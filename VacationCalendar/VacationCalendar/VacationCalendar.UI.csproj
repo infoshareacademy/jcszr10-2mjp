@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Calendar.BusinessLogic\VacationCalendar.BusinessLogic.csproj" />
+  </ItemGroup>
+
 </Project>
