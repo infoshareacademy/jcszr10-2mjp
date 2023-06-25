@@ -1,4 +1,4 @@
-﻿namespace VacationCalendar
+﻿namespace VacationCalendar.UI
 {
     internal class Program
     {
