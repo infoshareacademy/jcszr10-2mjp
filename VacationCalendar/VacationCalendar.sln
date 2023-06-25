@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationCalendar", "VacationCalendar\VacationCalendar.csproj", "{DBA800B5-DDBD-4A28-88CF-E8E0469DE35A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBA800B5-DDBD-4A28-88CF-E8E0469DE35A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBA800B5-DDBD-4A28-88CF-E8E0469DE35A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBA800B5-DDBD-4A28-88CF-E8E0469DE35A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBA800B5-DDBD-4A28-88CF-E8E0469DE35A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B781F4A-073C-418C-8319-5ECC9A065479}
+	EndGlobalSection
+EndGlobal
