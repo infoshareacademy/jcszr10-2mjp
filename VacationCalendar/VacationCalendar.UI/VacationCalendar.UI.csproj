@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Calendar.BusinessLogic\VacationCalendar.BusinessLogic.csproj" />
+    <ProjectReference Include="..\VacationCalendar.BusinessLogic\VacationCalendar.BusinessLogic.csproj" />
   </ItemGroup>
-
 </Project>
