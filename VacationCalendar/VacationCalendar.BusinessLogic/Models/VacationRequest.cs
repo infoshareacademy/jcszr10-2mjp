@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Models
 {
-    internal class VacationRequest
+    public class VacationRequest
     {
         public int Id { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
 
-        public int  Days 
-        { 
-            set { } 
-        }
+        public TimeSpan NumberOfDays 
+        {
+            get { return To.Subtract(From); }
+        } 
     }
 }
