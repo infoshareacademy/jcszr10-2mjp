@@ -8,16 +8,18 @@ namespace VacationCalendar.BusinessLogic.Models
 {
     public class VacationRequest
     {
-        public int Id { get; set; }
+        private static int nextID = 0;
+        public int ID { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
 
-        public TimeSpan NumberOfDays 
+        public VacationRequest(DateTime from, DateTime to)
         {
-            get 
-            {  
-                return To.Subtract(From); 
-            }
-        } 
+            ID = nextID;
+            nextID++;
+            From = from;
+            To = to;
+        }
+    
     }
 }

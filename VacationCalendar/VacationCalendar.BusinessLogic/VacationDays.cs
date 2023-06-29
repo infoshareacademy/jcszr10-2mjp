@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VacationCalendar.BusinessLogic.Models;
+﻿using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic
 {
@@ -20,42 +15,36 @@ namespace VacationCalendar.BusinessLogic
         /// <returns></returns>
         public static int CountVacationDays(string from, string to)
         {
-            VacationRequest vacationRequest = new VacationRequest();
 
-            DateTime dateValueFrom;
-            string dateStringFrom = from;
-            DateTime.TryParse(dateStringFrom, out dateValueFrom);
-            vacationRequest.From = dateValueFrom;
-
-            DateTime dateValueTo;
-            string dateStringTo = to;
-            DateTime.TryParse(dateStringTo, out dateValueTo);
-            vacationRequest.To = dateValueTo;
-
-            var numberOfDays = vacationRequest.NumberOfDays.Days;
-
-            List<DateTime> allDays = new List<DateTime>
+            if (!DateTime.TryParse(from, out DateTime startDate) || !DateTime.TryParse(to, out DateTime endDate))
             {
-                dateValueFrom
-            };
-
-            for (int i = 1; i <= numberOfDays; i++)
-            {
-                DateTime tmpDate;
-                tmpDate = dateValueFrom.AddDays(i);
-                allDays.Add(tmpDate);
+                // Wyrzuca wyjątek jeżeli nie uda się sparsować Stringa z Datą na typ DateTime
+                throw new ArgumentException("Nieprawiłowy format daty!");
             }
 
-            List<DateTime> daysWithoutWeekend = new List<DateTime>();
-
-            foreach (DateTime date in allDays)
+            if (endDate < startDate)
             {
-                var dayOfWeek = date.DayOfWeek;
-                if (dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Saturday)
-                {
+                throw new ArgumentException("Data koncowa musi byc późniejsza niż data startowa!");
+            }
+
+            VacationRequest vacationRequest = new VacationRequest(startDate, endDate);
+
+            TimeSpan dateInterval = vacationRequest.To - vacationRequest.From;
+            int numberOfDays = dateInterval.Days;
+
+            List<DateTime> daysWithoutWeekend = new List<DateTime>
+            {
+                startDate
+            };
+
+            DateTime nextDay;
+            for (int i = 1; i <= numberOfDays; i++)
+            {
+                nextDay = (daysWithoutWeekend[0].AddDays(i));
+                if (nextDay.DayOfWeek == DayOfWeek.Sunday || nextDay.DayOfWeek == DayOfWeek.Saturday)
                     continue;
-                }
-                daysWithoutWeekend.Add(date);
+
+                daysWithoutWeekend.Add(nextDay);
             }
 
             return daysWithoutWeekend.Count;
