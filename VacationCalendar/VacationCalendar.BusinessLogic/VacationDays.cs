@@ -31,23 +31,19 @@ namespace VacationCalendar.BusinessLogic
 
             TimeSpan dateInterval = vacationRequest.To - vacationRequest.From;
             int numberOfDays = dateInterval.Days;
-
-            List<DateTime> daysWithoutWeekend = new List<DateTime>
+            
+            DateTime currentDay;
+            int daysWithoutWeekend = 0;
+            for (int i = 0; i <= numberOfDays; i++)
             {
-                startDate
-            };
-
-            DateTime nextDay;
-            for (int i = 1; i <= numberOfDays; i++)
-            {
-                nextDay = (daysWithoutWeekend[0].AddDays(i));
-                if (nextDay.DayOfWeek == DayOfWeek.Sunday || nextDay.DayOfWeek == DayOfWeek.Saturday)
+                currentDay = (startDate.AddDays(i));
+                if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
                     continue;
 
-                daysWithoutWeekend.Add(nextDay);
+                daysWithoutWeekend++;
             }
 
-            return daysWithoutWeekend.Count;
+            return daysWithoutWeekend;
         }
     }
 }
