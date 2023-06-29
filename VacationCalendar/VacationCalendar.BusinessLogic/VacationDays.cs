@@ -18,7 +18,7 @@ namespace VacationCalendar.BusinessLogic
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static int CountVacationDays(string from, string to)
+        public static int CountVacationDays(string from, string to, out string message)
         {
             VacationRequest vacationRequest = new VacationRequest();
 
@@ -32,6 +32,11 @@ namespace VacationCalendar.BusinessLogic
             DateTime.TryParse(dateStringTo, out dateValueTo);
             vacationRequest.To = dateValueTo;
 
+            if(dateValueFrom >= dateValueTo)
+            {
+                message = "\"Data od\" nie może być nowsza od \"daty do\"! Dni urlopu:";
+                return 0;
+            }
             var numberOfDays = vacationRequest.NumberOfDays.Days;
 
             List<DateTime> allDays = new List<DateTime>
@@ -57,7 +62,7 @@ namespace VacationCalendar.BusinessLogic
                 }
                 daysWithoutWeekend.Add(date);
             }
-
+            message = "Dni urlopu:";
             return daysWithoutWeekend.Count;
         }
     }

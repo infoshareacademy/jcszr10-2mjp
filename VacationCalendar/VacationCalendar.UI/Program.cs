@@ -41,9 +41,10 @@ namespace VacationCalendar.UI
                 Console.WriteLine("Podaj datę do kiedy? (dd/MM/rrrr)");
                 string to = Console.ReadLine();
 
-                var vacationDays = VacationDays.CountVacationDays(from, to);
+                string message;
+                var vacationDays = VacationDays.CountVacationDays(from, to, out message);
 
-                Console.WriteLine($"Dni urlopu: {vacationDays}");
+                Console.WriteLine($"{message} {vacationDays}");
             }
             if (menu.SelectedIndex == 1)
             {
