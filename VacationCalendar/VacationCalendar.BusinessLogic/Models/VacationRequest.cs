@@ -14,7 +14,10 @@ namespace VacationCalendar.BusinessLogic.Models
 
         public TimeSpan NumberOfDays 
         {
-            get { return To.Subtract(From); }
+            get 
+            {  
+                return To.Subtract(From); 
+            }
         } 
     }
 }

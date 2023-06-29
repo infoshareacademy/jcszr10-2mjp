@@ -1,4 +1,6 @@
-﻿using VacationCalendar.BusinessLogic.Models;
+﻿using System;
+using VacationCalendar.BusinessLogic;
+using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.UI
 {
@@ -7,7 +9,7 @@ namespace VacationCalendar.UI
         static void Main(string[] args)
         {
             Console.WriteLine("Kalendarz urlopowy");
-
+            Console.WriteLine("\nWybierz opcję w menu:");
             var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Opcja_2", "Opcja_3", "Opcja_4", "Opcja_5", "Opcja_6" });
             var menuPainter = new ConsoleMenuPainter(menu);
 
@@ -15,8 +17,8 @@ namespace VacationCalendar.UI
 
             do
             {
-                // położenie menu
-                menuPainter.Paint(1, 3);
+                // położenie menu w konsoli
+                menuPainter.Paint(2, 3);
 
                 var keyInfo = Console.ReadKey();
 
@@ -39,30 +41,14 @@ namespace VacationCalendar.UI
                 Console.WriteLine("Podaj datę do kiedy? (dd/MM/rrrr)");
                 string to = Console.ReadLine();
 
-                PrepareVacationRequest(from, to) ;
+                var vacationDays = VacationDays.CountVacationDays(from, to);
+
+                Console.WriteLine($"Dni urlopu: {vacationDays}");
             }
             if (menu.SelectedIndex == 1)
             {
                 Console.WriteLine("Opcja 2");
             }
-        }
-
-        private static void PrepareVacationRequest(string from, string to)
-        {
-            VacationRequest vacationRequest = new VacationRequest();
-
-            DateTime dateValueFrom;
-            string dateStringFrom = from;
-            DateTime.TryParse(dateStringFrom, out dateValueFrom);
-            vacationRequest.From = dateValueFrom;
-
-            DateTime dateValueTo;
-            string dateStringTo = to;
-            DateTime.TryParse(dateStringTo, out dateValueTo);
-            vacationRequest.To = dateValueTo;
-
-            var days = vacationRequest.NumberOfDays.Days;
-            Console.WriteLine($"Dni urlopu: {days}");
         }
     }
 }
