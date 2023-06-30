@@ -8,6 +8,8 @@ namespace VacationCalendar.UI
     {
         static void Main(string[] args)
         {
+            VacationRequest vacationRequest = new VacationRequest();
+
             Console.WriteLine("Kalendarz urlopowy");
             Console.WriteLine("\nWybierz opcję w menu:");
             var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Opcja_2", "Opcja_3", "Opcja_4", "Opcja_5", "Opcja_6" });
@@ -42,7 +44,7 @@ namespace VacationCalendar.UI
                 string to = Console.ReadLine();
 
                 string message;
-                var vacationDays = VacationDays.CountVacationDays(from, to, out message);
+                var vacationDays = vacationRequest.CountVacationDays(from, to, out message);
 
                 Console.WriteLine($"{message} {vacationDays}");
             }
