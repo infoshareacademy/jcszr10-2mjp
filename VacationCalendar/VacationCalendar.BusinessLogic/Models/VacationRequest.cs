@@ -27,32 +27,51 @@ namespace VacationCalendar.BusinessLogic.Models
         /// <returns></returns>
         public int CountVacationDays(string from, string to, out string message)
         {
-            DateTime dateValueFrom;
+            DateTime dateFromValue;
             string dateStringFrom = from;
-            DateTime.TryParse(dateStringFrom, out dateValueFrom);
-            From = dateValueFrom;
+            bool isDateFromGoodFormat = DateTime.TryParse(dateStringFrom, out dateFromValue);
+            From = dateFromValue;
 
-            DateTime dateValueTo;
+            DateTime dateToValue;
             string dateStringTo = to;
-            DateTime.TryParse(dateStringTo, out dateValueTo);
-            To = dateValueTo;
+            bool isDateToGoodFormat = DateTime.TryParse(dateStringTo, out dateToValue);
+            To = dateToValue;
 
-            if (dateValueFrom >= dateValueTo)
+            if(!isDateToGoodFormat || !isDateFromGoodFormat)
+            {
+                message = "Nieprawidłowy format daty! Dni urlopu:";
+                return 0;
+            }
+
+            if (dateFromValue >= dateToValue)
             {
                 message = "\"Data od\" nie może być nowsza od \"daty do\"! Dni urlopu:";
                 return 0;
             }
-            var numberOfDays = NumberOfDays.Days;
 
+            if (dateFromValue < DateTime.Now)
+            {
+                message = "Urlop nie może być planowany wstecz. Dni urlopu:";
+                return 0;
+            }
+
+            if (dateFromValue > DateTime.Now.AddMonths(12))
+            {
+                message = "Nie możesz planowac tak daleko w przyszłość. Dni urlopu:";
+                return 0;
+            }
+
+            var numberOfDays = NumberOfDays.Days;
+  
             List<DateTime> allDays = new List<DateTime>
             {
-                dateValueFrom
+                dateFromValue
             };
 
             for (int i = 1; i <= numberOfDays; i++)
             {
                 DateTime tmpDate;
-                tmpDate = dateValueFrom.AddDays(i);
+                tmpDate = dateFromValue.AddDays(i);
                 allDays.Add(tmpDate);
             }
 
@@ -67,7 +86,14 @@ namespace VacationCalendar.BusinessLogic.Models
                 }
                 daysWithoutWeekend.Add(date);
             }
-            message = "Dni urlopu:";
+
+            if (daysWithoutWeekend.Count > 30)
+            {
+                message = "Trochę za dużo tego urlopu... Dni urlopu:";
+                return 0;
+            }
+
+            message = $"Wystawiono wniosek. Ilość dni urlopu:";
             return daysWithoutWeekend.Count;
         }
     }
