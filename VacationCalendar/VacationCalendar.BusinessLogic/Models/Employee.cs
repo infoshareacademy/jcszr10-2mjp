@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VacationCalendar.BusinessLogic.Models
+﻿namespace VacationCalendar.BusinessLogic.Models
 {
-    internal class Employee
+    public class Employee
     {
-        public int ID { get; set; }
+        public int ID { get; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
+        public string Email { get; set; }
+        public Employee(int id, string firstName, string lastName, string email)
+        {
+            ID = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+        }
+        public override string ToString()
+        {
+            return $"ID: {ID}\nFirstName: {FirstName}\nLastName: {LastName}\nEmail: {Email}";
+        }
+        public VacationRequest Request(DateTime from, DateTime to)
+        {   
+            return new VacationRequest(this, from, to);
+        }
     }
 }
