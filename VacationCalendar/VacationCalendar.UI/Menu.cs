@@ -25,6 +25,7 @@
                         MoveDown();
                         break;
                     case ConsoleKey.Enter:
+                        Console.Clear();
                         Options[SelectedIndex].Action();
                         break;
                 }

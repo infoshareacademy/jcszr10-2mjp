@@ -4,17 +4,43 @@ namespace VacationCalendar.UI
 {
     public class Program
     {
-        List<MenuOption> mainMenu = new List<MenuOption>
+        public static Employee emp = new Employee(1, "Jakub", "Szot", "xdd");
+        public static List<MenuOption> mainOptions = new List<MenuOption>
         {
             new MenuOption("1.Employee", () =>
             {
-                new Employee(1, "Jakub", "Szot", "jakubszot17@gmail.com");
+                new Menu(empOptions).Run();
+            }),
+            new MenuOption("2.Supervisor", () =>
+            {
+                new Supervisor(1, "Piotr", "Tryfon", "p.tryfon@gmail.com");
 
             }),
         };
-        static void Main(string[] args)
-        {   
 
+        public static List<MenuOption> empOptions= new List<MenuOption>
+        {
+            new MenuOption("1.Wniosek", () =>
+            {
+                emp.Request(new DateTime(2023, 07, 02), new DateTime(2023, 07, 09));
+            }),
+            new MenuOption("2.Info", () =>
+            {
+                new Supervisor(1, "Piotr", "Tryfon", "p.tryfon@gmail.com");
+
+            }),
+
+            new MenuOption("3.Powrot", () =>
+            {
+                new Menu(mainOptions).Run();
+            }),
+        };
+
+        
+        static void Main(string[] args)
+        {
+            Menu mainMenu = new Menu(mainOptions);
+            mainMenu.Run();
         }
     }
 }
