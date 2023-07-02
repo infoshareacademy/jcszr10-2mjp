@@ -1,4 +1,6 @@
-﻿namespace VacationCalendar.UI
+﻿using VacationCalendar.BusinessLogic.Models;
+
+namespace VacationCalendar.UI
 {
     public class Menu
     {
@@ -26,7 +28,7 @@
                         break;
                     case ConsoleKey.Enter:
                         Console.Clear();
-                        Options[SelectedIndex].Action();
+                        Options[SelectedIndex].Action(new VacationRequest(new Employee(2, "qwq", "s", "d"), new DateTime(2023, 11, 02), new DateTime(2023, 12, 09)));
                         break;
                 }
             } while (!exit);
