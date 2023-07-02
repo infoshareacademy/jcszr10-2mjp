@@ -2,7 +2,7 @@
 {
     public class Employee
     {
-        public int ID { get; }
+        public int ID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -13,6 +13,7 @@
             LastName = lastName;
             Email = email;
         }
+        public Employee() { }
         public override string ToString()
         {
             return $"ID: {ID}\nFirstName: {FirstName}\nLastName: {LastName}\nEmail: {Email}";

@@ -11,12 +11,14 @@ namespace VacationCalendar.UI
             Options = options;
             SelectedIndex = 0;
         }
+        public Menu() {}
         public void Run()
         {
             bool exit = false;
             do
             {
                 Display();
+                Console.CursorVisible = false;
                 var key = Console.ReadKey(true);
                 switch (key.Key)
                 {
@@ -27,8 +29,7 @@ namespace VacationCalendar.UI
                         MoveDown();
                         break;
                     case ConsoleKey.Enter:
-                        Console.Clear();
-                        Options[SelectedIndex].Action(new VacationRequest(new Employee(2, "qwq", "s", "d"), new DateTime(2023, 11, 02), new DateTime(2023, 12, 09)));
+                        Options[SelectedIndex].Action();
                         break;
                 }
             } while (!exit);

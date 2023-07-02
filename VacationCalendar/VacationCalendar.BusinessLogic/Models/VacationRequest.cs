@@ -18,11 +18,17 @@
             To = to;
             Status = true;
         }
+
+        public VacationRequest()
+        {
+            ID = nextID;
+            nextID++;
+            Status = true;
+        }
         public override string ToString()
         {
             return $"ID: {ID}\nEmployee: \n{Emp.ToString()}\nFrom: {From}\nTo: {To}\nVacationDays: {VacationDays()}\nStatus: {Status}";
         }
-
         public int VacationDays()
         {
             TimeSpan dateInterval = To - From;
