@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Models
 {
-    internal class Employee
+    public class Employee
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public VacationRequest vRequest { get; set; }
     }
 }

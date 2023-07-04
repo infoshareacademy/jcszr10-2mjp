@@ -10,7 +10,7 @@ namespace VacationCalendar.BusinessLogic.Models
     {
         public int Id { get; set; }
         public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public DateTime To { get; set; }        
 
         public TimeSpan NumberOfDays 
         {
@@ -18,7 +18,13 @@ namespace VacationCalendar.BusinessLogic.Models
             {  
                 return To.Subtract(From); 
             }
+            set
+            {
+                NumberOfDays = value;
+            }
         }
+
+        public int NumOfDaysToInt { get; set; }
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele
         /// </summary>

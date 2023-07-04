@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using VacationCalendar.BusinessLogic;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -10,7 +11,7 @@ namespace VacationCalendar.UI
         {
             VacationRequest vacationRequest = new VacationRequest();
            
-            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Opcja 2", "Opcja 3", "Opcja 4", "Opcja 5", "Exit" });
+            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Opcja 2", "Opcja 3", "Opcja 4", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
 
             bool esc = true;
@@ -52,7 +53,30 @@ namespace VacationCalendar.UI
                     string message;
                     var vacationDays = vacationRequest.CountVacationDays(from, to, out message);
 
-                    Console.WriteLine($"{message} {vacationDays}");
+                    Regex validateDateRegex = new Regex("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$");
+
+                    var validatorFrom = validateDateRegex.IsMatch(from);
+                    var validatorTo = validateDateRegex.IsMatch(to);
+
+                    if (validatorFrom && validatorTo)
+                    {
+                        Employee employee = new Employee
+                        {
+                            FirstName = "Piotr",
+                            LastName = "Kowalski",
+                            vRequest = new VacationRequest
+                            {
+                                NumOfDaysToInt = vacationDays,
+                                From = DateTime.Parse(from),
+                                To = DateTime.Parse(to),
+                            }
+                        };
+
+                        Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
+                        Console.WriteLine($"Urlop od {employee.vRequest.From.ToString("dd-MM-yy")} do {employee.vRequest.To.ToString("dd-MM-yy")}");
+                        Console.WriteLine($"{message} {employee.vRequest.NumOfDaysToInt}");
+                    }
+                    else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }
                 if (menu.SelectedIndex == 1)
                 {
