@@ -11,7 +11,25 @@ namespace VacationCalendar.BusinessLogic.Services
     public class VacationService
     {
         VacationRequest vacationRequest = new VacationRequest();
+        VacationRequests vacationRequests = new VacationRequests();
 
+        public void AddVacationRequest(VacationRequest vacationRequest)
+        {
+            vacationRequests.vacationRequestsList.Add(vacationRequest);
+        }
+        public void DisplayAllVacationRequests()
+        {
+            var vacationRequestList = vacationRequests.vacationRequestsList;
+            foreach (var request in vacationRequestList)
+            {
+                Console.WriteLine(
+                    $" Id pracownika: {request.EmployeeId}" +
+                    $" Od: {request.From.ToString("dd-MM-yy")}" +
+                    $" Do: {request.To.ToString("dd-MM-yy")} " +
+                    $" Dni: {request.NumberOfDays}");            
+            }
+        }
+        
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele
         /// </summary>
@@ -87,6 +105,7 @@ namespace VacationCalendar.BusinessLogic.Services
             }
 
             message = $"Wystawiono wniosek. Ilość dni urlopu:";
+
             return daysWithoutWeekend.Count;
         }
     }

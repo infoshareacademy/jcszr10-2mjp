@@ -19,7 +19,7 @@ namespace VacationCalendar.UI
             Employees employees = new Employees();
             var employeesList = employees.EmployeesList;
            
-            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Opcja 2", "Opcja 3", "Opcja 4", "Manager", "Exit" });
+            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Wnioski", "Opcja 3", "Opcja 4", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
 
             bool esc = true;
@@ -78,7 +78,7 @@ namespace VacationCalendar.UI
                             EmployeeId = 1
                         };
 
-                        vacationRequestsList.Add(vacation1);
+                        vacationService.AddVacationRequest(vacation1);
 
                         Console.WriteLine($"Pracownik: {employee1.FirstName} {employee1.LastName}");
                         Console.WriteLine($"Urlop od {vacation1.From.ToString("dd-MM-yy")} do {vacation1.To.ToString("dd-MM-yy")}");
@@ -88,7 +88,7 @@ namespace VacationCalendar.UI
                 }
                 if (menu.SelectedIndex == 1)
                 {
-                    Console.WriteLine("Wykonuje się opcja 2...");
+                    vacationService.DisplayAllVacationRequests();
                 }
                 if (menu.SelectedIndex == 2)
                 {
