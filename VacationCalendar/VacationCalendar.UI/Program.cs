@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using VacationCalendar.BusinessLogic;
+using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.UI
@@ -10,6 +11,11 @@ namespace VacationCalendar.UI
         static void Main(string[] args)
         {
             VacationRequest vacationRequest = new VacationRequest();
+            VacationRequests vacationRequests = new VacationRequests();
+            var vacationRequestsList = vacationRequests.vacationRequestsList;
+
+            Employees employees = new Employees();
+            var employeesList = employees.EmployeesList;
            
             var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Opcja 2", "Opcja 3", "Opcja 4", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
@@ -60,21 +66,21 @@ namespace VacationCalendar.UI
 
                     if (validatorFrom && validatorTo)
                     {
-                        Employee employee = new Employee
+                        var employee1 = employeesList.FirstOrDefault(e => e.Id == 1);
+
+                        VacationRequest vacation1 = new VacationRequest
                         {
-                            FirstName = "Piotr",
-                            LastName = "Kowalski",
-                            vRequest = new VacationRequest
-                            {
-                                NumOfDaysToInt = vacationDays,
-                                From = DateTime.Parse(from),
-                                To = DateTime.Parse(to),
-                            }
+                            From = DateTime.Parse(from),
+                            To = DateTime.Parse(to),
+                            NumberOfDays = vacationDays,
+                            EmployeeId = 1
                         };
 
-                        Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
-                        Console.WriteLine($"Urlop od {employee.vRequest.From.ToString("dd-MM-yy")} do {employee.vRequest.To.ToString("dd-MM-yy")}");
-                        Console.WriteLine($"{message} {employee.vRequest.NumOfDaysToInt}");
+                        vacationRequestsList.Add(vacation1);
+
+                        Console.WriteLine($"Pracownik: {employee1.FirstName} {employee1.LastName}");
+                        Console.WriteLine($"Urlop od {vacation1.From.ToString("dd-MM-yy")} do {vacation1.To.ToString("dd-MM-yy")}");
+                        Console.WriteLine($"{message} {vacation1.NumberOfDays}");
                     }
                     else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }

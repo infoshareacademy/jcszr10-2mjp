@@ -10,9 +10,12 @@ namespace VacationCalendar.BusinessLogic.Models
     {
         public int Id { get; set; }
         public DateTime From { get; set; }
-        public DateTime To { get; set; }        
+        public DateTime To { get; set; }
+        public Employee Employee { get; set; }
+        public int EmployeeId { get; set; }
+        public bool Confirmed { get; set; } = false;
 
-        public TimeSpan NumberOfDays 
+        public TimeSpan NumberOfDaysSpan 
         {
             get 
             {  
@@ -20,11 +23,11 @@ namespace VacationCalendar.BusinessLogic.Models
             }
             set
             {
-                NumberOfDays = value;
+                NumberOfDaysSpan = value;
             }
         }
+        public int NumberOfDays { get; set; }
 
-        public int NumOfDaysToInt { get; set; }
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele
         /// </summary>
@@ -67,7 +70,7 @@ namespace VacationCalendar.BusinessLogic.Models
                 return 0;
             }
 
-            var numberOfDays = NumberOfDays.Days;
+            var numberOfDays = NumberOfDaysSpan.Days;
   
             List<DateTime> allDays = new List<DateTime>
             {

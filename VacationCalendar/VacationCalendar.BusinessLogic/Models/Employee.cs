@@ -12,6 +12,6 @@ namespace VacationCalendar.BusinessLogic.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public VacationRequest vRequest { get; set; }
+        public List<VacationRequest> vRequests { get; set; } = new List<VacationRequest>() { };
     }
 }
