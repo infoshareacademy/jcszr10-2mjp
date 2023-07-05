@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using VacationCalendar.BusinessLogic;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
+using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.UI
 {
@@ -10,6 +11,7 @@ namespace VacationCalendar.UI
     {
         static void Main(string[] args)
         {
+            VacationService vacationService = new VacationService();
             VacationRequest vacationRequest = new VacationRequest();
             VacationRequests vacationRequests = new VacationRequests();
             var vacationRequestsList = vacationRequests.vacationRequestsList;
@@ -57,7 +59,7 @@ namespace VacationCalendar.UI
                     string to = Console.ReadLine();
 
                     string message;
-                    var vacationDays = vacationRequest.CountVacationDays(from, to, out message);
+                    var vacationDays = vacationService.CountVacationDays(from, to, out message);
 
                     Regex validateDateRegex = new Regex("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$");
 
