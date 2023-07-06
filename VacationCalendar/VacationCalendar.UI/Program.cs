@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Threading.Channels;
 using VacationCalendar.BusinessLogic;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
@@ -18,8 +19,21 @@ namespace VacationCalendar.UI
 
             Employees employees = new Employees();
             var employeesList = employees.EmployeesList;
-           
-            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Wnioski", "Opcja 3", "Opcja 4", "Manager", "Exit" });
+
+            Console.WriteLine("Zaloguj się jako:");
+            Console.WriteLine("Imię:");
+            string firstname = Console.ReadLine();
+            Console.WriteLine("Nazwisko:");
+            string lastname = Console.ReadLine();
+            Console.Clear();
+
+            var employee = EmployeeService.LogInEmployee(firstname, lastname, employees);
+            if (employee == null)
+            {
+                return;
+            }
+
+            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
 
             bool esc = true;
@@ -33,7 +47,6 @@ namespace VacationCalendar.UI
 
                 do
                 {
-                    // położenie menu w konsoli
                     menuPainter.Paint(2, 3);
 
                     var keyInfo = Console.ReadKey();
@@ -52,7 +65,7 @@ namespace VacationCalendar.UI
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 if (menu.SelectedIndex == 0)
-                {
+                {        
                     Console.WriteLine("\nPodaj datę od kiedy? (dd/MM/rrrr)");
                     string from = Console.ReadLine();
                     Console.WriteLine("Podaj datę do kiedy? (dd/MM/rrrr)");
@@ -68,41 +81,59 @@ namespace VacationCalendar.UI
 
                     if (validatorFrom && validatorTo)
                     {
-                        var employee1 = employeesList.FirstOrDefault(e => e.Id == 1);
-
                         VacationRequest vacation1 = new VacationRequest
                         {
                             From = DateTime.Parse(from),
                             To = DateTime.Parse(to),
                             NumberOfDays = vacationDays,
-                            EmployeeId = 1
+                            EmployeeId = employee.Id
                         };
 
                         vacationService.AddVacationRequest(vacation1);
 
-                        Console.WriteLine($"Pracownik: {employee1.FirstName} {employee1.LastName}");
+                        Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
                         Console.WriteLine($"Urlop od {vacation1.From.ToString("dd-MM-yy")} do {vacation1.To.ToString("dd-MM-yy")}");
                         Console.WriteLine($"{message} {vacation1.NumberOfDays}");
                     }
                     else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }
+              
                 if (menu.SelectedIndex == 1)
                 {
-                    vacationService.DisplayAllVacationRequests();
+                    Console.Clear();
+                    Console.WriteLine("Menu managera");
+                    var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "End" });
+                    var managerMenuPainter = new ConsoleMenuPainter(managerMenu);
+                    bool end = false;
+                    do
+                    {
+                        managerMenuPainter.Paint(0, 1);
+
+                        var keyInfo2 = Console.ReadKey();
+
+                        switch (keyInfo2.Key)
+                        {
+                            case ConsoleKey.UpArrow: managerMenu.MoveUp(); break;
+                            case ConsoleKey.DownArrow: managerMenu.MoveDown(); break;
+                            case ConsoleKey.Enter: end = true; break;
+                        }
+                    }
+                    while (!end);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Wybrano: " + (menu.SelectedOption ?? "Nie wybrano opcji z menu..."));
+                    Console.ForegroundColor = ConsoleColor.Gray;
+
+                    if(managerMenu.SelectedIndex == 0)
+                    {
+                        Console.WriteLine("Wnioski:");
+                        vacationService.DisplayAllVacationRequests();
+                    }
+                    if(managerMenu.SelectedIndex == 1)
+                    {
+                        Console.WriteLine("Pracownicy");
+                    }
                 }
                 if (menu.SelectedIndex == 2)
-                {
-                    Console.WriteLine("Wykonuje się opcja 3...");
-                }
-                if (menu.SelectedIndex == 3)
-                {
-                    Console.WriteLine("Wykonuje się opcja 4...");
-                }
-                if (menu.SelectedIndex == 4)
-                {
-                    Console.WriteLine("Wykonuje się opcja 5...");
-                }
-                if (menu.SelectedIndex == 5)
                 {
                     esc = !esc;
                 }

@@ -8,9 +8,9 @@ namespace VacationCalendar.BusinessLogic.Models
 {
     internal class Manager : Employee
     {
-        public void ConformVacation()
+        public void ConformVacation(VacationRequest vacationRequest)
         {
-            Console.WriteLine("Vacation confirmed");
+            vacationRequest.Confirmed = true;
         }
     }
 }

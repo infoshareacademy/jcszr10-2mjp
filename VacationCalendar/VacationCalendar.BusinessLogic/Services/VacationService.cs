@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -20,6 +16,12 @@ namespace VacationCalendar.BusinessLogic.Services
         public void DisplayAllVacationRequests()
         {
             var vacationRequestList = vacationRequests.vacationRequestsList;
+
+            if(vacationRequestList.Count == 0)
+            {
+                Console.WriteLine("Brak wniosków.");
+            }
+
             foreach (var request in vacationRequestList)
             {
                 Console.WriteLine(
