@@ -1,5 +1,4 @@
-﻿
-namespace VacationCalendar.BusinessLogic.Models
+﻿namespace VacationCalendar.BusinessLogic.Models
 {
     public class VacationRequest
     {

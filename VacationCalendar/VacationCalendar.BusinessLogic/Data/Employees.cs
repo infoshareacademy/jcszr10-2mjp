@@ -1,5 +1,4 @@
-﻿
-using VacationCalendar.BusinessLogic.Models;
+﻿using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Data
 { 

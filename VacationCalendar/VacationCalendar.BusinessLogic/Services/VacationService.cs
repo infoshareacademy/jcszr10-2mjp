@@ -1,5 +1,4 @@
-﻿
-using VacationCalendar.BusinessLogic.Data;
+﻿using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -26,8 +25,8 @@ namespace VacationCalendar.BusinessLogic.Services
             {
                 Console.WriteLine(
                     $" Id pracownika: {request.EmployeeId}" +
-                    $" Od: {request.From.ToString("dd-MM-yy")}" +
-                    $" Do: {request.To.ToString("dd-MM-yy")} " +
+                    $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
+                    $" do: {request.To.ToString("dd-MM-yy")} " +
                     $" Dni: {request.NumberOfDays}");            
             }
         }

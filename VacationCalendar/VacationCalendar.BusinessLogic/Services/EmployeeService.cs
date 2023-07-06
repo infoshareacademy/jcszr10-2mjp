@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VacationCalendar.BusinessLogic.Data;
+﻿using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -19,6 +13,13 @@ namespace VacationCalendar.BusinessLogic.Services
                 .FirstName.ToLower() == firstname.ToLower() && e.LastName.ToLower() == lastname.ToLower());
          
             return employee;
+        }
+        public static void GetEmployees(Employees employees)
+        {
+            foreach (var employee in employees.EmployeesList)
+            {
+                Console.WriteLine($"{employee.Id} {employee.FirstName} {employee.LastName}");
+            }
         }
     }
 }
