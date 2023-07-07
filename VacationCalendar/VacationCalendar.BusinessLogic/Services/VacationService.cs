@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -13,6 +14,11 @@ namespace VacationCalendar.BusinessLogic.Services
             vacationRequests.vacationRequestsList.Add(vacationRequest);
         }
 
+        public int GetNumberOfVacationRequests()
+        {
+            return vacationRequests.vacationRequestsList.Count();
+        }
+
         public List<string> GetAllVacationRequestsToString()
         {
             var vacationRequestList = vacationRequests.vacationRequestsList;
@@ -20,10 +26,10 @@ namespace VacationCalendar.BusinessLogic.Services
             List<string> vacRequests = new List<string>();
 
             foreach (var request in vacationRequestList)
-            {
+            { 
                vacRequests.Add(
                     $" Id pracownika: {request.EmployeeId}" +
-                    $" Id wniosku: {request.Id} " +
+                    $" Id wniosku: {request.Id}" +
                     $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
                     $" do: {request.To.ToString("dd-MM-yy")} " +
                     $" Dni: {request.NumberOfDays}" +
@@ -31,6 +37,11 @@ namespace VacationCalendar.BusinessLogic.Services
             }
 
             return vacRequests;
+        }
+
+        public List<VacationRequest> GetVacationRequests()
+        {
+            return vacationRequests.vacationRequestsList;
         }
         
         /// <summary>

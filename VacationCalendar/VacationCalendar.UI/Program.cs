@@ -10,6 +10,7 @@ namespace VacationCalendar.UI
         static void Main(string[] args)
         {
             VacationService vacationService = new VacationService();
+            VacationRequests vacationRequests = new VacationRequests();
             Employees employees = new Employees();
 
             var menu = new Menu(new string[] { "Wniosek pracownika", "Manager", "Exit" });
@@ -76,10 +77,11 @@ namespace VacationCalendar.UI
                     {
                         VacationRequest vacation = new VacationRequest
                         {
+                            Id = vacationService.GetNumberOfVacationRequests() + 1,
                             From = DateTime.Parse(from),
                             To = DateTime.Parse(to),
                             NumberOfDays = vacationDays,
-                            EmployeeId = employee.Id
+                            EmployeeId = employee.Id,
                         };
 
                         vacationService.AddVacationRequest(vacation);
@@ -117,20 +119,21 @@ namespace VacationCalendar.UI
 
                     if(managerMenu.SelectedIndex == 0)
                     {
-                        //VacationRequests vacationRequests = new VacationRequests();
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("WNIOSKI");
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        var list = vacationService.GetAllVacationRequestsToString();
 
-                        var numberOfElementsInList = list.Count;
+                        var vacReqListToStr = vacationService.GetAllVacationRequestsToString();
+                        var vacReqList = vacationService.GetVacationRequests();
+
+                        var numberOfElementsInList = vacReqListToStr.Count;
                         if(numberOfElementsInList == 0)
                         {
-                            list = new List<string> { "Brak wniosków." };
+                            vacReqListToStr = new List<string> { "Brak wniosków." };
                         }
 
-                        var requestMenu = new Menu(list);
+                        var requestMenu = new Menu(vacReqListToStr);
                         var requestMenuPainter = new ConsoleMenuPainter(requestMenu);
                         bool isDone = false;
                         do
@@ -157,7 +160,13 @@ namespace VacationCalendar.UI
                         {                          
                             if(requestMenu.SelectedIndex == i)
                             {
-                                Console.WriteLine(i);
+                                var request = vacationService.GetVacationRequests()
+                                    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
+                                request.isConfirmed = !request.isConfirmed;
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.WriteLine("Status wniosku zmieniony");
+                                Console.ReadKey();
+                                Console.Clear();
                             }
                         }
 
