@@ -13,7 +13,7 @@ namespace VacationCalendar.UI
             VacationRequests vacationRequests = new VacationRequests();
             Employees employees = new Employees();
 
-            var menu = new Menu(new string[] { "Wniosek pracownika", "Manager", "Exit" });
+            var menu = new Menu(new string[] { "Nowy wniosek pracownika", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
 
             bool esc = true;
@@ -121,7 +121,7 @@ namespace VacationCalendar.UI
                     {
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine("WNIOSKI");
+                        Console.WriteLine("WNIOSKI - enter aby zatwierdzić");
                         Console.ForegroundColor = ConsoleColor.Gray;
 
                         var vacReqListToStr = vacationService.GetAllVacationRequestsToString();
@@ -151,11 +151,13 @@ namespace VacationCalendar.UI
                         }
                         while (!isDone);
 
-                        if(requestMenu.SelectedOption.ToString() == "Brak wniosków.")
+                        if(requestMenu.SelectedOption == null)
                         {
+                            Console.WriteLine("Exit");
+                            Console.ReadLine();
                             isDone = !isDone;
                         }
-                    
+
                         for(var i = 0; i < numberOfElementsInList; i++)
                         {                          
                             if(requestMenu.SelectedIndex == i)
@@ -171,7 +173,6 @@ namespace VacationCalendar.UI
                         }
 
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        //vacationService.DisplayAllVacationRequests();
                     }
                     if(managerMenu.SelectedIndex == 1)
                     {
