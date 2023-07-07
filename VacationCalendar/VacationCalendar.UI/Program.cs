@@ -57,7 +57,10 @@ namespace VacationCalendar.UI
 
                     if (employee == null)
                     {
-                        return;
+                        Console.WriteLine("Nie ma takiego pracownika.");
+                        Console.ReadLine();
+                        Console.Clear();
+                        continue;               
                     }
 
                     Console.WriteLine("\nPodaj datę od kiedy? (dd/MM/rrrr)");
@@ -99,7 +102,7 @@ namespace VacationCalendar.UI
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Menu managera");
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "End" });
+                    var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "Exit" });
                     var managerMenuPainter = new ConsoleMenuPainter(managerMenu);
                     bool end = false;
                     do
@@ -180,8 +183,9 @@ namespace VacationCalendar.UI
                         EmployeeService.GetEmployees(employees);
                     }
                     if(managerMenu.SelectedIndex == 2)
-                    {
-                        //exit
+                    {       
+                        Console.Clear();
+                        Console.ForegroundColor= ConsoleColor.Gray;
                     }
                 }
                 if (menu.SelectedIndex == 2)
