@@ -74,7 +74,7 @@ namespace VacationCalendar.UI
 
                     if (validatorFrom && validatorTo)
                     {
-                        VacationRequest vacation1 = new VacationRequest
+                        VacationRequest vacation = new VacationRequest
                         {
                             From = DateTime.Parse(from),
                             To = DateTime.Parse(to),
@@ -82,11 +82,11 @@ namespace VacationCalendar.UI
                             EmployeeId = employee.Id
                         };
 
-                        vacationService.AddVacationRequest(vacation1);
+                        vacationService.AddVacationRequest(vacation);
 
                         Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
-                        Console.WriteLine($"Urlop od {vacation1.From.ToString("dd-MM-yy")} do {vacation1.To.ToString("dd-MM-yy")}");
-                        Console.WriteLine($"{message} {vacation1.NumberOfDays}");
+                        Console.WriteLine($"Urlop od {vacation.From.ToString("dd-MM-yy")} do {vacation.To.ToString("dd-MM-yy")}");
+                        Console.WriteLine($"{message} {vacation.NumberOfDays}");
                     }
                     else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }
@@ -117,13 +117,61 @@ namespace VacationCalendar.UI
 
                     if(managerMenu.SelectedIndex == 0)
                     {
-                        Console.WriteLine("Wnioski:");
-                        vacationService.DisplayAllVacationRequests();
+                        //VacationRequests vacationRequests = new VacationRequests();
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("WNIOSKI");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        var list = vacationService.GetAllVacationRequestsToString();
+
+                        var numberOfElementsInList = list.Count;
+                        if(numberOfElementsInList == 0)
+                        {
+                            list = new List<string> { "Brak wniosków." };
+                        }
+
+                        var requestMenu = new Menu(list);
+                        var requestMenuPainter = new ConsoleMenuPainter(requestMenu);
+                        bool isDone = false;
+                        do
+                        {
+                            requestMenuPainter.Paint(0, 1);
+
+                            var keyInfo3 = Console.ReadKey();
+
+                            switch (keyInfo3.Key)
+                            {
+                                case ConsoleKey.UpArrow: requestMenu.MoveUp(); break;
+                                case ConsoleKey.DownArrow: requestMenu.MoveDown(); break;
+                                case ConsoleKey.Enter: isDone = true; break;
+                            }
+                        }
+                        while (!isDone);
+
+                        if(requestMenu.SelectedOption.ToString() == "Brak wniosków.")
+                        {
+                            isDone = !isDone;
+                        }
+                    
+                        for(var i = 0; i < numberOfElementsInList; i++)
+                        {                          
+                            if(requestMenu.SelectedIndex == i)
+                            {
+                                Console.WriteLine(i);
+                            }
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        //vacationService.DisplayAllVacationRequests();
                     }
                     if(managerMenu.SelectedIndex == 1)
                     {
                         Console.WriteLine("Pracownicy:");
                         EmployeeService.GetEmployees(employees);
+                    }
+                    if(managerMenu.SelectedIndex == 2)
+                    {
+                        //exit
                     }
                 }
                 if (menu.SelectedIndex == 2)

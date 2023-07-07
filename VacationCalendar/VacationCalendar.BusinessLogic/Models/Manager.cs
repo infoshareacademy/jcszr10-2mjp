@@ -5,7 +5,7 @@ namespace VacationCalendar.BusinessLogic.Models
     {
         public void ConformVacation(VacationRequest vacationRequest)
         {
-            vacationRequest.Confirmed = true;
+            vacationRequest.isConfirmed = true;
         }
     }
 }

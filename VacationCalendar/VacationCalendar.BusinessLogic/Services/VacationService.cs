@@ -1,4 +1,5 @@
-﻿using VacationCalendar.BusinessLogic.Data;
+﻿using System;
+using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -7,28 +8,29 @@ namespace VacationCalendar.BusinessLogic.Services
     {
         VacationRequest vacationRequest = new VacationRequest();
         VacationRequests vacationRequests = new VacationRequests();
-
         public void AddVacationRequest(VacationRequest vacationRequest)
         {
             vacationRequests.vacationRequestsList.Add(vacationRequest);
         }
-        public void DisplayAllVacationRequests()
+
+        public List<string> GetAllVacationRequestsToString()
         {
             var vacationRequestList = vacationRequests.vacationRequestsList;
 
-            if(vacationRequestList.Count == 0)
-            {
-                Console.WriteLine("Brak wniosków.");
-            }
+            List<string> vacRequests = new List<string>();
 
             foreach (var request in vacationRequestList)
             {
-                Console.WriteLine(
+               vacRequests.Add(
                     $" Id pracownika: {request.EmployeeId}" +
+                    $" Id wniosku: {request.Id} " +
                     $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
                     $" do: {request.To.ToString("dd-MM-yy")} " +
-                    $" Dni: {request.NumberOfDays}");            
+                    $" Dni: {request.NumberOfDays}" +
+                    $" Czy potwierdzony: {request.isConfirmed}");            
             }
+
+            return vacRequests;
         }
         
         /// <summary>

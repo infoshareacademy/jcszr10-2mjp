@@ -2,12 +2,14 @@
 {
     public class VacationRequest
     {
+        private int id;
         public int Id { get; set; }
+
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public Employee Employee { get; set; }
         public int EmployeeId { get; set; }
-        public bool Confirmed { get; set; } = false;
+        public bool isConfirmed { get; set; } = false;
 
         public TimeSpan NumberOfDaysSpan 
         {
