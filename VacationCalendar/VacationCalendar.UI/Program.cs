@@ -10,7 +10,7 @@ namespace VacationCalendar.UI
         static void Main(string[] args)
         {
             VacationService vacationService = new VacationService();
-            VacationRequests vacationRequests = new VacationRequests();
+
             Employees employees = new Employees();
 
             var menu = new Menu(new string[] { "Nowy wniosek pracownika", "Manager", "Exit" });
