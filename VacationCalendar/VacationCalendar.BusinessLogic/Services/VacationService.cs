@@ -1,6 +1,5 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using VacationCalendar.BusinessLogic.Data;
+﻿using Newtonsoft.Json;
+using System.Net.WebSockets;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -8,20 +7,57 @@ namespace VacationCalendar.BusinessLogic.Services
     public class VacationService
     {
         VacationRequest vacationRequest = new VacationRequest();
-        VacationRequests vacationRequests = new VacationRequests();
+
+        static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\VacationCalendar.BusinessLogic\Data\", "vacationRequests.json");
+        private static List<VacationRequest> DeserializeVacationRequests()
+        {
+           
+            var vacationRequestSerialized = File.ReadAllText(path);
+            List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
+            return requests;
+        }
+        public void ChangeRequestStatus(int id)
+        {
+            try
+            {
+                var requests = DeserializeVacationRequests();
+                var request = requests.FirstOrDefault(r => r.Id == id + 1);
+                request.isConfirmed = !request.isConfirmed;
+                var json = JsonConvert.SerializeObject(requests);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Wystąpił błąd: {ex.Message}");
+            } 
+        }
         public void AddVacationRequest(VacationRequest vacationRequest)
         {
-            vacationRequests.vacationRequestsList.Add(vacationRequest);
+            var requests = DeserializeVacationRequests();
+            if(requests == null )
+            {
+                var text = JsonConvert.SerializeObject(vacationRequest);
+                File.WriteAllText(path, text);
+            }
+            else
+            {
+                int lastId = requests.Last().Id;
+                vacationRequest.Id = lastId + 1;
+                requests.Add(vacationRequest);
+
+                var json = JsonConvert.SerializeObject(requests);
+                File.WriteAllText(path, json);
+            }  
         }
 
         public int GetNumberOfVacationRequests()
         {
-            return vacationRequests.vacationRequestsList.Count();
+            return DeserializeVacationRequests().Count();
         }
 
         public List<string> GetAllVacationRequestsToString()
         {
-            var vacationRequestList = vacationRequests.vacationRequestsList;
+            var vacationRequestList = DeserializeVacationRequests();
 
             List<string> vacRequests = new List<string>();
 
@@ -41,7 +77,7 @@ namespace VacationCalendar.BusinessLogic.Services
 
         public List<VacationRequest> GetVacationRequests()
         {
-            return vacationRequests.vacationRequestsList;
+            return DeserializeVacationRequests();
         }
         
         /// <summary>
@@ -68,7 +104,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 return 0;
             }
 
-            if (dateFromValue >= dateToValue)
+            if (dateFromValue > dateToValue)
             {
                 message = "\"Data od\" nie może być nowsza od \"daty do\"! Dni urlopu:";
                 return 0;
@@ -86,7 +122,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 return 0;
             }
 
-            var numberOfDays = vacationRequest.NumberOfDaysSpan.Days;
+            var numberOfDays = vacationRequest.To.Subtract(vacationRequest.From).Days;
 
             List<DateTime> allDays = new List<DateTime>
             {

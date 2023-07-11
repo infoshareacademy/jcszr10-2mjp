@@ -165,9 +165,10 @@ namespace VacationCalendar.UI
                         {                          
                             if(requestMenu.SelectedIndex == i)
                             {
-                                var request = vacationService.GetVacationRequests()
-                                    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
-                                request.isConfirmed = !request.isConfirmed;
+                                vacationService.ChangeRequestStatus(i);
+                                //var request = vacationService.GetVacationRequests()
+                                //    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
+                                //request.isConfirmed = !request.isConfirmed;
                                 Console.ForegroundColor = ConsoleColor.Gray;
                                 Console.WriteLine("Status wniosku zmieniony");
                                 Console.ReadKey();
