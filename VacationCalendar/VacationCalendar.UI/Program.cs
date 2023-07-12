@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Threading.Channels;
-using VacationCalendar.BusinessLogic;
+﻿using System.Text.RegularExpressions;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
@@ -13,27 +10,10 @@ namespace VacationCalendar.UI
         static void Main(string[] args)
         {
             VacationService vacationService = new VacationService();
-            VacationRequest vacationRequest = new VacationRequest();
-            VacationRequests vacationRequests = new VacationRequests();
-            var vacationRequestsList = vacationRequests.vacationRequestsList;
 
             Employees employees = new Employees();
-            var employeesList = employees.EmployeesList;
 
-            Console.WriteLine("Zaloguj się jako:");
-            Console.WriteLine("Imię:");
-            string firstname = Console.ReadLine();
-            Console.WriteLine("Nazwisko:");
-            string lastname = Console.ReadLine();
-            Console.Clear();
-
-            var employee = EmployeeService.LogInEmployee(firstname, lastname, employees);
-            if (employee == null)
-            {
-                return;
-            }
-
-            var menu = new Menu(new string[] { "Wystaw wniosek urlopowy", "Manager", "Exit" });
+            var menu = new Menu(new string[] { "Nowy wniosek pracownika", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
 
             bool esc = true;
@@ -65,7 +45,24 @@ namespace VacationCalendar.UI
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 if (menu.SelectedIndex == 0)
-                {        
+                {
+                    Console.WriteLine("Zaloguj się jako:");
+                    Console.WriteLine("Imię:");
+                    string firstname = Console.ReadLine();
+                    Console.WriteLine("Nazwisko:");
+                    string lastname = Console.ReadLine();
+                    Console.Clear();
+
+                    var employee = EmployeeService.LogInEmployee(firstname, lastname, employees);
+
+                    if (employee == null)
+                    {
+                        Console.WriteLine("Nie ma takiego pracownika.");
+                        Console.ReadLine();
+                        Console.Clear();
+                        continue;               
+                    }
+
                     Console.WriteLine("\nPodaj datę od kiedy? (dd/MM/rrrr)");
                     string from = Console.ReadLine();
                     Console.WriteLine("Podaj datę do kiedy? (dd/MM/rrrr)");
@@ -81,19 +78,20 @@ namespace VacationCalendar.UI
 
                     if (validatorFrom && validatorTo)
                     {
-                        VacationRequest vacation1 = new VacationRequest
+                        VacationRequest vacation = new VacationRequest
                         {
+                            Id = vacationService.GetNumberOfVacationRequests() + 1,
                             From = DateTime.Parse(from),
                             To = DateTime.Parse(to),
                             NumberOfDays = vacationDays,
-                            EmployeeId = employee.Id
+                            EmployeeId = employee.Id,
                         };
 
-                        vacationService.AddVacationRequest(vacation1);
+                        vacationService.AddVacationRequest(vacation);
 
                         Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
-                        Console.WriteLine($"Urlop od {vacation1.From.ToString("dd-MM-yy")} do {vacation1.To.ToString("dd-MM-yy")}");
-                        Console.WriteLine($"{message} {vacation1.NumberOfDays}");
+                        Console.WriteLine($"Urlop od {vacation.From.ToString("dd-MM-yy")} do {vacation.To.ToString("dd-MM-yy")}");
+                        Console.WriteLine($"{message} {vacation.NumberOfDays}");
                     }
                     else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }
@@ -101,8 +99,10 @@ namespace VacationCalendar.UI
                 if (menu.SelectedIndex == 1)
                 {
                     Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Menu managera");
-                    var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "End" });
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "Exit" });
                     var managerMenuPainter = new ConsoleMenuPainter(managerMenu);
                     bool end = false;
                     do
@@ -119,18 +119,74 @@ namespace VacationCalendar.UI
                         }
                     }
                     while (!end);
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine("Wybrano: " + (menu.SelectedOption ?? "Nie wybrano opcji z menu..."));
-                    Console.ForegroundColor = ConsoleColor.Gray;
 
                     if(managerMenu.SelectedIndex == 0)
                     {
-                        Console.WriteLine("Wnioski:");
-                        vacationService.DisplayAllVacationRequests();
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("WNIOSKI - enter aby zatwierdzić");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+
+                        var vacReqListToStr = vacationService.GetAllVacationRequestsToString();
+                        var vacReqList = vacationService.GetVacationRequests();
+
+                        var numberOfElementsInList = vacReqListToStr.Count;
+                        if(numberOfElementsInList == 0)
+                        {
+                            vacReqListToStr = new List<string> { "Brak wniosków." };
+                        }
+
+                        var requestMenu = new Menu(vacReqListToStr);
+                        var requestMenuPainter = new ConsoleMenuPainter(requestMenu);
+                        bool isDone = false;
+                        do
+                        {
+                            requestMenuPainter.Paint(0, 1);
+
+                            var keyInfo3 = Console.ReadKey();
+
+                            switch (keyInfo3.Key)
+                            {
+                                case ConsoleKey.UpArrow: requestMenu.MoveUp(); break;
+                                case ConsoleKey.DownArrow: requestMenu.MoveDown(); break;
+                                case ConsoleKey.Enter: isDone = true; break;
+                            }
+                        }
+                        while (!isDone);
+
+                        if(requestMenu.SelectedOption == null)
+                        {
+                            Console.WriteLine("Exit");
+                            Console.ReadLine();
+                            isDone = !isDone;
+                        }
+
+                        for(var i = 0; i < numberOfElementsInList; i++)
+                        {                          
+                            if(requestMenu.SelectedIndex == i)
+                            {
+                                vacationService.ChangeRequestStatus(i);
+                                //var request = vacationService.GetVacationRequests()
+                                //    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
+                                //request.isConfirmed = !request.isConfirmed;
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.WriteLine("Status wniosku zmieniony");
+                                Console.ReadKey();
+                                Console.Clear();
+                            }
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Gray;
                     }
                     if(managerMenu.SelectedIndex == 1)
                     {
-                        Console.WriteLine("Pracownicy");
+                        Console.WriteLine("Pracownicy:");
+                        EmployeeService.GetEmployees(employees);
+                    }
+                    if(managerMenu.SelectedIndex == 2)
+                    {       
+                        Console.Clear();
+                        Console.ForegroundColor= ConsoleColor.Gray;
                     }
                 }
                 if (menu.SelectedIndex == 2)

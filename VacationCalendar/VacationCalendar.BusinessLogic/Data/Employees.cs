@@ -1,5 +1,4 @@
-﻿
-using VacationCalendar.BusinessLogic.Models;
+﻿using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Data
 { 
@@ -24,6 +23,24 @@ namespace VacationCalendar.BusinessLogic.Data
                     Id = 3,
                     FirstName = "John",
                     LastName = "Doe"
+                },
+                new Employee()
+                {
+                    Id = 4,
+                    FirstName = "Magdalena",
+                    LastName = "Staniszewska"
+                },
+                new Employee()
+                {
+                    Id = 5,
+                    FirstName = "Jakub",
+                    LastName = "Szot"
+                },
+                new Employee()
+                {
+                    Id = 6,
+                    FirstName = "Piotr",
+                    LastName = "Tryfon"
                 }
             };
     }
