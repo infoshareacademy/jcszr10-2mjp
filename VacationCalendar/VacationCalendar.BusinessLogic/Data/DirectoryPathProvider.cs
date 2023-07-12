@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VacationCalendar.BusinessLogic.Providers
+namespace VacationCalendar.BusinessLogic.Data
 {
     public static class DirectoryPathProvider
     {

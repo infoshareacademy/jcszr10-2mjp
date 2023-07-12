@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System.Net.WebSockets;
+using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
-using VacationCalendar.BusinessLogic.Providers;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
