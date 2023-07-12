@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net.WebSockets;
 using VacationCalendar.BusinessLogic.Models;
+using VacationCalendar.BusinessLogic.Providers;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -8,10 +9,9 @@ namespace VacationCalendar.BusinessLogic.Services
     {
         VacationRequest vacationRequest = new VacationRequest();
 
-        static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\VacationCalendar.BusinessLogic\Data\", "vacationRequests.json");
+        static string path = $@"{DirectoryPathProvider.GetSolutionDirectoryInfo().FullName}\VacationCalendar.BusinessLogic\Data\vacationRequests.json";
         private static List<VacationRequest> DeserializeVacationRequests()
         {
-           
             var vacationRequestSerialized = File.ReadAllText(path);
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
             return requests;
