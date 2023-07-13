@@ -12,6 +12,7 @@ namespace VacationCalendar.UI
             VacationService vacationService = new VacationService();
 
             Employees employees = new Employees();
+            Managers managers = new Managers();
 
             var menu = new Menu(new string[] { "Nowy wniosek pracownika", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
@@ -60,7 +61,7 @@ namespace VacationCalendar.UI
                         Console.WriteLine("Nie ma takiego pracownika.");
                         Console.ReadLine();
                         Console.Clear();
-                        continue;               
+                        continue;
                     }
 
                     Console.WriteLine("\nPodaj datę od kiedy? (dd/MM/rrrr)");
@@ -95,100 +96,134 @@ namespace VacationCalendar.UI
                     }
                     else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }
-              
+
                 if (menu.SelectedIndex == 1)
                 {
+
+                    Console.WriteLine("Zaloguj się jako:");
+                    Console.WriteLine("Imię:");
+                    string firstname = Console.ReadLine();
+                    Console.WriteLine("Nazwisko:");
+                    string lastname = Console.ReadLine();
                     Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine("Menu managera");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "Exit" });
-                    var managerMenuPainter = new ConsoleMenuPainter(managerMenu);
-                    bool end = false;
-                    do
+
+
+                    var manager = ManagerService.LogInManager(firstname, lastname, managers);
+
+                    if (manager == null)
                     {
-                        managerMenuPainter.Paint(0, 1);
-
-                        var keyInfo2 = Console.ReadKey();
-
-                        switch (keyInfo2.Key)
-                        {
-                            case ConsoleKey.UpArrow: managerMenu.MoveUp(); break;
-                            case ConsoleKey.DownArrow: managerMenu.MoveDown(); break;
-                            case ConsoleKey.Enter: end = true; break;
-                        }
+                        Console.WriteLine("Nie ma takiego managera.");
+                        Console.ReadLine();
+                        Console.Clear();
+                        continue;
                     }
-                    while (!end);
-
-                    if(managerMenu.SelectedIndex == 0)
+                    bool managerExit = false;
+                    while (!managerExit)
                     {
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine("WNIOSKI - enter aby zatwierdzić");
+                        Console.WriteLine("Menu managera");
                         Console.ForegroundColor = ConsoleColor.Gray;
-
-                        var vacReqListToStr = vacationService.GetAllVacationRequestsToString();
-                        var vacReqList = vacationService.GetVacationRequests();
-
-                        var numberOfElementsInList = vacReqListToStr.Count;
-                        if(numberOfElementsInList == 0)
-                        {
-                            vacReqListToStr = new List<string> { "Brak wniosków." };
-                        }
-
-                        var requestMenu = new Menu(vacReqListToStr);
-                        var requestMenuPainter = new ConsoleMenuPainter(requestMenu);
-                        bool isDone = false;
+                        var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "Exit" });
+                        var managerMenuPainter = new ConsoleMenuPainter(managerMenu);
+                        bool end = false;
                         do
                         {
-                            requestMenuPainter.Paint(0, 1);
+                            managerMenuPainter.Paint(0, 1);
 
-                            var keyInfo3 = Console.ReadKey();
+                            var keyInfo2 = Console.ReadKey();
 
-                            switch (keyInfo3.Key)
+                            switch (keyInfo2.Key)
                             {
-                                case ConsoleKey.UpArrow: requestMenu.MoveUp(); break;
-                                case ConsoleKey.DownArrow: requestMenu.MoveDown(); break;
-                                case ConsoleKey.Enter: isDone = true; break;
+                                case ConsoleKey.UpArrow: managerMenu.MoveUp(); break;
+                                case ConsoleKey.DownArrow: managerMenu.MoveDown(); break;
+                                case ConsoleKey.Enter: end = true; break;
                             }
                         }
-                        while (!isDone);
+                        while (!end);
 
-                        if(requestMenu.SelectedOption == null)
+                        if (managerMenu.SelectedIndex == 0)
                         {
-                            Console.WriteLine("Exit");
-                            Console.ReadLine();
-                            isDone = !isDone;
-                        }
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("WNIOSKI - enter aby zatwierdzić");
+                            Console.ForegroundColor = ConsoleColor.Gray;
 
-                        for(var i = 0; i < numberOfElementsInList; i++)
-                        {                          
-                            if(requestMenu.SelectedIndex == i)
+                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString();
+                            var vacReqList = vacationService.GetVacationRequests();
+
+                            var numberOfElementsInList = vacReqListToStr.Count;
+                            if (numberOfElementsInList == 0)
                             {
-                                vacationService.ChangeRequestStatus(i);
-                                //var request = vacationService.GetVacationRequests()
-                                //    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
-                                //request.isConfirmed = !request.isConfirmed;
-                                Console.ForegroundColor = ConsoleColor.Gray;
-                                Console.WriteLine("Status wniosku zmieniony");
-                                Console.ReadKey();
-                                Console.Clear();
+                                vacReqListToStr = new List<string> { "Brak wniosków." };
                             }
-                        }
 
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                    }
-                    if(managerMenu.SelectedIndex == 1)
-                    {
-                        Console.WriteLine("Pracownicy:");
-                        EmployeeService.GetEmployees(employees);
-                    }
-                    if(managerMenu.SelectedIndex == 2)
-                    {       
-                        Console.Clear();
-                        Console.ForegroundColor= ConsoleColor.Gray;
+                            var requestMenu = new Menu(vacReqListToStr);
+                            var requestMenuPainter = new ConsoleMenuPainter(requestMenu);
+
+
+                            bool isDone = false;
+                            do
+                            {
+                                requestMenuPainter.Paint(0, 1);
+
+                                var keyInfo3 = Console.ReadKey();
+
+                                switch (keyInfo3.Key)
+                                {
+                                    case ConsoleKey.UpArrow: requestMenu.MoveUp(); break;
+                                    case ConsoleKey.DownArrow: requestMenu.MoveDown(); break;
+                                    case ConsoleKey.Enter: isDone = true; break;
+                                }
+                            }
+                            while (!isDone);
+
+                            if (requestMenu.SelectedOption == null)
+                            {
+                                Console.WriteLine("Exit");
+                                Console.ReadLine();
+                                isDone = !isDone;
+                            }
+
+                            for (var i = 0; i < numberOfElementsInList; i++)
+                            {
+                                if (requestMenu.SelectedIndex == i)
+                                {
+                                    vacationService.ChangeRequestStatus(i);
+                                    //var request = vacationService.GetVacationRequests()
+                                    //    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
+                                    //request.isConfirmed = !request.isConfirmed;
+                                    Console.ForegroundColor = ConsoleColor.Gray;
+                                    Console.WriteLine("Status wniosku zmieniony");
+                                    Console.ReadKey();
+                                    Console.Clear();
+
+                                }
+                            }
+
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                        }
+                        if (managerMenu.SelectedIndex == 1)
+                        {
+
+                            Console.WriteLine("Pracownicy:");
+                            EmployeeService.GetEmployees(employees);
+                            Console.WriteLine("\nMenadżerowie:");
+                            ManagerService.GetManagers(managers);
+                            Console.ReadKey();
+
+
+                        }
+                        if (managerMenu.SelectedIndex == 2)
+                        {
+
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            managerExit = true;
+                        }
                     }
                 }
+
                 if (menu.SelectedIndex == 2)
                 {
                     esc = !esc;
