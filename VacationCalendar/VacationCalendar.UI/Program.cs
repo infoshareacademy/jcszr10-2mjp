@@ -99,14 +99,12 @@ namespace VacationCalendar.UI
 
                 if (menu.SelectedIndex == 1)
                 {
-
                     Console.WriteLine("Zaloguj się jako:");
                     Console.WriteLine("Imię:");
                     string firstname = Console.ReadLine();
                     Console.WriteLine("Nazwisko:");
                     string lastname = Console.ReadLine();
                     Console.Clear();
-
 
                     var manager = ManagerService.LogInManager(firstname, lastname, managers);
 
@@ -149,8 +147,7 @@ namespace VacationCalendar.UI
                             Console.WriteLine("WNIOSKI - enter aby zatwierdzić");
                             Console.ForegroundColor = ConsoleColor.Gray;
 
-                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString();
-                            var vacReqList = vacationService.GetVacationRequests();
+                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString();                       
 
                             var numberOfElementsInList = vacReqListToStr.Count;
                             if (numberOfElementsInList == 0)
@@ -159,9 +156,8 @@ namespace VacationCalendar.UI
                             }
 
                             var requestMenu = new Menu(vacReqListToStr);
-                            var requestMenuPainter = new ConsoleMenuPainter(requestMenu);
-
-
+                            var requestMenuPainter = new ConsoleMenuPainter(requestMenu);                    
+                            
                             bool isDone = false;
                             do
                             {
@@ -173,7 +169,7 @@ namespace VacationCalendar.UI
                                 {
                                     case ConsoleKey.UpArrow: requestMenu.MoveUp(); break;
                                     case ConsoleKey.DownArrow: requestMenu.MoveDown(); break;
-                                    case ConsoleKey.Enter: isDone = true; break;
+                                    case ConsoleKey.Enter: isDone = true; break;                             
                                 }
                             }
                             while (!isDone);
@@ -181,42 +177,41 @@ namespace VacationCalendar.UI
                             if (requestMenu.SelectedOption == null)
                             {
                                 Console.WriteLine("Exit");
-                                Console.ReadLine();
+                                isDone = !isDone;
+                            }
+                            if (requestMenu.SelectedOption == "Exit")
+                            {                            
                                 isDone = !isDone;
                             }
 
                             for (var i = 0; i < numberOfElementsInList; i++)
                             {
-                                if (requestMenu.SelectedIndex == i)
+                                if (requestMenu.SelectedIndex == i && requestMenu.SelectedIndex < requestMenu.Items.Count()-1)
                                 {
-                                    vacationService.ChangeRequestStatus(i);
-                                    //var request = vacationService.GetVacationRequests()
-                                    //    .FirstOrDefault(r=>r.Id== vacReqList[i].Id);
-                                    //request.isConfirmed = !request.isConfirmed;
+                                    vacationService.ChangeRequestStatus(i);                   
                                     Console.ForegroundColor = ConsoleColor.Gray;
-                                    Console.WriteLine("Status wniosku zmieniony");
+                                    Console.WriteLine("Status wniosku został zmieniony.");
                                     Console.ReadKey();
                                     Console.Clear();
-
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Gray;
+                                    Console.Clear();
                                 }
                             }
-
                             Console.ForegroundColor = ConsoleColor.Gray;
                         }
                         if (managerMenu.SelectedIndex == 1)
                         {
-
                             Console.WriteLine("Pracownicy:");
                             EmployeeService.GetEmployees(employees);
                             Console.WriteLine("\nMenadżerowie:");
                             ManagerService.GetManagers(managers);
                             Console.ReadKey();
-
-
                         }
                         if (managerMenu.SelectedIndex == 2)
                         {
-
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Gray;
                             managerExit = true;

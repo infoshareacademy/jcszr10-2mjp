@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System.Net.WebSockets;
+using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -8,10 +8,9 @@ namespace VacationCalendar.BusinessLogic.Services
     {
         VacationRequest vacationRequest = new VacationRequest();
 
-        static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\VacationCalendar.BusinessLogic\Data\", "vacationRequests.json");
+        static string path = $@"{DirectoryPathProvider.GetSolutionDirectoryInfo().FullName}\VacationCalendar.BusinessLogic\Data\vacationRequests.json";
         private static List<VacationRequest> DeserializeVacationRequests()
         {
-           
             var vacationRequestSerialized = File.ReadAllText(path);
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
             return requests;
@@ -22,9 +21,16 @@ namespace VacationCalendar.BusinessLogic.Services
             {
                 var requests = DeserializeVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id + 1);
-                request.isConfirmed = !request.isConfirmed;
-                var json = JsonConvert.SerializeObject(requests);
-                File.WriteAllText(path, json);
+                if(request != null)
+                {
+                    request.isConfirmed = !request.isConfirmed;
+                    var json = JsonConvert.SerializeObject(requests);
+                    File.WriteAllText(path, json);
+                }
+                else
+                {
+                    Console.WriteLine("Nie znaleziono wniosku.");
+                }           
             }
             catch (Exception ex)
             {
@@ -71,7 +77,7 @@ namespace VacationCalendar.BusinessLogic.Services
                     $" Dni: {request.NumberOfDays}" +
                     $" Czy potwierdzony: {request.isConfirmed}");            
             }
-
+            vacRequests.Add("Exit");
             return vacRequests;
         }
 
