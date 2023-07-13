@@ -188,11 +188,54 @@ namespace VacationCalendar.UI
                             {
                                 if (requestMenu.SelectedIndex == i && requestMenu.SelectedIndex < requestMenu.Items.Count()-1)
                                 {
-                                    vacationService.ChangeRequestStatus(i);                   
-                                    Console.ForegroundColor = ConsoleColor.Gray;
-                                    Console.WriteLine("Status wniosku został zmieniony.");
-                                    Console.ReadKey();
-                                    Console.Clear();
+                                    bool isRequestStatusContinue = true;
+                                    while (isRequestStatusContinue)
+                                    {
+                                        Console.Clear();
+                                        Console.ForegroundColor = ConsoleColor.Blue;
+                                        Console.WriteLine($"Wniosek id {i + 1}:");
+                                        Console.ForegroundColor = ConsoleColor.Gray;
+
+                                        var changeRequestMenu = new Menu(new[] { "Zatwierdź", "Odrzuć", "Exit" });
+                                        var changeRequestMenuPainter = new ConsoleMenuPainter(changeRequestMenu);
+
+                                        bool isChangeRequestMenuDone = false;
+                                        do
+                                        {
+                                            changeRequestMenuPainter.Paint(0, 1);
+
+                                            var keyInfo4 = Console.ReadKey();
+
+                                            switch (keyInfo4.Key)
+                                            {
+                                                case ConsoleKey.UpArrow: changeRequestMenu.MoveUp(); break;
+                                                case ConsoleKey.DownArrow: changeRequestMenu.MoveDown(); break;
+                                                case ConsoleKey.Enter: isChangeRequestMenuDone = true; break;
+                                            }
+                                        }
+                                        while (!isChangeRequestMenuDone);
+
+                                        if (changeRequestMenu.SelectedIndex == 0)
+                                        {
+                                            vacationService.ConfirmRequest(i);
+                                            Console.ForegroundColor = ConsoleColor.Gray;
+                                            Console.WriteLine("Wniosek został zatwierdzony.");
+                                            Console.ReadKey();
+                                            Console.Clear();
+                                        }
+                                        if (changeRequestMenu.SelectedIndex == 1)
+                                        {
+                                            vacationService.RejectRequest(i);
+                                            Console.ForegroundColor = ConsoleColor.Gray;
+                                            Console.WriteLine("Wniosek został odrzucony.");
+                                            Console.ReadKey();
+                                            Console.Clear();
+                                        }
+                                        if (changeRequestMenu.SelectedIndex == 2)
+                                        {
+                                            isRequestStatusContinue = false;
+                                        }
+                                    }
                                 }
                                 else
                                 {

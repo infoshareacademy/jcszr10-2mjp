@@ -15,7 +15,7 @@ namespace VacationCalendar.BusinessLogic.Services
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
             return requests;
         }
-        public void ChangeRequestStatus(int id)
+        public void ConfirmRequest(int id)
         {
             try
             {
@@ -23,7 +23,8 @@ namespace VacationCalendar.BusinessLogic.Services
                 var request = requests.FirstOrDefault(r => r.Id == id + 1);
                 if(request != null)
                 {
-                    request.isConfirmed = !request.isConfirmed;
+                    request.isConfirmed = true;
+                    request.isRejected = false;
                     var json = JsonConvert.SerializeObject(requests);
                     File.WriteAllText(path, json);
                 }
@@ -37,23 +38,38 @@ namespace VacationCalendar.BusinessLogic.Services
                 Console.WriteLine($"Wystąpił błąd: {ex.Message}");
             } 
         }
+        public void RejectRequest(int id)
+        {
+            try
+            {
+                var requests = DeserializeVacationRequests();
+                var request = requests.FirstOrDefault(r => r.Id == id + 1);
+                if (request != null)
+                {
+                    request.isConfirmed = false;
+                    request.isRejected = true;
+                    var json = JsonConvert.SerializeObject(requests);
+                    File.WriteAllText(path, json);
+                }
+                else
+                {
+                    Console.WriteLine("Nie znaleziono wniosku.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Wystąpił błąd: {ex.Message}");
+            }
+        }
         public void AddVacationRequest(VacationRequest vacationRequest)
         {
             var requests = DeserializeVacationRequests();
-            if(requests == null )
-            {
-                var text = JsonConvert.SerializeObject(vacationRequest);
-                File.WriteAllText(path, text);
-            }
-            else
-            {
-                int lastId = requests.Last().Id;
-                vacationRequest.Id = lastId + 1;
-                requests.Add(vacationRequest);
+            
+            vacationRequest.Id = requests.Count() + 1;
+            requests.Add(vacationRequest);
 
-                var json = JsonConvert.SerializeObject(requests);
-                File.WriteAllText(path, json);
-            }  
+            var json = JsonConvert.SerializeObject(requests);
+            File.WriteAllText(path, json);
         }
 
         public int GetNumberOfVacationRequests()
@@ -70,14 +86,15 @@ namespace VacationCalendar.BusinessLogic.Services
             foreach (var request in vacationRequestList)
             { 
                vacRequests.Add(
-                    $" Id pracownika: {request.EmployeeId}" +
                     $" Id wniosku: {request.Id}" +
+                    $" Id pracownika: {request.EmployeeId}" +
                     $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
                     $" do: {request.To.ToString("dd-MM-yy")} " +
                     $" Dni: {request.NumberOfDays}" +
-                    $" Czy potwierdzony: {request.isConfirmed}");            
+                    $" Czy potwierdzony: {request.isConfirmed}" +
+                    $" Czy odrzucony: {request.isRejected}");            
             }
-            vacRequests.Add("Exit");
+            vacRequests.Add("\nExit");
             return vacRequests;
         }
 
