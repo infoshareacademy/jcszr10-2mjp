@@ -99,14 +99,12 @@ namespace VacationCalendar.UI
 
                 if (menu.SelectedIndex == 1)
                 {
-
                     Console.WriteLine("Zaloguj się jako:");
                     Console.WriteLine("Imię:");
                     string firstname = Console.ReadLine();
                     Console.WriteLine("Nazwisko:");
                     string lastname = Console.ReadLine();
                     Console.Clear();
-
 
                     var manager = ManagerService.LogInManager(firstname, lastname, managers);
 
@@ -202,23 +200,18 @@ namespace VacationCalendar.UI
                                     Console.Clear();
                                 }
                             }
-
                             Console.ForegroundColor = ConsoleColor.Gray;
                         }
                         if (managerMenu.SelectedIndex == 1)
                         {
-
                             Console.WriteLine("Pracownicy:");
                             EmployeeService.GetEmployees(employees);
                             Console.WriteLine("\nMenadżerowie:");
                             ManagerService.GetManagers(managers);
                             Console.ReadKey();
-
-
                         }
                         if (managerMenu.SelectedIndex == 2)
                         {
-
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Gray;
                             managerExit = true;
