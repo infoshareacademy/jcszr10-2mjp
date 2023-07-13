@@ -21,9 +21,16 @@ namespace VacationCalendar.BusinessLogic.Services
             {
                 var requests = DeserializeVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id + 1);
-                request.isConfirmed = !request.isConfirmed;
-                var json = JsonConvert.SerializeObject(requests);
-                File.WriteAllText(path, json);
+                if(request != null)
+                {
+                    request.isConfirmed = !request.isConfirmed;
+                    var json = JsonConvert.SerializeObject(requests);
+                    File.WriteAllText(path, json);
+                }
+                else
+                {
+                    Console.WriteLine("Nie znaleziono wniosku.");
+                }           
             }
             catch (Exception ex)
             {
@@ -70,7 +77,7 @@ namespace VacationCalendar.BusinessLogic.Services
                     $" Dni: {request.NumberOfDays}" +
                     $" Czy potwierdzony: {request.isConfirmed}");            
             }
-
+            vacRequests.Add("Exit");
             return vacRequests;
         }
 
