@@ -123,63 +123,55 @@ namespace VacationCalendar.BusinessLogic.Services
 
             if (!isDateToGoodFormat || !isDateFromGoodFormat)
             {
-                message = "Nieprawidłowy format daty! Dni urlopu:";
+                message = "Nieprawidłowy format daty!";
                 return 0;
             }
 
             if (dateFromValue > dateToValue)
             {
-                message = "\"Data od\" nie może być nowsza od \"daty do\"! Dni urlopu:";
+                message = "\"Data od\" nie może być nowsza od \"daty do\"!";
+                return 0;
+            }      
+
+            if (dateFromValue.DayOfWeek == DayOfWeek.Saturday || dateFromValue.DayOfWeek == DayOfWeek.Sunday
+                || dateToValue.DayOfWeek == DayOfWeek.Saturday || dateToValue.DayOfWeek == DayOfWeek.Sunday)
+            {
+                message = $"Wniosek nie może zaczynać i kończyć się na sobocie lub niedzieli.";
                 return 0;
             }
 
-            if (dateFromValue < DateTime.Now)
+            if (dateFromValue.Day < DateTime.Now.Day)
             {
-                message = "Urlop nie może być planowany wstecz. Dni urlopu:";
+                message = "Urlop nie może być planowany wstecz.";
                 return 0;
             }
 
             if (dateFromValue > DateTime.Now.AddMonths(12))
             {
-                message = "Nie możesz planowac tak daleko w przyszłość. Dni urlopu:";
+                message = "Nie możesz planowac tak daleko w przyszłość.";
                 return 0;
             }
 
-            var numberOfDays = vacationRequest.To.Subtract(vacationRequest.From).Days;
-
-            List<DateTime> allDays = new List<DateTime>
+            if (dateFromValue == dateToValue)
             {
-                dateFromValue
-            };
-
-            for (int i = 1; i <= numberOfDays; i++)
-            {
-                DateTime tmpDate;
-                tmpDate = dateFromValue.AddDays(i);
-                allDays.Add(tmpDate);
+                message = $"Wystawiono wniosek. Ilość dni urlopu:";
+                return 1;
             }
 
-            List<DateTime> daysWithoutWeekend = new List<DateTime>();
-
-            foreach (DateTime date in allDays)
+            TimeSpan dateInterval = dateToValue - dateFromValue;
+            int numberOfDays = dateInterval.Days;
+            DateTime currentDay;
+            int daysWithoutWeekend = 0;
+            for (int i = 0; i <= numberOfDays; i++)
             {
-                var dayOfWeek = date.DayOfWeek;
-                if (dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Saturday)
-                {
+                currentDay = (dateFromValue.AddDays(i));
+                if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
                     continue;
-                }
-                daysWithoutWeekend.Add(date);
-            }
 
-            if (daysWithoutWeekend.Count > 30)
-            {
-                message = "Trochę za dużo tego urlopu... Dni urlopu:";
-                return 0;
+                daysWithoutWeekend++;
             }
-
             message = $"Wystawiono wniosek. Ilość dni urlopu:";
-
-            return daysWithoutWeekend.Count;
+            return daysWithoutWeekend;
         }
     }
 }
