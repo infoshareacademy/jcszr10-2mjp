@@ -78,10 +78,25 @@ namespace VacationCalendar.UI
                     var validatorTo = validateDateRegex.IsMatch(to);
 
                     if (validatorFrom && validatorTo)
-                    {                      
-                        VacationRequest vacation = new VacationRequest
+                    {
+                        VacationRequest vacation;
+
+                        if (vacationService.GetVacationRequests().Count() != 0)
                         {
-                            Id = vacationService.GetNumberOfVacationRequests() + 1,
+                            vacation = new VacationRequest
+                            {
+                                Id = vacationService.GetVacationRequests().Max(r => r.Id + 1),                   
+                            };
+                        }
+                        if (vacationService.GetVacationRequests().Count() == 0)
+                        {
+                            vacation = new VacationRequest
+                            {
+                                Id = 1,                           
+                            };
+                        }
+                        vacation = new VacationRequest
+                        {
                             From = DateTime.Parse(from),
                             To = DateTime.Parse(to),
                             NumberOfDays = vacationDays,
@@ -154,11 +169,12 @@ namespace VacationCalendar.UI
                             Console.WriteLine("WNIOSKI:");
                             Console.ForegroundColor = ConsoleColor.Gray;
 
-                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString()
-                                .Where(r=>!r.Contains("Exit")).ToList();                       
+                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString();                   
 
-                            var numberOfElementsInList = vacReqListToStr.Count;
-                            if (numberOfElementsInList == 0)
+                            var vacReqListToStrWithoutExit = vacationService.GetAllVacationRequestsToString()
+                                .Where(r=>!r.Contains("Exit")).ToList();  
+
+                            if (vacReqListToStrWithoutExit.Count == 0)
                             {
                                 vacReqListToStr = new List<string> { "Brak wniosków." };
                             }
@@ -192,16 +208,16 @@ namespace VacationCalendar.UI
                                 isDone = !isDone;
                             }
 
-                            for (var i = 0; i < numberOfElementsInList; i++)
+                            for (var i = 0; i < vacReqListToStr.Count; i++)
                             {
                                 if (requestMenu.SelectedIndex == i && requestMenu.SelectedIndex < requestMenu.Items.Count()-1)
-                                {
+                                {                                  
                                     bool isRequestStatusContinue = true;
                                     while (isRequestStatusContinue)
                                     {
                                         Console.Clear();
                                         Console.ForegroundColor = ConsoleColor.Blue;
-                                        Console.WriteLine($"Wniosek id {i + 1}:");
+                                        Console.WriteLine($"Wniosek {i + 1}:");
                                         Console.ForegroundColor = ConsoleColor.Gray;
 
                                         var changeRequestMenu = new Menu(new[] { "Zatwierdź", "Odrzuć", "Exit" });
@@ -225,7 +241,7 @@ namespace VacationCalendar.UI
 
                                         if (changeRequestMenu.SelectedIndex == 0)
                                         {
-                                            vacationService.ConfirmRequest(i);
+                                            vacationService.ConfirmRequest(i + 1);
                                             Console.ForegroundColor = ConsoleColor.Gray;
                                             Console.WriteLine("Wniosek został zatwierdzony.");
                                             Console.ReadKey();
@@ -233,7 +249,7 @@ namespace VacationCalendar.UI
                                         }
                                         if (changeRequestMenu.SelectedIndex == 1)
                                         {
-                                            vacationService.RejectRequest(i);
+                                            vacationService.RejectRequest(i + 1);
                                             Console.ForegroundColor = ConsoleColor.Gray;
                                             Console.WriteLine("Wniosek został odrzucony.");
                                             Console.ReadKey();

@@ -1,3 +1,1 @@
-[
-
-]
+[{"Id":1,"From":"2023-07-20T00:00:00","To":"2023-07-21T00:00:00","EmployeeId":1,"isConfirmed":true,"isRejected":false,"NumberOfDays":2},{"Id":2,"From":"2023-07-14T00:00:00","To":"2023-07-17T00:00:00","EmployeeId":6,"isConfirmed":false,"isRejected":false,"NumberOfDays":2}]

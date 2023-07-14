@@ -20,7 +20,7 @@ namespace VacationCalendar.BusinessLogic.Services
             try
             {
                 var requests = DeserializeVacationRequests();
-                var request = requests.FirstOrDefault(r => r.Id == id + 1);
+                var request = requests.FirstOrDefault(r => r.Id == id);
                 if(request != null)
                 {
                     request.isConfirmed = true;
@@ -43,7 +43,7 @@ namespace VacationCalendar.BusinessLogic.Services
             try
             {
                 var requests = DeserializeVacationRequests();
-                var request = requests.FirstOrDefault(r => r.Id == id + 1);
+                var request = requests.FirstOrDefault(r => r.Id == id);
                 if (request != null)
                 {
                     request.isConfirmed = false;
@@ -71,7 +71,6 @@ namespace VacationCalendar.BusinessLogic.Services
             var json = JsonConvert.SerializeObject(requests);
             File.WriteAllText(path, json);
         }
-
         public int GetNumberOfVacationRequests()
         {
             return DeserializeVacationRequests().Count();
