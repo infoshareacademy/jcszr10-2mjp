@@ -17,14 +17,14 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public void ConfirmRequest(int id)
         {
+            RequestStatus confirmed = RequestStatus.Confirmed;
             try
             {
                 var requests = DeserializeVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id);
                 if(request != null)
                 {
-                    request.isConfirmed = true;
-                    request.isRejected = false;
+                    request.requestStatus = confirmed;
                     var json = JsonConvert.SerializeObject(requests);
                     File.WriteAllText(path, json);
                 }
@@ -40,14 +40,14 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public void RejectRequest(int id)
         {
+            RequestStatus rejected = RequestStatus.Rejected;
             try
             {
                 var requests = DeserializeVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id);
                 if (request != null)
                 {
-                    request.isConfirmed = false;
-                    request.isRejected = true;
+                    request.requestStatus = rejected;
                     var json = JsonConvert.SerializeObject(requests);
                     File.WriteAllText(path, json);
                 }
@@ -90,8 +90,7 @@ namespace VacationCalendar.BusinessLogic.Services
                     $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
                     $" do: {request.To.ToString("dd-MM-yy")} " +
                     $" Dni: {request.NumberOfDays}" +
-                    $" Czy potwierdzony: {request.isConfirmed}" +
-                    $" Czy odrzucony: {request.isRejected}");            
+                    $" Status wniosku: {request.requestStatus}");            
             }
             vacRequests.Add("\nExit");
             return vacRequests;
