@@ -19,7 +19,7 @@ namespace VacationCalendar.UI
 
             bool esc = true;
 
-            do
+            while(esc) 
             {
                 Console.WriteLine("Kalendarz urlopowy");
                 Console.WriteLine("\nWybierz opcję w menu:");
@@ -79,20 +79,41 @@ namespace VacationCalendar.UI
 
                     if (validatorFrom && validatorTo)
                     {
-                        VacationRequest vacation = new VacationRequest
+                        VacationRequest vacation;
+
+                        if (vacationService.GetVacationRequests().Count() != 0)
                         {
-                            Id = vacationService.GetNumberOfVacationRequests() + 1,
+                            vacation = new VacationRequest
+                            {
+                                Id = vacationService.GetVacationRequests().Max(r => r.Id + 1),                   
+                            };
+                        }
+                        if (vacationService.GetVacationRequests().Count() == 0)
+                        {
+                            vacation = new VacationRequest
+                            {
+                                Id = 1,                           
+                            };
+                        }
+                        vacation = new VacationRequest
+                        {
                             From = DateTime.Parse(from),
                             To = DateTime.Parse(to),
                             NumberOfDays = vacationDays,
                             EmployeeId = employee.Id,
                         };
 
-                        vacationService.AddVacationRequest(vacation);
-
-                        Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
-                        Console.WriteLine($"Urlop od {vacation.From.ToString("dd-MM-yy")} do {vacation.To.ToString("dd-MM-yy")}");
-                        Console.WriteLine($"{message} {vacation.NumberOfDays}");
+                        if (vacationDays != 0)
+                        {
+                            vacationService.AddVacationRequest(vacation);
+                            Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
+                            Console.WriteLine($"Urlop od {vacation.From.ToString("dd-MM-yy")} do {vacation.To.ToString("dd-MM-yy")}");
+                            Console.WriteLine($"{message} {vacation.NumberOfDays}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{message}");
+                        }
                     }
                     else { Console.WriteLine("Nieprawidłowy format daty"); }
                 }
@@ -115,6 +136,7 @@ namespace VacationCalendar.UI
                         Console.Clear();
                         continue;
                     }
+
                     bool managerExit = false;
                     while (!managerExit)
                     {
@@ -144,13 +166,15 @@ namespace VacationCalendar.UI
                         {
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("WNIOSKI - enter aby zatwierdzić");
+                            Console.WriteLine("WNIOSKI:");
                             Console.ForegroundColor = ConsoleColor.Gray;
 
-                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString();                       
+                            var vacReqListToStr = vacationService.GetAllVacationRequestsToString();                   
 
-                            var numberOfElementsInList = vacReqListToStr.Count;
-                            if (numberOfElementsInList == 0)
+                            var vacReqListToStrWithoutExit = vacationService.GetAllVacationRequestsToString()
+                                .Where(r=>!r.Contains("Exit")).ToList();  
+
+                            if (vacReqListToStrWithoutExit.Count == 0)
                             {
                                 vacReqListToStr = new List<string> { "Brak wniosków." };
                             }
@@ -184,15 +208,58 @@ namespace VacationCalendar.UI
                                 isDone = !isDone;
                             }
 
-                            for (var i = 0; i < numberOfElementsInList; i++)
+                            for (var i = 0; i < vacReqListToStr.Count; i++)
                             {
                                 if (requestMenu.SelectedIndex == i && requestMenu.SelectedIndex < requestMenu.Items.Count()-1)
-                                {
-                                    vacationService.ChangeRequestStatus(i);                   
-                                    Console.ForegroundColor = ConsoleColor.Gray;
-                                    Console.WriteLine("Status wniosku został zmieniony.");
-                                    Console.ReadKey();
-                                    Console.Clear();
+                                {                                  
+                                    bool isRequestStatusContinue = true;
+                                    while (isRequestStatusContinue)
+                                    {
+                                        Console.Clear();
+                                        Console.ForegroundColor = ConsoleColor.Blue;
+                                        Console.WriteLine($"Wniosek {i + 1}:");
+                                        Console.ForegroundColor = ConsoleColor.Gray;
+
+                                        var changeRequestMenu = new Menu(new[] { "Zatwierdź", "Odrzuć", "Exit" });
+                                        var changeRequestMenuPainter = new ConsoleMenuPainter(changeRequestMenu);
+
+                                        bool isChangeRequestMenuDone = false;
+                                        do
+                                        {
+                                            changeRequestMenuPainter.Paint(0, 1);
+
+                                            var keyInfo4 = Console.ReadKey();
+
+                                            switch (keyInfo4.Key)
+                                            {
+                                                case ConsoleKey.UpArrow: changeRequestMenu.MoveUp(); break;
+                                                case ConsoleKey.DownArrow: changeRequestMenu.MoveDown(); break;
+                                                case ConsoleKey.Enter: isChangeRequestMenuDone = true; break;
+                                            }
+                                        }
+                                        while (!isChangeRequestMenuDone);
+
+                                        if (changeRequestMenu.SelectedIndex == 0)
+                                        {
+                                            vacationService.ConfirmRequest(i + 1);
+                                            Console.ForegroundColor = ConsoleColor.Gray;
+                                            Console.WriteLine("Wniosek został zatwierdzony.");
+                                            Console.ReadKey();
+                                            Console.Clear();
+                                        }
+                                        if (changeRequestMenu.SelectedIndex == 1)
+                                        {
+                                            vacationService.RejectRequest(i + 1);
+                                            Console.ForegroundColor = ConsoleColor.Gray;
+                                            Console.WriteLine("Wniosek został odrzucony.");
+                                            Console.ReadKey();
+                                            Console.Clear();
+                                        }
+                                        if (changeRequestMenu.SelectedIndex == 2)
+                                        {
+                                            isRequestStatusContinue = false;
+                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -227,7 +294,7 @@ namespace VacationCalendar.UI
                 Console.ReadKey();
                 Console.Clear();
 
-            } while (esc);
+            };
         }
     }
 }
