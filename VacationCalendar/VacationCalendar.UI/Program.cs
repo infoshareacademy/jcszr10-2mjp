@@ -81,14 +81,14 @@ namespace VacationCalendar.UI
                     {
                         VacationRequest vacation;
 
-                        if (vacationService.GetVacationRequests().Count() != 0)
+                        if (VacationService.GetVacationRequests().Count() != 0)
                         {
                             vacation = new VacationRequest
                             {
-                                Id = vacationService.GetVacationRequests().Max(r => r.Id + 1),                   
+                                Id = VacationService.GetVacationRequests().Max(r => r.Id + 1),                   
                             };
                         }
-                        if (vacationService.GetVacationRequests().Count() == 0)
+                        if (VacationService.GetVacationRequests().Count() == 0)
                         {
                             vacation = new VacationRequest
                             {

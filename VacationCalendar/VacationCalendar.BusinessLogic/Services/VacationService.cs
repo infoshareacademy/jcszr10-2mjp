@@ -9,7 +9,7 @@ namespace VacationCalendar.BusinessLogic.Services
         VacationRequest vacationRequest = new VacationRequest();
 
         static string path = $@"{DirectoryPathProvider.GetSolutionDirectoryInfo().FullName}\VacationCalendar.BusinessLogic\Data\vacationRequests.json";
-        private static List<VacationRequest> DeserializeVacationRequests()
+        public static List<VacationRequest> GetVacationRequests()
         {
             var vacationRequestSerialized = File.ReadAllText(path);
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
@@ -20,7 +20,7 @@ namespace VacationCalendar.BusinessLogic.Services
             RequestStatus confirmed = RequestStatus.Confirmed;
             try
             {
-                var requests = DeserializeVacationRequests();
+                var requests = GetVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id);
                 if(request != null)
                 {
@@ -43,7 +43,7 @@ namespace VacationCalendar.BusinessLogic.Services
             RequestStatus rejected = RequestStatus.Rejected;
             try
             {
-                var requests = DeserializeVacationRequests();
+                var requests = GetVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id);
                 if (request != null)
                 {
@@ -63,7 +63,7 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public void AddVacationRequest(VacationRequest vacationRequest)
         {
-            var requests = DeserializeVacationRequests();
+            var requests = GetVacationRequests();
             
             vacationRequest.Id = requests.Count() + 1;
             requests.Add(vacationRequest);
@@ -73,12 +73,12 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public int GetNumberOfVacationRequests()
         {
-            return DeserializeVacationRequests().Count();
+            return GetVacationRequests().Count();
         }
 
         public List<string> GetAllVacationRequestsToString()
         {
-            var vacationRequestList = DeserializeVacationRequests();
+            var vacationRequestList = GetVacationRequests();
 
             List<string> vacRequests = new List<string>();
 
@@ -96,10 +96,6 @@ namespace VacationCalendar.BusinessLogic.Services
             return vacRequests;
         }
 
-        public List<VacationRequest> GetVacationRequests()
-        {
-            return DeserializeVacationRequests();
-        }
         
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele

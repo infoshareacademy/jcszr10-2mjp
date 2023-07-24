@@ -9,7 +9,7 @@ namespace VacationCalendar.BusinessLogic.Services
     public static class ManagerService
     {
         static string pathToManagers = $@"{DirectoryPathProvider.GetSolutionDirectoryInfo().FullName}\VacationCalendar.BusinessLogic\Data\Managers.json";
-        private static List<Manager> DeserializeManagers()
+        public static List<Manager> GetManagers()
         {
             var managersSerialized = File.ReadAllText(pathToManagers);
             List<Manager> managers = JsonConvert.DeserializeObject<List<Manager>>(managersSerialized);
@@ -19,7 +19,7 @@ namespace VacationCalendar.BusinessLogic.Services
      
         public static Manager LogInManager(string firstname, string lastname)
         {
-            var managers = DeserializeManagers();
+            var managers = GetManagers();
 
             var manager = managers
                 .FirstOrDefault(e => e
@@ -30,17 +30,12 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public static void GetManagersToString()
         {
-            var managers = DeserializeManagers();
+            var managers = GetManagers();
 
             foreach (var manager in managers)
             {
                 Console.WriteLine($"{manager.Id} {manager.FirstName} {manager.LastName}");
             }
-        }
-
-        public static List<Manager> GetManagers()
-        {
-            return DeserializeManagers();
         }
     }
 }
