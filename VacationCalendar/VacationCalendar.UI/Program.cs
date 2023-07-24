@@ -11,8 +11,8 @@ namespace VacationCalendar.UI
         {
             VacationService vacationService = new VacationService();
 
-            Employees employees = new Employees();
-            Managers managers = new Managers();
+            var employees = EmployeeService.GetEmployees();
+            var managers = ManagerService.GetManagers();
 
             var menu = new Menu(new string[] { "Nowy wniosek pracownika", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
@@ -54,7 +54,7 @@ namespace VacationCalendar.UI
                     string lastname = Console.ReadLine();
                     Console.Clear();
 
-                    var employee = EmployeeService.LogInEmployee(firstname, lastname, employees);
+                    var employee = EmployeeService.LogInEmployee(firstname, lastname);
 
                     if (employee == null)
                     {
@@ -127,7 +127,7 @@ namespace VacationCalendar.UI
                     string lastname = Console.ReadLine();
                     Console.Clear();
 
-                    var manager = ManagerService.LogInManager(firstname, lastname, managers);
+                    var manager = ManagerService.LogInManager(firstname, lastname);
 
                     if (manager == null)
                     {
@@ -272,9 +272,9 @@ namespace VacationCalendar.UI
                         if (managerMenu.SelectedIndex == 1)
                         {
                             Console.WriteLine("Pracownicy:");
-                            EmployeeService.GetEmployees(employees);
+                            EmployeeService.GetEmployeesToString();
                             Console.WriteLine("\nMenadżerowie:");
-                            ManagerService.GetManagers(managers);
+                            ManagerService.GetManagersToString();
                             Console.ReadKey();
                         }
                         if (managerMenu.SelectedIndex == 2)

@@ -1,7 +1,7 @@
 ﻿
 namespace VacationCalendar.BusinessLogic.Models
 {
-    public class Manager : Employee
+    public class Manager
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
