@@ -3,13 +3,13 @@
     "Id": 1,
     "FirstName": "Jan",
     "LastName": "Kowalski",
-    "ManagerId": 1
+    "ManagerId": 2
   },
   {
     "Id": 2,
     "FirstName": "Piotr",
     "LastName": "Tryfon",
-    "ManagerId": 2
+    "ManagerId": 1
   },
   {
     "Id": 3,

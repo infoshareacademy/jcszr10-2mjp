@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -76,13 +77,27 @@ namespace VacationCalendar.BusinessLogic.Services
             return GetVacationRequests().Count();
         }
 
-        public List<string> GetAllVacationRequestsToString()
+        public List<string> GetAllVacationRequestsToString(int id)
         {
-            var vacationRequestList = GetVacationRequests();
+            var vacationRequestList= GetVacationRequests();
+     
+            List<Employee> employees = EmployeeService.GetEmployees().ToList();
+            var employeesByManager = employees.Where(e => e.ManagerId == id).ToList();
+            var listOfEmployeesIds = employeesByManager.Select(e => e.Id).ToList();
+
+            List<VacationRequest> vacationRequestsByManager = new List<VacationRequest>();
+
+            foreach (var v in vacationRequestList)
+            {
+                if (listOfEmployeesIds.Contains(v.EmployeeId))
+                {
+                    vacationRequestsByManager.Add(v);
+                }
+            }
 
             List<string> vacRequests = new List<string>();
 
-            foreach (var request in vacationRequestList)
+            foreach (var request in vacationRequestsByManager)
             { 
                vacRequests.Add(
                     $" Id wniosku: {request.Id}" +
