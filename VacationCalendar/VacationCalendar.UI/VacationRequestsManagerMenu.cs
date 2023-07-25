@@ -12,9 +12,11 @@ namespace VacationCalendar.UI
         internal static bool DisplayManagerMenu(VacationService vacationService, bool managerExit, int managerId)
         {
             {
+                var manager = ManagerService.GetManagers().Where(m => m.Id == managerId).FirstOrDefault();
+
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("Menu managera");
+                Console.WriteLine($"Menu managera: {manager.FirstName} {manager.LastName}");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "Exit" });
                 var managerMenuPainter = new ConsoleMenuPainter(managerMenu);
@@ -147,7 +149,7 @@ namespace VacationCalendar.UI
                     EmployeeService.GetEmployeesToString();
                     Console.WriteLine("\nMenadżerowie:");
                     ManagerService.GetManagersToString();
-                    Console.ReadKey();
+                  
                 }
                 if (managerMenu.SelectedIndex == 2)
                 {
