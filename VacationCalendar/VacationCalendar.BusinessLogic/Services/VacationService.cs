@@ -98,14 +98,15 @@ namespace VacationCalendar.BusinessLogic.Services
             List<string> vacRequests = new List<string>();
 
             foreach (var request in vacationRequestsByManager)
-            { 
-               vacRequests.Add(
-                    $" Id wniosku: {request.Id}" +
-                    $" Id pracownika: {request.EmployeeId}" +
-                    $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
-                    $" do: {request.To.ToString("dd-MM-yy")} " +
-                    $" Dni: {request.NumberOfDays}" +
-                    $" Status wniosku: {request.requestStatus}");            
+            {
+                var employeeLastName = EmployeeService.GetEmployees().FirstOrDefault(e => e.Id == request.EmployeeId).LastName;
+                   vacRequests.Add(
+                        $" Id wniosku: {request.Id};" +
+                        $" Pracownik: id {request.EmployeeId} {employeeLastName};" +
+                        $" Wniosek od: {request.From.ToString("dd-MM-yy")};" +
+                        $" do: {request.To.ToString("dd-MM-yy")};" +
+                        $" Dni: {request.NumberOfDays};" +
+                        $" Status wniosku: {request.requestStatus}");            
             }
             vacRequests.Add("\nExit");
             return vacRequests;
