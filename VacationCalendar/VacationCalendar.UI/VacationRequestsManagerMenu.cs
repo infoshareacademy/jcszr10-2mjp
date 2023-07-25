@@ -149,7 +149,7 @@ namespace VacationCalendar.UI
                     EmployeeService.GetEmployeesToString();
                     Console.WriteLine("\nMenadżerowie:");
                     ManagerService.GetManagersToString();
-                  
+                    Console.ReadKey();
                 }
                 if (managerMenu.SelectedIndex == 2)
                 {
