@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
@@ -14,9 +9,9 @@ namespace VacationCalendar.UI
         internal static void DisplayVacationRequestEmployeeMenu(VacationService vacationService, Employee employee)
         {
             Console.WriteLine("\nPodaj datę od kiedy? (dd/MM/rrrr)");
-            string from = Console.ReadLine();
+            string from = Console.ReadLine().Trim();
             Console.WriteLine("Podaj datę do kiedy? (dd/MM/rrrr)");
-            string to = Console.ReadLine();
+            string to = Console.ReadLine().Trim();
 
             string message;
             var vacationDays = vacationService.CountVacationDays(from, to, out message);

@@ -1,7 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using VacationCalendar.BusinessLogic.Data;
-using VacationCalendar.BusinessLogic.Models;
-using VacationCalendar.BusinessLogic.Services;
+﻿using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.UI
 {
@@ -10,9 +7,6 @@ namespace VacationCalendar.UI
         static void Main(string[] args)
         {
             VacationService vacationService = new VacationService();
-
-            var employees = EmployeeService.GetEmployees();
-            var managers = ManagerService.GetManagers();
 
             var menu = new Menu(new string[] { "Nowy wniosek pracownika", "Manager", "Exit" });
             var menuPainter = new ConsoleMenuPainter(menu);
@@ -49,9 +43,9 @@ namespace VacationCalendar.UI
                 {
                     Console.WriteLine("Zaloguj się jako:");
                     Console.WriteLine("Imię:");
-                    string firstname = Console.ReadLine();
+                    string firstname = Console.ReadLine().Trim();
                     Console.WriteLine("Nazwisko:");
-                    string lastname = Console.ReadLine();
+                    string lastname = Console.ReadLine().Trim();
                     Console.Clear();
 
                     var employee = EmployeeService.LogInEmployee(firstname, lastname);
@@ -71,9 +65,9 @@ namespace VacationCalendar.UI
                 {
                     Console.WriteLine("Zaloguj się jako:");
                     Console.WriteLine("Imię:");
-                    string firstname = Console.ReadLine();
+                    string firstname = Console.ReadLine().Trim();
                     Console.WriteLine("Nazwisko:");
-                    string lastname = Console.ReadLine();
+                    string lastname = Console.ReadLine().Trim();
                     Console.Clear();
 
                     var manager = ManagerService.LogInManager(firstname, lastname);

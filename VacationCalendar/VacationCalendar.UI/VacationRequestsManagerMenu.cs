@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VacationCalendar.BusinessLogic.Services;
+﻿using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.UI
 {
@@ -25,9 +20,9 @@ namespace VacationCalendar.UI
                 {
                     managerMenuPainter.Paint(0, 1);
 
-                    var keyInfo2 = Console.ReadKey();
+                    var keyInfo = Console.ReadKey();
 
-                    switch (keyInfo2.Key)
+                    switch (keyInfo.Key)
                     {
                         case ConsoleKey.UpArrow: managerMenu.MoveUp(); break;
                         case ConsoleKey.DownArrow: managerMenu.MoveDown(); break;
@@ -61,9 +56,9 @@ namespace VacationCalendar.UI
                     {
                         requestMenuPainter.Paint(0, 1);
 
-                        var keyInfo3 = Console.ReadKey();
+                        var keyInfo = Console.ReadKey();
 
-                        switch (keyInfo3.Key)
+                        switch (keyInfo.Key)
                         {
                             case ConsoleKey.UpArrow: requestMenu.MoveUp(); break;
                             case ConsoleKey.DownArrow: requestMenu.MoveDown(); break;
@@ -102,9 +97,9 @@ namespace VacationCalendar.UI
                                 {
                                     changeRequestMenuPainter.Paint(0, 1);
 
-                                    var keyInfo4 = Console.ReadKey();
+                                    var keyInfo = Console.ReadKey();
 
-                                    switch (keyInfo4.Key)
+                                    switch (keyInfo.Key)
                                     {
                                         case ConsoleKey.UpArrow: changeRequestMenu.MoveUp(); break;
                                         case ConsoleKey.DownArrow: changeRequestMenu.MoveDown(); break;
