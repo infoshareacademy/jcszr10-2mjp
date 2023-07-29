@@ -121,15 +121,13 @@ namespace VacationCalendar.BusinessLogic.Services
         /// <returns></returns>
         public int CountVacationDays(string from, string to, out string message)
         {
-            DateTime dateFromValue;
-            string dateStringFrom = from;
-            bool isDateFromGoodFormat = DateTime.TryParse(dateStringFrom, out dateFromValue);
-            vacationRequest.From = dateFromValue;
+            DateTime dateFrom;
+            bool isDateFromGoodFormat = DateTime.TryParse(from, out dateFrom);
+            vacationRequest.From = dateFrom;
 
-            DateTime dateToValue;
-            string dateStringTo = to;
-            bool isDateToGoodFormat = DateTime.TryParse(dateStringTo, out dateToValue);
-            vacationRequest.To = dateToValue;
+            DateTime dateTo;
+            bool isDateToGoodFormat = DateTime.TryParse(to, out dateTo);
+            vacationRequest.To = dateTo;
 
             if (!isDateToGoodFormat || !isDateFromGoodFormat)
             {
@@ -137,44 +135,44 @@ namespace VacationCalendar.BusinessLogic.Services
                 return 0;
             }
 
-            if (dateFromValue > dateToValue)
+            if (dateFrom > dateTo)
             {
                 message = "\"Data od\" nie może być nowsza od \"daty do\"!";
                 return 0;
             }      
 
-            if (dateFromValue.DayOfWeek == DayOfWeek.Saturday || dateFromValue.DayOfWeek == DayOfWeek.Sunday
-                || dateToValue.DayOfWeek == DayOfWeek.Saturday || dateToValue.DayOfWeek == DayOfWeek.Sunday)
+            if (dateFrom.DayOfWeek == DayOfWeek.Saturday || dateFrom.DayOfWeek == DayOfWeek.Sunday
+                || dateTo.DayOfWeek == DayOfWeek.Saturday || dateTo.DayOfWeek == DayOfWeek.Sunday)
             {
                 message = $"Wniosek nie może zaczynać i kończyć się na sobocie lub niedzieli.";
                 return 0;
             }
 
-            if (dateFromValue.Day < DateTime.Now.Day)
+            if (dateFrom.Day < DateTime.Now.Day)
             {
                 message = "Urlop nie może być planowany wstecz.";
                 return 0;
             }
 
-            if (dateFromValue > DateTime.Now.AddMonths(12))
+            if (dateFrom > DateTime.Now.AddMonths(12))
             {
                 message = "Nie możesz planowac tak daleko w przyszłość.";
                 return 0;
             }
 
-            if (dateFromValue == dateToValue)
+            if (dateFrom == dateTo)
             {
                 message = $"Wystawiono wniosek. Ilość dni urlopu:";
                 return 1;
             }
 
-            TimeSpan dateInterval = dateToValue - dateFromValue;
+            TimeSpan dateInterval = dateTo - dateFrom;
             int numberOfDays = dateInterval.Days;
             DateTime currentDay;
             int daysWithoutWeekend = 0;
             for (int i = 0; i <= numberOfDays; i++)
             {
-                currentDay = (dateFromValue.AddDays(i));
+                currentDay = (dateFrom.AddDays(i));
                 if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
                     continue;
 

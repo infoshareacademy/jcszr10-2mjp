@@ -58,7 +58,7 @@ namespace VacationCalendar.UI
                         continue;
                     }
 
-                    VacationRequestEmployeeMenu.DisplayVacationRequestEmployeeMenu(vacationService, employee);
+                    EmployeeMenu.DisplayEmployeeMenu(vacationService, employee);
                 }
 
                 if (menu.SelectedIndex == 1)
@@ -82,7 +82,7 @@ namespace VacationCalendar.UI
                     var managerId = manager.Id;
                     bool managerExit = false;
                     while (!managerExit)
-                        managerExit = VacationRequestsManagerMenu.DisplayManagerMenu(vacationService, managerExit, managerId);
+                        managerExit = ManagerMenu.DisplayManagerMenu(vacationService, managerExit, managerId);
                 }
 
                 if (menu.SelectedIndex == 2)

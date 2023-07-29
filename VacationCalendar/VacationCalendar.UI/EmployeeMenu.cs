@@ -4,9 +4,9 @@ using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.UI
 {
-    internal class VacationRequestEmployeeMenu
+    internal class EmployeeMenu
     {
-        internal static void DisplayVacationRequestEmployeeMenu(VacationService vacationService, Employee employee)
+        internal static void DisplayEmployeeMenu(VacationService vacationService, Employee employee)
         {
             Console.WriteLine("\nPodaj datę od kiedy? (dd/MM/rrrr)");
             string from = Console.ReadLine().Trim();
@@ -39,24 +39,32 @@ namespace VacationCalendar.UI
                         Id = 1,
                     };
                 }
-                vacation = new VacationRequest
+                try
                 {
-                    From = DateTime.Parse(from),
-                    To = DateTime.Parse(to),
-                    NumberOfDays = vacationDays,
-                    EmployeeId = employee.Id,
-                };
+                    vacation = new VacationRequest
+                    {
+                        From = DateTime.Parse(from),
+                        To = DateTime.Parse(to),
+                        NumberOfDays = vacationDays,
+                        EmployeeId = employee.Id,
+                    };
 
-                if (vacationDays != 0)
-                {
-                    vacationService.AddVacationRequest(vacation);
-                    Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
-                    Console.WriteLine($"Urlop od {vacation.From.ToString("dd-MM-yy")} do {vacation.To.ToString("dd-MM-yy")}");
-                    Console.WriteLine($"{message} {vacation.NumberOfDays}");
+                    if (vacationDays != 0)
+                    {
+                        vacationService.AddVacationRequest(vacation);
+                        Console.WriteLine($"Pracownik: {employee.FirstName} {employee.LastName}");
+                        Console.WriteLine($"Urlop od {vacation.From.ToString("dd-MM-yy")} do {vacation.To.ToString("dd-MM-yy")}");
+                        Console.WriteLine($"{message} {vacation.NumberOfDays}");
+                    }
+                    else
+                    {
+                        Console.WriteLine(message);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"{message}");
+                    message = ex.Message;
+                    Console.WriteLine(message);
                 }
             }
             else { Console.WriteLine("Nieprawidłowy format daty"); }

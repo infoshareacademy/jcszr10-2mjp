@@ -2,7 +2,7 @@
 
 namespace VacationCalendar.UI
 {
-    public class VacationRequestsManagerMenu
+    public class ManagerMenu
     {
         internal static bool DisplayManagerMenu(VacationService vacationService, bool managerExit, int managerId)
         {
