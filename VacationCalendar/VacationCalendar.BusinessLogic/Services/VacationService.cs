@@ -148,7 +148,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 return 0;
             }
 
-            if (dateFrom.Day < DateTime.Now.Day)
+            if (dateFrom < DateTime.Now)
             {
                 message = "Urlop nie może być planowany wstecz.";
                 return 0;
