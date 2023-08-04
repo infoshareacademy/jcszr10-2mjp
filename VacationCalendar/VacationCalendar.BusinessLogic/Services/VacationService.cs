@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -9,18 +10,34 @@ namespace VacationCalendar.BusinessLogic.Services
         VacationRequest vacationRequest = new VacationRequest();
 
         static string path = $@"{DirectoryPathProvider.GetSolutionDirectoryInfo().FullName}\VacationCalendar.BusinessLogic\Data\vacationRequests.json";
-        private static List<VacationRequest> DeserializeVacationRequests()
+        public static List<VacationRequest> GetVacationRequests()
         {
             var vacationRequestSerialized = File.ReadAllText(path);
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
             return requests;
+        }
+        public static List<VacationRequest> GetVacationRequestsByManager(int managerId)
+        {
+            List<Employee> employees = EmployeeService.GetEmployees().ToList();
+            var employeesByManager = employees.Where(e => e.ManagerId == managerId).ToList();
+            var listOfEmployeesIds = employeesByManager.Select(e => e.Id).ToList();
+            List<VacationRequest> vacationRequestsByManager = new List<VacationRequest>();
+            var vacationRequestList = GetVacationRequests();
+            foreach (var v in vacationRequestList)
+            {
+                if (listOfEmployeesIds.Contains(v.EmployeeId))
+                {
+                    vacationRequestsByManager.Add(v);
+                }
+            }
+            return vacationRequestsByManager;
         }
         public void ConfirmRequest(int id)
         {
             RequestStatus confirmed = RequestStatus.Confirmed;
             try
             {
-                var requests = DeserializeVacationRequests();
+                var requests = GetVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id);
                 if(request != null)
                 {
@@ -43,7 +60,7 @@ namespace VacationCalendar.BusinessLogic.Services
             RequestStatus rejected = RequestStatus.Rejected;
             try
             {
-                var requests = DeserializeVacationRequests();
+                var requests = GetVacationRequests();
                 var request = requests.FirstOrDefault(r => r.Id == id);
                 if (request != null)
                 {
@@ -63,7 +80,7 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public void AddVacationRequest(VacationRequest vacationRequest)
         {
-            var requests = DeserializeVacationRequests();
+            var requests = GetVacationRequests();
             
             vacationRequest.Id = requests.Count() + 1;
             requests.Add(vacationRequest);
@@ -73,33 +90,44 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public int GetNumberOfVacationRequests()
         {
-            return DeserializeVacationRequests().Count();
+            return GetVacationRequests().Count();
         }
 
-        public List<string> GetAllVacationRequestsToString()
+        public List<string> GetAllVacationRequestsToString(int id)
         {
-            var vacationRequestList = DeserializeVacationRequests();
+            var vacationRequestList= GetVacationRequests();
+     
+            List<Employee> employees = EmployeeService.GetEmployees().ToList();
+            var employeesByManager = employees.Where(e => e.ManagerId == id).ToList();
+            var listOfEmployeesIds = employeesByManager.Select(e => e.Id).ToList();
+
+            List<VacationRequest> vacationRequestsByManager = new List<VacationRequest>();
+
+            foreach (var v in vacationRequestList)
+            {
+                if (listOfEmployeesIds.Contains(v.EmployeeId))
+                {
+                    vacationRequestsByManager.Add(v);
+                }
+            }
 
             List<string> vacRequests = new List<string>();
 
-            foreach (var request in vacationRequestList)
-            { 
-               vacRequests.Add(
-                    $" Id wniosku: {request.Id}" +
-                    $" Id pracownika: {request.EmployeeId}" +
-                    $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
-                    $" do: {request.To.ToString("dd-MM-yy")} " +
-                    $" Dni: {request.NumberOfDays}" +
-                    $" Status wniosku: {request.requestStatus}");            
+            foreach (var request in vacationRequestsByManager)
+            {
+                var employeeLastName = EmployeeService.GetEmployees().FirstOrDefault(e => e.Id == request.EmployeeId).LastName;
+                   vacRequests.Add(
+                        $" Id wniosku: {request.Id};" +
+                        $" Pracownik: id {request.EmployeeId} {employeeLastName};" +
+                        $" Wniosek od: {request.From.ToString("dd-MM-yy")};" +
+                        $" do: {request.To.ToString("dd-MM-yy")};" +
+                        $" Dni: {request.NumberOfDays};" +
+                        $" Status wniosku: {request.requestStatus}");            
             }
             vacRequests.Add("\nExit");
             return vacRequests;
         }
 
-        public List<VacationRequest> GetVacationRequests()
-        {
-            return DeserializeVacationRequests();
-        }
         
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele
@@ -109,15 +137,13 @@ namespace VacationCalendar.BusinessLogic.Services
         /// <returns></returns>
         public int CountVacationDays(string from, string to, out string message)
         {
-            DateTime dateFromValue;
-            string dateStringFrom = from;
-            bool isDateFromGoodFormat = DateTime.TryParse(dateStringFrom, out dateFromValue);
-            vacationRequest.From = dateFromValue;
+            DateTime dateFrom;
+            bool isDateFromGoodFormat = DateTime.TryParse(from, out dateFrom);
+            vacationRequest.From = dateFrom;
 
-            DateTime dateToValue;
-            string dateStringTo = to;
-            bool isDateToGoodFormat = DateTime.TryParse(dateStringTo, out dateToValue);
-            vacationRequest.To = dateToValue;
+            DateTime dateTo;
+            bool isDateToGoodFormat = DateTime.TryParse(to, out dateTo);
+            vacationRequest.To = dateTo;
 
             if (!isDateToGoodFormat || !isDateFromGoodFormat)
             {
@@ -125,44 +151,44 @@ namespace VacationCalendar.BusinessLogic.Services
                 return 0;
             }
 
-            if (dateFromValue > dateToValue)
+            if (dateFrom > dateTo)
             {
                 message = "\"Data od\" nie może być nowsza od \"daty do\"!";
                 return 0;
             }      
 
-            if (dateFromValue.DayOfWeek == DayOfWeek.Saturday || dateFromValue.DayOfWeek == DayOfWeek.Sunday
-                || dateToValue.DayOfWeek == DayOfWeek.Saturday || dateToValue.DayOfWeek == DayOfWeek.Sunday)
+            if (dateFrom.DayOfWeek == DayOfWeek.Saturday || dateFrom.DayOfWeek == DayOfWeek.Sunday
+                || dateTo.DayOfWeek == DayOfWeek.Saturday || dateTo.DayOfWeek == DayOfWeek.Sunday)
             {
                 message = $"Wniosek nie może zaczynać i kończyć się na sobocie lub niedzieli.";
                 return 0;
             }
 
-            if (dateFromValue.Day < DateTime.Now.Day)
+            if (dateFrom < DateTime.Now)
             {
-                message = "Urlop nie może być planowany wstecz.";
+                message = "Urlop nie może być planowany wstecz ani w dniu brania urlopu.";
                 return 0;
             }
 
-            if (dateFromValue > DateTime.Now.AddMonths(12))
+            if (dateFrom > DateTime.Now.AddMonths(12))
             {
                 message = "Nie możesz planowac tak daleko w przyszłość.";
                 return 0;
             }
 
-            if (dateFromValue == dateToValue)
+            if (dateFrom == dateTo)
             {
                 message = $"Wystawiono wniosek. Ilość dni urlopu:";
                 return 1;
             }
 
-            TimeSpan dateInterval = dateToValue - dateFromValue;
+            TimeSpan dateInterval = dateTo - dateFrom;
             int numberOfDays = dateInterval.Days;
             DateTime currentDay;
             int daysWithoutWeekend = 0;
             for (int i = 0; i <= numberOfDays; i++)
             {
-                currentDay = (dateFromValue.AddDays(i));
+                currentDay = (dateFrom.AddDays(i));
                 if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
                     continue;
 
