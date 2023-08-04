@@ -166,7 +166,7 @@ namespace VacationCalendar.BusinessLogic.Services
 
             if (dateFrom < DateTime.Now)
             {
-                message = "Urlop nie może być planowany wstecz.";
+                message = "Urlop nie może być planowany wstecz ani w dniu brania urlopu.";
                 return 0;
             }
 
