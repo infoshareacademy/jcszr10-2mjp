@@ -10,7 +10,7 @@ namespace VacationCalendar.UI
                 var manager = ManagerService.GetManagers().Where(m => m.Id == managerId).FirstOrDefault();
 
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Menu managera: {manager.FirstName} {manager.LastName}");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 var managerMenu = new Menu(new string[] { "Wnioski", "Pracownicy", "Exit" });
@@ -34,7 +34,7 @@ namespace VacationCalendar.UI
                 if (managerMenu.SelectedIndex == 0)
                 {
                     Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WNIOSKI:");
                     Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -84,9 +84,12 @@ namespace VacationCalendar.UI
                             bool isRequestStatusContinue = true;
                             while (isRequestStatusContinue)
                             {
+                                var vacationRequests = VacationService.GetVacationRequestsByManager(managerId);
+                                var request = vacationRequests[i];
+
                                 Console.Clear();
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine($"Wniosek {i + 1}:");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine($"Id wniosku: {request.Id}:");
                                 Console.ForegroundColor = ConsoleColor.Gray;
 
                                 var changeRequestMenu = new Menu(new[] { "Zatwierdź", "Odrzuć", "Exit" });
@@ -110,7 +113,8 @@ namespace VacationCalendar.UI
 
                                 if (changeRequestMenu.SelectedIndex == 0)
                                 {
-                                    vacationService.ConfirmRequest(i + 1);
+                                    vacationService.ConfirmRequest(request.Id);
+
                                     Console.ForegroundColor = ConsoleColor.Gray;
                                     Console.WriteLine("Wniosek został zatwierdzony.");
                                     Console.ReadKey();
@@ -118,7 +122,8 @@ namespace VacationCalendar.UI
                                 }
                                 if (changeRequestMenu.SelectedIndex == 1)
                                 {
-                                    vacationService.RejectRequest(i + 1);
+                                    vacationService.RejectRequest(request.Id);
+
                                     Console.ForegroundColor = ConsoleColor.Gray;
                                     Console.WriteLine("Wniosek został odrzucony.");
                                     Console.ReadKey();

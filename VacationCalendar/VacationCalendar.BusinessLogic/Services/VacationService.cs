@@ -16,6 +16,22 @@ namespace VacationCalendar.BusinessLogic.Services
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
             return requests;
         }
+        public static List<VacationRequest> GetVacationRequestsByManager(int managerId)
+        {
+            List<Employee> employees = EmployeeService.GetEmployees().ToList();
+            var employeesByManager = employees.Where(e => e.ManagerId == managerId).ToList();
+            var listOfEmployeesIds = employeesByManager.Select(e => e.Id).ToList();
+            List<VacationRequest> vacationRequestsByManager = new List<VacationRequest>();
+            var vacationRequestList = GetVacationRequests();
+            foreach (var v in vacationRequestList)
+            {
+                if (listOfEmployeesIds.Contains(v.EmployeeId))
+                {
+                    vacationRequestsByManager.Add(v);
+                }
+            }
+            return vacationRequestsByManager;
+        }
         public void ConfirmRequest(int id)
         {
             RequestStatus confirmed = RequestStatus.Confirmed;
