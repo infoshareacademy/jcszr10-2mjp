@@ -6,7 +6,7 @@
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public int EmployeeId { get; set; }
-        public bool isConfirmed { get; set; } = false;    
+        public RequestStatus requestStatus { get; set; } = RequestStatus.InProgress;    
         public int NumberOfDays { get; set; }
     }
 }

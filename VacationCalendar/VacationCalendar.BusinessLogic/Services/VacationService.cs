@@ -15,15 +15,16 @@ namespace VacationCalendar.BusinessLogic.Services
             List<VacationRequest> requests = JsonConvert.DeserializeObject<List<VacationRequest>>(vacationRequestSerialized);
             return requests;
         }
-        public void ChangeRequestStatus(int id)
+        public void ConfirmRequest(int id)
         {
+            RequestStatus confirmed = RequestStatus.Confirmed;
             try
             {
                 var requests = DeserializeVacationRequests();
-                var request = requests.FirstOrDefault(r => r.Id == id + 1);
+                var request = requests.FirstOrDefault(r => r.Id == id);
                 if(request != null)
                 {
-                    request.isConfirmed = !request.isConfirmed;
+                    request.requestStatus = confirmed;
                     var json = JsonConvert.SerializeObject(requests);
                     File.WriteAllText(path, json);
                 }
@@ -37,25 +38,39 @@ namespace VacationCalendar.BusinessLogic.Services
                 Console.WriteLine($"Wystąpił błąd: {ex.Message}");
             } 
         }
+        public void RejectRequest(int id)
+        {
+            RequestStatus rejected = RequestStatus.Rejected;
+            try
+            {
+                var requests = DeserializeVacationRequests();
+                var request = requests.FirstOrDefault(r => r.Id == id);
+                if (request != null)
+                {
+                    request.requestStatus = rejected;
+                    var json = JsonConvert.SerializeObject(requests);
+                    File.WriteAllText(path, json);
+                }
+                else
+                {
+                    Console.WriteLine("Nie znaleziono wniosku.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Wystąpił błąd: {ex.Message}");
+            }
+        }
         public void AddVacationRequest(VacationRequest vacationRequest)
         {
             var requests = DeserializeVacationRequests();
-            if(requests == null )
-            {
-                var text = JsonConvert.SerializeObject(vacationRequest);
-                File.WriteAllText(path, text);
-            }
-            else
-            {
-                int lastId = requests.Last().Id;
-                vacationRequest.Id = lastId + 1;
-                requests.Add(vacationRequest);
+            
+            vacationRequest.Id = requests.Count() + 1;
+            requests.Add(vacationRequest);
 
-                var json = JsonConvert.SerializeObject(requests);
-                File.WriteAllText(path, json);
-            }  
+            var json = JsonConvert.SerializeObject(requests);
+            File.WriteAllText(path, json);
         }
-
         public int GetNumberOfVacationRequests()
         {
             return DeserializeVacationRequests().Count();
@@ -70,14 +85,14 @@ namespace VacationCalendar.BusinessLogic.Services
             foreach (var request in vacationRequestList)
             { 
                vacRequests.Add(
-                    $" Id pracownika: {request.EmployeeId}" +
                     $" Id wniosku: {request.Id}" +
+                    $" Id pracownika: {request.EmployeeId}" +
                     $" Wniosek od: {request.From.ToString("dd-MM-yy")}" +
                     $" do: {request.To.ToString("dd-MM-yy")} " +
                     $" Dni: {request.NumberOfDays}" +
-                    $" Czy potwierdzony: {request.isConfirmed}");            
+                    $" Status wniosku: {request.requestStatus}");            
             }
-            vacRequests.Add("Exit");
+            vacRequests.Add("\nExit");
             return vacRequests;
         }
 
@@ -106,63 +121,55 @@ namespace VacationCalendar.BusinessLogic.Services
 
             if (!isDateToGoodFormat || !isDateFromGoodFormat)
             {
-                message = "Nieprawidłowy format daty! Dni urlopu:";
+                message = "Nieprawidłowy format daty!";
                 return 0;
             }
 
             if (dateFromValue > dateToValue)
             {
-                message = "\"Data od\" nie może być nowsza od \"daty do\"! Dni urlopu:";
+                message = "\"Data od\" nie może być nowsza od \"daty do\"!";
+                return 0;
+            }      
+
+            if (dateFromValue.DayOfWeek == DayOfWeek.Saturday || dateFromValue.DayOfWeek == DayOfWeek.Sunday
+                || dateToValue.DayOfWeek == DayOfWeek.Saturday || dateToValue.DayOfWeek == DayOfWeek.Sunday)
+            {
+                message = $"Wniosek nie może zaczynać i kończyć się na sobocie lub niedzieli.";
                 return 0;
             }
 
-            if (dateFromValue < DateTime.Now)
+            if (dateFromValue.Day < DateTime.Now.Day)
             {
-                message = "Urlop nie może być planowany wstecz. Dni urlopu:";
+                message = "Urlop nie może być planowany wstecz.";
                 return 0;
             }
 
             if (dateFromValue > DateTime.Now.AddMonths(12))
             {
-                message = "Nie możesz planowac tak daleko w przyszłość. Dni urlopu:";
+                message = "Nie możesz planowac tak daleko w przyszłość.";
                 return 0;
             }
 
-            var numberOfDays = vacationRequest.To.Subtract(vacationRequest.From).Days;
-
-            List<DateTime> allDays = new List<DateTime>
+            if (dateFromValue == dateToValue)
             {
-                dateFromValue
-            };
-
-            for (int i = 1; i <= numberOfDays; i++)
-            {
-                DateTime tmpDate;
-                tmpDate = dateFromValue.AddDays(i);
-                allDays.Add(tmpDate);
+                message = $"Wystawiono wniosek. Ilość dni urlopu:";
+                return 1;
             }
 
-            List<DateTime> daysWithoutWeekend = new List<DateTime>();
-
-            foreach (DateTime date in allDays)
+            TimeSpan dateInterval = dateToValue - dateFromValue;
+            int numberOfDays = dateInterval.Days;
+            DateTime currentDay;
+            int daysWithoutWeekend = 0;
+            for (int i = 0; i <= numberOfDays; i++)
             {
-                var dayOfWeek = date.DayOfWeek;
-                if (dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Saturday)
-                {
+                currentDay = (dateFromValue.AddDays(i));
+                if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
                     continue;
-                }
-                daysWithoutWeekend.Add(date);
-            }
 
-            if (daysWithoutWeekend.Count > 30)
-            {
-                message = "Trochę za dużo tego urlopu... Dni urlopu:";
-                return 0;
+                daysWithoutWeekend++;
             }
-
             message = $"Wystawiono wniosek. Ilość dni urlopu:";
-
-            return daysWithoutWeekend.Count;
+            return daysWithoutWeekend;
         }
     }
 }
