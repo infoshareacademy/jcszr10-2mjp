@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationCalendar.UI", "VacationCalendar.UI\VacationCalendar.UI.csproj", "{12878FF4-5755-4C06-9F34-BA1D1FC2F296}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationCalendar.BusinessLogic", "VacationCalendar.BusinessLogic\VacationCalendar.BusinessLogic.csproj", "{F446EB0D-BD0D-4553-A66E-FC220D5721AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationCalendar.MVC", "VacationCalendar.MVC\VacationCalendar.MVC.csproj", "{A583D535-7EFC-44CB-BB1A-5B236D7E80B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{12878FF4-5755-4C06-9F34-BA1D1FC2F296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{12878FF4-5755-4C06-9F34-BA1D1FC2F296}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{12878FF4-5755-4C06-9F34-BA1D1FC2F296}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{12878FF4-5755-4C06-9F34-BA1D1FC2F296}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F446EB0D-BD0D-4553-A66E-FC220D5721AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F446EB0D-BD0D-4553-A66E-FC220D5721AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F446EB0D-BD0D-4553-A66E-FC220D5721AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F446EB0D-BD0D-4553-A66E-FC220D5721AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A583D535-7EFC-44CB-BB1A-5B236D7E80B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A583D535-7EFC-44CB-BB1A-5B236D7E80B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A583D535-7EFC-44CB-BB1A-5B236D7E80B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A583D535-7EFC-44CB-BB1A-5B236D7E80B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
