@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using VacationCalendar.BusinessLogic.Data;
+using VacationCalendar.BusinessLogic.Models;
+using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC
 {
@@ -11,6 +14,7 @@ namespace VacationCalendar.MVC
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<VacationCalendarDbContext>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             var app = builder.Build();
 
@@ -32,6 +36,24 @@ namespace VacationCalendar.MVC
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            using var scope = app.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<VacationCalendarDbContext>();
+            var pandingMigrations = dbContext.Database.GetPendingMigrations();
+            if (pandingMigrations.Any())
+            {
+                dbContext.Database.Migrate();
+            }
+
+            var employees = dbContext.Employees.ToList();
+            if (!employees.Any())
+            {
+                var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska" };
+                var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon" };
+                var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot" };
+                dbContext.Employees.AddRange(employee1, employee2, employee3);
+                dbContext.SaveChanges();
+            }
 
             app.Run();
         }

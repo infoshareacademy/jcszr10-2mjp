@@ -5,10 +5,10 @@ namespace VacationCalendar.BusinessLogic.Data
 {
     public class VacationCalendarDbContext : DbContext
     {
-        public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options) : base(options)
-        {
+        //public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options) : base(options)
+        //{
 
-        }
+        //}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
