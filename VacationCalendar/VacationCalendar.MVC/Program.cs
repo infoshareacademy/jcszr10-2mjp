@@ -48,12 +48,21 @@ namespace VacationCalendar.MVC
                 dbContext.Database.Migrate();
             }
 
+            var managers = dbContext.Managers.ToList();
+            if (!managers.Any())
+            {
+                var manager1 = new Manager() { FirstName = "Anna", LastName = "Kowalska" };
+                var manager2 = new Manager() { FirstName = "Jan", LastName = "Kowalski" };
+                dbContext.Managers.AddRange(manager1, manager2);
+                dbContext.SaveChanges();
+            }
+
             var employees = dbContext.Employees.ToList();
             if (!employees.Any())
             {
-                var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska" };
-                var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon" };
-                var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot" };
+                var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", ManagerId = 1};
+                var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", ManagerId = 1};
+                var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", ManagerId = 2 };
                 dbContext.Employees.AddRange(employee1, employee2, employee3);
                 dbContext.SaveChanges();
             }

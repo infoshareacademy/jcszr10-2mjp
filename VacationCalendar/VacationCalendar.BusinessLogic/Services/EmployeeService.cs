@@ -14,7 +14,7 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public List<Employee> GetAll()
         {
-            var employees =  _context.Employees.ToList();
+            var employees =  _context.Employees.Include(e=>e.Manager).ToList();
             return employees;
         }
     }
