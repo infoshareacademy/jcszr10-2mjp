@@ -13,7 +13,10 @@ namespace VacationCalendar.MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<VacationCalendarDbContext>();
+
+            builder.Services.AddDbContext<VacationCalendarDbContext>(option => 
+                option.UseSqlServer(builder.Configuration.GetConnectionString("VacationCalendar")));
+
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             var app = builder.Build();

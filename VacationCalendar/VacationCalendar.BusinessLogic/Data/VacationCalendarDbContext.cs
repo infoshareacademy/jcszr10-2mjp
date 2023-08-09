@@ -5,15 +5,15 @@ namespace VacationCalendar.BusinessLogic.Data
 {
     public class VacationCalendarDbContext : DbContext
     {
-        //public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options) : base(options)
-        //{
-
-        //}
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=(LocalDb)\\MSSQLLocalDB; Database=VacationCalendarDb;Integrated Security=True;Trusted_Connection=True;");
+
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(
+        //        "Server=(LocalDb)\\MSSQLLocalDB; Database=VacationCalendarDb;Integrated Security=True;Trusted_Connection=True;");
+        //}
 
         public DbSet<VacationRequest> VacationRequests { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
