@@ -67,6 +67,16 @@ namespace VacationCalendar.MVC
                 dbContext.SaveChanges();
             }
 
+            var requestStatuses = dbContext.RequestStatuses.ToList();
+            if (!requestStatuses.Any())
+            {
+                var status1 = new RequestStatus() { RequestStatusName = "InProgress" };
+                var status2 = new RequestStatus() { RequestStatusName = "Confirmed" };
+                var status3 = new RequestStatus() { RequestStatusName = "Rejected" };
+                dbContext.RequestStatuses.AddRange(status1, status2, status3);  
+                dbContext.SaveChanges();
+            }
+
             app.Run();
         }
     }

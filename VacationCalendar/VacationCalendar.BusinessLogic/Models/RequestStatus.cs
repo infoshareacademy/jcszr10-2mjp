@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Models
 {
-    public enum RequestStatus
+    public class RequestStatus
     {
-        Confirmed,  Rejected, InProgress
+        public int Id { get; set; }
+        public string RequestStatusName { get; set; }
     }
 }

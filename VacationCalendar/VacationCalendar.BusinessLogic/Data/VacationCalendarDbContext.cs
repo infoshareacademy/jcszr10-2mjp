@@ -19,6 +19,7 @@ namespace VacationCalendar.BusinessLogic.Data
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Manager> Managers { get; set; }
+        public DbSet<RequestStatus> RequestStatuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,7 @@ namespace VacationCalendar.BusinessLogic.Data
                 entityBuilder.Property(m => m.FirstName).HasColumnType("varchar(100)");
                 entityBuilder.Property(m => m.LastName).HasColumnType("varchar(100)");
             });
+
         }
     }
 }
