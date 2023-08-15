@@ -5,10 +5,9 @@ namespace VacationCalendar.BusinessLogic.Data
 {
     public class VacationCalendarDbContext : DbContext
     {
-        private readonly VacationCalendarDbContext _context;
-        public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options, VacationCalendarDbContext context) : base(options)
+        public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options) : base(options)
         {
-            _context = context;
+
         }
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{

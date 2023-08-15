@@ -77,6 +77,14 @@ namespace VacationCalendar.MVC
                 dbContext.SaveChanges();
             }
 
+            var admins = dbContext.Administrators.ToList();
+            if (!admins.Any())
+            {
+                var admin = new Administrator() { Login = "admin", Password = "password" };
+                dbContext.Administrators.Add(admin);
+                dbContext.SaveChanges();
+            }
+
             app.Run();
         }
     }
