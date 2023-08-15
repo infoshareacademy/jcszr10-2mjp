@@ -23,20 +23,21 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" data-bs-toggle="modal" data-bs-target="#logInAsAdmin">Administrator</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Employees</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Managers" asp-action="Index">Manager</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="VacationRequests" asp-action="Create">Create Vecation Request</a>
-                        </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Pracownik</a>
+                        </li>                     
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
+     
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -53,3 +54,34 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<!-- Login as administrator Modal -->
+<div class="modal fade" id="logInAsAdmin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-controller="Administrators" asp-action="Index" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Logowanie administratora</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">         
+                    <div class="mb-3">
+                        <label for="" class="form-label">Login</label>
+                        <input type="text" name="Login" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label">Password</label>
+                        <input type="password" name="Password" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                    <button type="submit" class="btn btn-primary">Zaloguj</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

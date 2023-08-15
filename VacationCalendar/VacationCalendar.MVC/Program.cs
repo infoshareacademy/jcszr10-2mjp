@@ -18,6 +18,7 @@ namespace VacationCalendar.MVC
                 option.UseSqlServer(builder.Configuration.GetConnectionString("VacationCalendar")));
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IAdministratorService,  AdministratorService>();
 
             var app = builder.Build();
 

@@ -13,12 +13,15 @@ namespace VacationCalendar.MVC.Controllers
             _employeeService = employeeService;
         }
         // GET: EmployeesController
-        public ActionResult Index()
+        public ActionResult GetEmployeesList()
         {
             var employees = _employeeService.GetAll();
             return View(employees);
         }
-
+        public ActionResult Index()
+        {
+            return View();
+        }
         // GET: EmployeesController/Details/5
         public ActionResult Details(int id)
         {
