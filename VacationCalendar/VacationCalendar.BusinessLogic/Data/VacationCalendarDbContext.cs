@@ -21,29 +21,5 @@ namespace VacationCalendar.BusinessLogic.Data
         public DbSet<Manager> Managers { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<VacationRequest>(entityBuilder =>
-            {
-                entityBuilder.HasKey(vr => vr.Id);
-                entityBuilder.HasOne(vr => vr.Employee).WithMany(e => e.VacationRequests)
-                    .HasForeignKey(vr => vr.EmployeeId);
-            });
-
-            modelBuilder.Entity<Employee>(entityBuilder =>
-            {
-                entityBuilder.HasKey(e => e.Id);
-                entityBuilder.Property(e => e.FirstName).HasColumnType("varchar(100)");
-                entityBuilder.Property(e => e.LastName).HasColumnType("varchar(100)");
-                entityBuilder.HasOne(e => e.Manager).WithMany(m => m.Employees).HasForeignKey(e => e.ManagerId);
-            });
-
-            modelBuilder.Entity<Manager>(entityBuilder =>
-            {
-                entityBuilder.Property(m => m.FirstName).HasColumnType("varchar(100)");
-                entityBuilder.Property(m => m.LastName).HasColumnType("varchar(100)");
-            });
-
-        }
     }
 }
