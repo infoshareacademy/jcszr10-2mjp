@@ -9,11 +9,6 @@ namespace VacationCalendar.BusinessLogic.Data
         {
 
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer(
-        //        "Server=(LocalDb)\\MSSQLLocalDB; Database=VacationCalendarDb;Integrated Security=True;Trusted_Connection=True;");
-        //}
 
         public DbSet<VacationRequest> VacationRequests { get; set; }
         public DbSet<Administrator> Administrators { get; set; }

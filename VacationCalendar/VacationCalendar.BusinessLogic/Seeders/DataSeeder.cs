@@ -15,9 +15,9 @@ namespace VacationCalendar.BusinessLogic.Seeders
 
         public async Task Seed()
         {
-            var pandingMigrations = _dbContext.Database.GetPendingMigrations();
+            var pendingMigrations = _dbContext.Database.GetPendingMigrations();
 
-            if (pandingMigrations.Any())
+            if (pendingMigrations.Any())
             {
                 _dbContext.Database.Migrate();
             }
