@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Models
 {
-    public class Administrator
+    public class Role
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-  
+        public string Name { get; set; }
+        public List<Employee> Employees { get; set; }
     }
 }

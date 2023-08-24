@@ -20,7 +20,6 @@ namespace VacationCalendar.MVC
             builder.Services.AddBusinessLogic(builder.Configuration);
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-            builder.Services.AddScoped<IAdministratorService,  AdministratorService>();
 
             var app = builder.Build();
 
