@@ -11,12 +11,6 @@ namespace VacationCalendar.BusinessLogic.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>()          
-               .HasOne(e => e.Manager)
-               .WithMany(e => e.ManagedEmployees)
-               .HasForeignKey(e => e.ManagerId)
-               .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Employee>().HasOne(e => e.Role).WithMany(r=>r.Employees).HasForeignKey(e=>e.RoleId);
         }
 

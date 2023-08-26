@@ -36,9 +36,9 @@ namespace VacationCalendar.BusinessLogic.Seeders
                 {
                     var admin = new Employee() { FirstName = "admin", LastName = "admin", Email = "admin@company.com", RoleId = 1 };
                     var manager1 = new Employee() { FirstName = "Anna", LastName = "Kowalska", Email = "anna.kowalska@company.com", RoleId = 2 };
-                    var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", Email = "magdalena.staniszewska@company.com", ManagerId = manager1.Id, RoleId = 3 };
-                    var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", Email = "piotr.tryfon@company.com", ManagerId = manager1.Id, RoleId = 3 };
-                    var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", Email = "jakub.szot@company.com", ManagerId = manager1.Id, RoleId = 3 };
+                    var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", Email = "magdalena.staniszewska@company.com", RoleId = 3 };
+                    var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", Email = "piotr.tryfon@company.com", RoleId = 3 };
+                    var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", Email = "jakub.szot@company.com", RoleId = 3 };
                     _dbContext.Employees.Add(admin);
                     _dbContext.Employees.Add(manager1);
                     _dbContext.Employees.AddRange(employee1, employee2, employee3);

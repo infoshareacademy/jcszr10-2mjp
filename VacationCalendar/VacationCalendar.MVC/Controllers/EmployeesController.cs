@@ -12,8 +12,9 @@ namespace VacationCalendar.MVC.Controllers
         {
             _employeeService = employeeService;
         }
+
         // GET: EmployeesController
-        public ActionResult GetEmployeesList()
+        public ActionResult GetEmployees()
         {
             var employees = _employeeService.GetAll();
             return View(employees);

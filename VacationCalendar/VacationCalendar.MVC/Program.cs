@@ -21,6 +21,8 @@ namespace VacationCalendar.MVC
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
+            builder.Services.AddScoped<IAccountService, AccountService>();
+
             var app = builder.Build();
 
             var scope = app.Services.CreateScope();
