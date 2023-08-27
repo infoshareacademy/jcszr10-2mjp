@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Extensions;
@@ -15,13 +16,11 @@ namespace VacationCalendar.MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
             // rejestrowanie zale¿noœci z modu³u z logik¹ biznesow¹
             builder.Services.AddBusinessLogic(builder.Configuration);
-
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
 
             var app = builder.Build();
 
