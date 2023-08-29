@@ -37,7 +37,13 @@
                     <input type="password" asp-for="ConfirmPassword" class="form-control" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
-
+                <div class="form-group">
+                    <label asp-for="RoleId" class="control-label"></label>
+                    <select asp-for="RoleId" class="form-control" asp-items=ViewBag.RoleId>
+                        <option>--wybierz--</option>
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
                 <br />
                 <div class="form-group">
                     <input type="submit" id="btnSubmit" value="Dodaj" class="btn btn-primary" />

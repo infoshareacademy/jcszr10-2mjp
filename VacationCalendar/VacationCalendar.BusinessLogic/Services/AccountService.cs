@@ -15,7 +15,10 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
         }
-
+        public VacationCalendarDbContext GetDbContext()
+        {
+            return _dbContext;
+        }
         public void RegisterEmployee(RegisterEmployeeDto dto) 
         {
             var newEmployee= new Models.Employee()
