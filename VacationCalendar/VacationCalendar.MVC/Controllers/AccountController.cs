@@ -61,7 +61,8 @@ namespace VacationCalendar.MVC.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, employee.Email),
+                    new Claim(ClaimTypes.Name, $"{employee.FirstName} {employee.LastName}"),
+                    new Claim(ClaimTypes.Email, employee.Email),
                     new Claim(ClaimTypes.Role, $"{employee.Role.Name}"),
                 };
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
