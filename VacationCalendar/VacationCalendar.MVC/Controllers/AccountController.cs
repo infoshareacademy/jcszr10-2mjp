@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Migrations;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
@@ -43,6 +44,8 @@ namespace VacationCalendar.MVC.Controllers
         {
             return View(); 
         }
+
+
         [HttpPost]
         public async Task<ActionResult> LoginAsync(LoginDto dto)
         {
