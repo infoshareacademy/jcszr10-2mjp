@@ -16,7 +16,7 @@ namespace VacationCalendar.BusinessLogic.Models.Validators
                 var emailInUse = dbContext.Employees.Any(u => u.Email == value);
                 if (emailInUse)
                 {
-                    context.AddFailure("Email", "Ten email już istnieje w bazie danych");
+                    context.AddFailure("Email", "Ten email jest już zarezerwowany");
                 }
             });
         }

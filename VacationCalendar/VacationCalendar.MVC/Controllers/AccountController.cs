@@ -29,8 +29,13 @@ namespace VacationCalendar.MVC.Controllers
             return View("Register");
         }
         [HttpPost]
-        public ActionResult Register(RegisterEmployeeDto dto)
+        public async Task<IActionResult> Register(RegisterEmployeeDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+               return View(dto);
+            }
+       
             _accountService.RegisterEmployee(dto);
            return RedirectToAction("GetEmployees", "Employees");
         }
