@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -14,7 +13,7 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public List<Employee> GetAll()
         {
-            var employees =  _context.Employees.Include(e=>e.Manager).ToList();
+            var employees =  _context.Employees.Include(e => e.Role).ToList();
             return employees;
         }
     }

@@ -12,7 +12,6 @@ namespace VacationCalendar.BusinessLogic.Seeders
         {
             _dbContext = dbContext;
         }
-
         public async Task Seed()
         {
             var pendingMigrations = _dbContext.Database.GetPendingMigrations();
@@ -24,20 +23,22 @@ namespace VacationCalendar.BusinessLogic.Seeders
 
             if (await _dbContext.Database.CanConnectAsync())
             {
-                if (!_dbContext.Managers.Any())
+                if (!_dbContext.Roles.Any())
                 {
-                    var manager1 = new Manager() { FirstName = "Anna", LastName = "Kowalska" };
-                    var manager2 = new Manager() { FirstName = "Jan", LastName = "Kowalski" };
-                    _dbContext.Managers.AddRange(manager1, manager2);
+                    var admin = new Role { Name = "admin" };
+                    var manager = new Role { Name = "manager" };
+                    var employee = new Role { Name = "employee" };
+                    _dbContext.AddRange(admin, manager, employee);
                     _dbContext.SaveChanges();
                 }
-
                 if (!_dbContext.Employees.Any())
                 {
-                    var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", ManagerId = 1 };
-                    var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", ManagerId = 1 };
-                    var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", ManagerId = 2 };
-                    _dbContext.Employees.AddRange(employee1, employee2, employee3);
+                    var admin = new Employee() { FirstName = "admin", LastName = "admin", Email = "admin@company.com", RoleId = 1, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var manager1 = new Employee() { FirstName = "Anna", LastName = "Kowalska", Email = "anna.kowalska@company.com", RoleId = 2, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", Email = "magdalena.staniszewska@company.com", RoleId = 3 , PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", Email = "piotr.tryfon@company.com", RoleId = 3, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", Email = "jakub.szot@company.com", RoleId = 3, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    _dbContext.Employees.AddRange(admin, manager1, employee1, employee2, employee3);
                     await _dbContext.SaveChangesAsync();
                 }
 
@@ -47,13 +48,6 @@ namespace VacationCalendar.BusinessLogic.Seeders
                     var status2 = new RequestStatus() { RequestStatusName = "Confirmed" };
                     var status3 = new RequestStatus() { RequestStatusName = "Rejected" };
                     _dbContext.RequestStatuses.AddRange(status1, status2, status3);
-                    _dbContext.SaveChanges();
-                }
-
-                if (!_dbContext.Administrators.Any())
-                {
-                    var admin = new Administrator() { Login = "admin", Password = "password" };
-                    _dbContext.Administrators.Add(admin);
                     _dbContext.SaveChanges();
                 }
             }

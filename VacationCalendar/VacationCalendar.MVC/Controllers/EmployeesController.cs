@@ -12,8 +12,9 @@ namespace VacationCalendar.MVC.Controllers
         {
             _employeeService = employeeService;
         }
+
         // GET: EmployeesController
-        public ActionResult GetEmployeesList()
+        public ActionResult GetEmployees()
         {
             var employees = _employeeService.GetAll();
             return View(employees);
@@ -22,32 +23,7 @@ namespace VacationCalendar.MVC.Controllers
         {
             return View();
         }
-        // GET: EmployeesController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: EmployeesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: EmployeesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: EmployeesController/Edit/5
         public ActionResult Edit(int id)

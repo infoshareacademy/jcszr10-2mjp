@@ -17,9 +17,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.To)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfDays)
-            </th>
+          
             <th>
                 Actions
             </th>
@@ -35,9 +33,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.To)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberOfDays)
-                </td>
+           
                 <td>
                     <a asp-action="Index" class="btn btn-sm btn-outline-warning" asp-route-id="@item.Id">Edit</a>
                     <a asp-action="Index" class="btn btn-sm btn-outline-secondary" asp-route-id="@item.Id">Details</a>

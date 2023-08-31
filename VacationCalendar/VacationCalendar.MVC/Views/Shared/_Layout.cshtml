@@ -22,18 +22,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                    
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" data-bs-toggle="modal" data-bs-target="#logInAsAdmin">Administrator</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja pracownika</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Managers" asp-action="Index">Manager</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="VacationRequests" asp-action="Create">Utwórz wniosek</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Pracownik</a>
-                        </li>                     
                     </ul>
                 </div>
-            </div>
+                <div class="mr-2">
+                    <partial name="_LoginStatusPartial" />
+                </div>
+            </div>            
         </nav>
     </header>
     <div class="container">

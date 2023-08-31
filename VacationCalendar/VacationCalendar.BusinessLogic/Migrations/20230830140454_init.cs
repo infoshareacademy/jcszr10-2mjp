@@ -6,57 +6,57 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VacationCalendar.BusinessLogic.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Administrators",
+                name: "RequestStatuses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RequestStatusName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Administrators", x => x.Id);
+                    table.PrimaryKey("PK_RequestStatuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Managers",
+                name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    LastName = table.Column<string>(type: "varchar(100)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Managers", x => x.Id);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    LastName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Managers_ManagerId",
-                        column: x => x.ManagerId,
-                        principalTable: "Managers",
-                        principalColumn: "Id");
+                        name: "FK_Employees_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,8 +67,8 @@ namespace VacationCalendar.BusinessLogic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     From = table.Column<DateTime>(type: "datetime2", nullable: false),
                     To = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    RequestStatus = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestStatusId = table.Column<int>(type: "int", nullable: false),
                     NumberOfDays = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -80,25 +80,33 @@ namespace VacationCalendar.BusinessLogic.Migrations
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VacationRequests_RequestStatuses_RequestStatusId",
+                        column: x => x.RequestStatusId,
+                        principalTable: "RequestStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_ManagerId",
+                name: "IX_Employees_RoleId",
                 table: "Employees",
-                column: "ManagerId");
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VacationRequests_EmployeeId",
                 table: "VacationRequests",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VacationRequests_RequestStatusId",
+                table: "VacationRequests",
+                column: "RequestStatusId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Administrators");
-
             migrationBuilder.DropTable(
                 name: "VacationRequests");
 
@@ -106,7 +114,10 @@ namespace VacationCalendar.BusinessLogic.Migrations
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Managers");
+                name: "RequestStatuses");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }

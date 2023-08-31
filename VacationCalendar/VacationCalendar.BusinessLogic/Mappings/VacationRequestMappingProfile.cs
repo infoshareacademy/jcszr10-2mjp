@@ -13,7 +13,7 @@ namespace VacationCalendar.BusinessLogic.Mappings
     {
         public VacationRequestMappingProfile()
         {
-            CreateMap<VacationRequestDto, VacationRequest>();
+            CreateMap<CreateVacationRequestDto, VacationRequest>();
         }
     }
 }

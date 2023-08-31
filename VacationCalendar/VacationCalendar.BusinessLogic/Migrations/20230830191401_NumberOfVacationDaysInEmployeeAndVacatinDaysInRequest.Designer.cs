@@ -12,89 +12,55 @@ using VacationCalendar.BusinessLogic.Data;
 namespace VacationCalendar.BusinessLogic.Migrations
 {
     [DbContext(typeof(VacationCalendarDbContext))]
-    [Migration("20230818141933_dataAnotations")]
-    partial class dataAnotations
+    [Migration("20230830191401_NumberOfVacationDaysInEmployeeAndVacatinDaysInRequest")]
+    partial class NumberOfVacationDaysInEmployeeAndVacatinDaysInRequest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Administrator", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Administrators");
-                });
-
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR");
+                        .HasColumnType("NVARCHAR");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("VARCHAR");
+                        .HasColumnType("NVARCHAR");
 
-                    b.Property<int?>("ManagerId")
+                    b.Property<int?>("NumberOfVacationDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Manager", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Managers");
                 });
 
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.RequestStatus", b =>
@@ -114,6 +80,23 @@ namespace VacationCalendar.BusinessLogic.Migrations
                     b.ToTable("RequestStatuses");
                 });
 
+            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.VacationRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -122,20 +105,20 @@ namespace VacationCalendar.BusinessLogic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("From")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("NumberOfDays")
-                        .HasColumnType("int");
 
                     b.Property<int>("RequestStatusId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("VacationDays")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -148,17 +131,19 @@ namespace VacationCalendar.BusinessLogic.Migrations
 
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Employee", b =>
                 {
-                    b.HasOne("VacationCalendar.BusinessLogic.Models.Manager", "Manager")
+                    b.HasOne("VacationCalendar.BusinessLogic.Models.Role", "Role")
                         .WithMany("Employees")
-                        .HasForeignKey("ManagerId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Manager");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.VacationRequest", b =>
                 {
                     b.HasOne("VacationCalendar.BusinessLogic.Models.Employee", "Employee")
-                        .WithMany("VacationRequests")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -174,12 +159,7 @@ namespace VacationCalendar.BusinessLogic.Migrations
                     b.Navigation("RequestStatus");
                 });
 
-            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Employee", b =>
-                {
-                    b.Navigation("VacationRequests");
-                });
-
-            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Manager", b =>
+            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Role", b =>
                 {
                     b.Navigation("Employees");
                 });
