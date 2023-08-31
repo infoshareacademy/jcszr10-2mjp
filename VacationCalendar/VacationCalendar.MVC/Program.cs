@@ -23,6 +23,7 @@ namespace VacationCalendar.MVC
             builder.Services.AddBusinessLogic(builder.Configuration);
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IVacationService, VacationService>();
             builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
             builder.Services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
 

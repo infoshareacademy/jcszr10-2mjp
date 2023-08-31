@@ -67,8 +67,7 @@ namespace VacationCalendar.BusinessLogic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     From = table.Column<DateTime>(type: "datetime2", nullable: false),
                     To = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RequestStatusId = table.Column<int>(type: "int", nullable: false),
                     NumberOfDays = table.Column<int>(type: "int", nullable: false)
                 },
@@ -76,8 +75,8 @@ namespace VacationCalendar.BusinessLogic.Migrations
                 {
                     table.PrimaryKey("PK_VacationRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VacationRequests_Employees_EmployeeId1",
-                        column: x => x.EmployeeId1,
+                        name: "FK_VacationRequests_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -95,9 +94,9 @@ namespace VacationCalendar.BusinessLogic.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VacationRequests_EmployeeId1",
+                name: "IX_VacationRequests_EmployeeId",
                 table: "VacationRequests",
-                column: "EmployeeId1");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VacationRequests_RequestStatusId",

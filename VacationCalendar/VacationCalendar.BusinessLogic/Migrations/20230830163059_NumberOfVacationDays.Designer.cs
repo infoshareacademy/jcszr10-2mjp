@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VacationCalendar.BusinessLogic.Data;
 
@@ -11,9 +12,11 @@ using VacationCalendar.BusinessLogic.Data;
 namespace VacationCalendar.BusinessLogic.Migrations
 {
     [DbContext(typeof(VacationCalendarDbContext))]
-    partial class VacationCalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230830163059_NumberOfVacationDays")]
+    partial class NumberOfVacationDays
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace VacationCalendar.BusinessLogic.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("NVARCHAR");
 
-                    b.Property<int?>("NumberOfVacationDays")
+                    b.Property<int>("NumberOfVacationDays")
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
@@ -113,9 +116,6 @@ namespace VacationCalendar.BusinessLogic.Migrations
 
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("VacationDays")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using VacationCalendar.BusinessLogic.Dtos;
-using VacationCalendar.BusinessLogic.Migrations;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
@@ -61,8 +60,7 @@ namespace VacationCalendar.MVC.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, $"{employee.FirstName} {employee.LastName}"),
-                    new Claim(ClaimTypes.Email, employee.Email),
+                    new Claim(ClaimTypes.Name, employee.Email),
                     new Claim(ClaimTypes.Role, $"{employee.Role.Name}"),
                 };
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");

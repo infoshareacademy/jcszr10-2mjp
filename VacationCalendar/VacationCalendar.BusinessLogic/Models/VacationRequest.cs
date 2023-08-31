@@ -14,10 +14,10 @@ namespace VacationCalendar.BusinessLogic.Models
         [DisplayName("Data do")]
         [DataType(DataType.Date)]
         public DateTime To { get; set; }
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
-        public int RequestStatusId { get; set; }
+        public int RequestStatusId { get; set; } = 1;
         public RequestStatus RequestStatus { get; set; }
-        public int NumberOfDays { get; set; }
+        public int? VacationDays { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using VacationCalendar.BusinessLogic.Data;
 namespace VacationCalendar.BusinessLogic.Migrations
 {
     [DbContext(typeof(VacationCalendarDbContext))]
-    [Migration("20230826122334_init")]
+    [Migration("20230830140454_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -102,10 +102,7 @@ namespace VacationCalendar.BusinessLogic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("EmployeeId1")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("From")
@@ -122,7 +119,7 @@ namespace VacationCalendar.BusinessLogic.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId1");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("RequestStatusId");
 
@@ -144,7 +141,7 @@ namespace VacationCalendar.BusinessLogic.Migrations
                 {
                     b.HasOne("VacationCalendar.BusinessLogic.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId1")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

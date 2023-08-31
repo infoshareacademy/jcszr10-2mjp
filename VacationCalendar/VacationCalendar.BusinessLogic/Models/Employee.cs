@@ -27,5 +27,6 @@ namespace VacationCalendar.BusinessLogic.Models
         public string? PasswordHash { get; set; }
         public int? RoleId { get; set; }
         public virtual Role Role { get; set; }
+        public int? NumberOfVacationDays { get; set; } = 30;
     }
 }
