@@ -1,0 +1,7 @@
+﻿
+@if (User.IsInRole("employee"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="VacationRequests" asp-action="Create">Utwórz wniosek</a>
+    </li>
+}
