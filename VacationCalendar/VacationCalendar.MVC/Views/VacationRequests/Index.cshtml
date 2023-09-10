@@ -1,0 +1,45 @@
+﻿@model IEnumerable<VacationCalendar.BusinessLogic.Models.VacationRequest>
+
+@{
+    ViewData["Title"] = "Vacation Requests";
+}
+
+<h4>Vacation Requests</h4>
+
+<a asp-action="Index" class="btn btn-success">Create New</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.From)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.To)
+            </th>
+          
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.From)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.To)
+                </td>
+           
+                <td>
+                    <a asp-action="Index" class="btn btn-sm btn-outline-warning" asp-route-id="@item.Id">Edit</a>
+                    <a asp-action="Index" class="btn btn-sm btn-outline-secondary" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Index" class="btn btn-sm btn-outline-danger" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
