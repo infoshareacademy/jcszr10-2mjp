@@ -72,7 +72,7 @@ namespace VacationCalendar.MVC.Controllers
 
         public async Task<IActionResult> VacationRequests()
         {
-            var requests = _employeeService.GetVacationRequests(User.Identity.Name);
+            var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             return View(requests);
         }
 
