@@ -29,10 +29,10 @@ namespace VacationCalendar.BusinessLogic.Services
             return requests;
         }
 
-        public void DeleteVacationRequest(int id)
+        public async Task DeleteVacationRequest(int id)
         {
-            // todo zamien na async firstordefault
-            _context.VacationRequests.Remove(_context.VacationRequests.Find(id));
+            var request = await _context.VacationRequests.FindAsync(id);
+            _context.VacationRequests.Remove(request);
             _context.SaveChanges();
         }
 
@@ -44,7 +44,7 @@ namespace VacationCalendar.BusinessLogic.Services
 
         public async Task<VacationRequest> GetVacationRequest(int id)
         {
-           return await _context.VacationRequests.FirstOrDefaultAsync(r=>r.Id == id);         
+           return await _context.VacationRequests.FirstOrDefaultAsync(r => r.Id == id);         
         }
     }
 }
