@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -15,6 +16,35 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             var employees =  _context.Employees.Include(e => e.Role).ToList();
             return employees;
+        }
+        public async Task<List<VacationRequest>> GetVacationRequests()
+        {
+            var requests = await _context.VacationRequests.Include(req => req.Employee).Include(req => req.RequestStatus).ToListAsync();
+            return requests;
+        }
+
+        public async Task<List<VacationRequest>> GetVacationRequests(string email)
+        {
+            var requests = await _context.VacationRequests.Where(req => req.Employee.Email == email).Include(req => req.Employee).Include(req => req.RequestStatus).ToListAsync();
+            return requests;
+        }
+
+        public async Task DeleteVacationRequest(int id)
+        {
+            var request = await _context.VacationRequests.FindAsync(id);
+            _context.VacationRequests.Remove(request);
+            _context.SaveChanges();
+        }
+
+        public void SetVacationDays(string email, int days)
+        {
+            var employee = _context.Employees.First(emp => emp.Email == email);
+            employee.VacationDays = days;
+        }
+
+        public async Task<VacationRequest> GetVacationRequest(int id)
+        {
+           return await _context.VacationRequests.FirstOrDefaultAsync(r => r.Id == id);         
         }
     }
 }
