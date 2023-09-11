@@ -20,5 +20,7 @@ namespace VacationCalendar.BusinessLogic.Services
 
         public void SetVacationDays(string email, int days);
 
+        Task<VacationRequest> GetVacationRequest(int id);
+
     }
 }

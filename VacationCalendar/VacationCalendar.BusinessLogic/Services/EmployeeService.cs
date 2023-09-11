@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -39,6 +40,11 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             var employee = _context.Employees.First(emp => emp.Email == email);
             employee.VacationDays = days;
+        }
+
+        public async Task<VacationRequest> GetVacationRequest(int id)
+        {
+           return await _context.VacationRequests.FirstOrDefaultAsync(r=>r.Id == id);         
         }
     }
 }

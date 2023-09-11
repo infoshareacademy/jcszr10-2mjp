@@ -22,9 +22,7 @@
                     <td>@item.To</td>
                     <td>@item.RequestStatus.RequestStatusName</td>
                     <td>
-                        <form asp-action="VacationRequestDelete" asp-route-id="@item.Id" method="post"> 
-                            <input type="submit" value="Usuń">
-                       </form> 
+                        <a asp-action="ConfirmDelete" asp-route-id="@item.Id">Usuń</a>
                     </td>
                 </tr>
             }

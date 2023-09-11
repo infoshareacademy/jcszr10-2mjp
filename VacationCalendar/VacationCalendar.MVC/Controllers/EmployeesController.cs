@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Services;
 using Microsoft.EntityFrameworkCore;
+using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.MVC.Controllers
 {
@@ -81,6 +82,17 @@ namespace VacationCalendar.MVC.Controllers
         {
             _employeeService.DeleteVacationRequest(id);
             return RedirectToAction("VacationRequests"); 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmDelete(int id)
+        {
+            var request = await _employeeService.GetVacationRequest(id);
+            if(request == null)
+            {
+                return NotFound();
+            }
+            return View(request);
         }
     }
 }
