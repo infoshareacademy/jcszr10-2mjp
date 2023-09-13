@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
         private readonly IEmployeeService _employeeService;
@@ -65,6 +65,19 @@ namespace VacationCalendar.MVC.Controllers
             {
                 return View();
             }
+        }
+
+        public async Task<IActionResult> VacationRequests()
+        {
+            var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
+            return View(requests);
+        }
+
+        public async Task<IActionResult> DeleteVacationRequest(int id)
+        {
+            await _employeeService.DeleteVacationRequest(id);
+            TempData["DeleteConfirmed"] = "Wniosek został usunięty";
+            return RedirectToAction("VacationRequests"); 
         }
     }
 }
