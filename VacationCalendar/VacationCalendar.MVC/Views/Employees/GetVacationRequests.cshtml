@@ -43,11 +43,18 @@
                         <td>@item.VacationDays</td>
                         <td>@item.RequestStatus.RequestStatusName</td>
                         <td>
-                            <form method="post">
-                                <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                   data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
-                                <a asp-controller="Employees" asp-action="EditVacationRequest" class="btn btn-sm btn-warning" asp-route-id="@item.Id">Edit</a>
-                            </form>
+                            @if (@item.RequestStatus.Id == 1)
+                            {
+                                <form method="post">
+                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
+                                    <a asp-controller="Employees" asp-action="EditVacationRequest" class="btn btn-sm btn-warning" asp-route-id="@item.Id">Edit</a>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>Brak akcji. &#128516</p>
+                            }
                         </td>
                     </tr>
                 }

@@ -26,7 +26,6 @@ namespace VacationCalendar.MVC.Controllers
 
         // POST: VacationRequestsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
             try
@@ -62,19 +61,18 @@ namespace VacationCalendar.MVC.Controllers
             }
         }
 
-        public async Task<IActionResult> VacationRequests()
+        public async Task<IActionResult> GetVacationRequests()
         {
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             return View(requests);
         }
 
         [Authorize(Roles = "employee,manager")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteVacationRequest(int id)
         {
             await _employeeService.DeleteVacationRequest(id);
             TempData["DeleteConfirmed"] = "Wniosek został usunięty";
-            return RedirectToAction("VacationRequests"); 
+            return RedirectToAction("GetVacationRequests"); 
         }
         [HttpGet]
         [Authorize(Roles = "employee,manager")]
@@ -110,13 +108,13 @@ namespace VacationCalendar.MVC.Controllers
             {
                 TempData["EditRequestMessage"] = "Można edytować wniosek, który jeszcze nie został zatwirdzony lub odrzucony.";
                 TempData["message-type"] = "warning";
-                return RedirectToAction(nameof(VacationRequests));
+                return RedirectToAction(nameof(GetVacationRequests));
             }
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return RedirectToAction(nameof(VacationRequests));
+                    return RedirectToAction(nameof(GetVacationRequests));
                 }
                 string message = "";
 
@@ -135,7 +133,7 @@ namespace VacationCalendar.MVC.Controllers
 
                 await _employeeService.EditVacationRequest(dto);
 
-                return RedirectToAction(nameof(VacationRequests));
+                return RedirectToAction(nameof(GetVacationRequests));
             }
             catch (Exception e)
             {
