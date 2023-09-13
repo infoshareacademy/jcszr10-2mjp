@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using VacationCalendar.BusinessLogic.Data;
+using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -8,9 +9,11 @@ namespace VacationCalendar.BusinessLogic.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly VacationCalendarDbContext _context;
-        public EmployeeService(VacationCalendarDbContext context)
+        private readonly ICountVacationDaysLogic _countVacationDaysLogic;
+        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysLogic countVacationDaysLogic)
         {
-                _context = context;
+            _context = context;
+            _countVacationDaysLogic = countVacationDaysLogic;
         }
         public List<Employee> GetAll()
         {
@@ -45,6 +48,24 @@ namespace VacationCalendar.BusinessLogic.Services
         public async Task<VacationRequest> GetVacationRequest(int id)
         {
            return await _context.VacationRequests.FirstOrDefaultAsync(r => r.Id == id);         
+        }
+
+        public async Task EditVacationRequest(EditVacationRequestDto dto)
+        {
+            var request = await _context.VacationRequests.FirstOrDefaultAsync(r => r.Id == dto.Id);
+            if(request == null)
+            {
+                throw new Exception("Nie ma takiego wniosku!");
+            }      
+            request.From = dto.From;
+            request.To = dto.To;
+            request.VacationDays = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To);
+
+            if (request.VacationDays > 0)
+            {
+                //throw new Exception("Error: Testowy błąd przed zapisaniem wniosku");
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

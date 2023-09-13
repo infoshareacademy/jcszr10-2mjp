@@ -8,9 +8,15 @@
             @TempData["DeleteConfirmed"]
         </div>
     }
+    @if (TempData["EditRequestMessage"] != null)
+    {
+        <div class="alert alert-@TempData["message-type"]" role="alert" ]>
+            @TempData["EditRequestMessage"]
+        </div>
+    }
     @if (!Model.Any())
     {
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-primary" role="alert">
             Brak wniosków urlopowych.
         </div>
     }
@@ -22,8 +28,9 @@
                     <th>@Html.DisplayNameFor(model => model.Employee.Email)</th>
                     <th>@Html.DisplayNameFor(model => model.From)</th>
                     <th>@Html.DisplayNameFor(model => model.To)</th>
-                    <th>@Html.DisplayNameFor(model => model.RequestStatus.RequestStatusName)</th>
-                    <th>Usuń</th>
+                    <th>@Html.DisplayNameFor(model => model.VacationDays)</th>
+                    <th>@Html.DisplayNameFor(model => model.RequestStatus)</th>
+                    <th>Akcje</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,11 +40,13 @@
                         <td>@item.Employee.Email</td>
                         <td>@item.From</td>
                         <td>@item.To</td>
+                        <td>@item.VacationDays</td>
                         <td>@item.RequestStatus.RequestStatusName</td>
                         <td>
                             <form method="post">
-                                <a id="deleteItem" class="btn btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
                                    data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
+                                <a asp-controller="Employees" asp-action="EditVacationRequest" class="btn btn-sm btn-warning" asp-route-id="@item.Id">Edit</a>
                             </form>
                         </td>
                     </tr>
@@ -52,20 +61,20 @@
 
 <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Usuwanie wniosku.</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    Czy na pewno chcesz usunąć wniosek?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-                    <button id="btnContinueDelete" class="btn btn-primary">Usuń</button>
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Usuwanie wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <div class="modal-body">
+                Czy na pewno chcesz usunąć wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueDelete" class="btn btn-primary">Usuń</button>
+            </div>
+        </div>
     </div>
 </div>
 
