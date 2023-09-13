@@ -11,12 +11,10 @@
         <div class="alert alert-@TempData["message-type"]" role="alert">
             @TempData["RequestMessage"]
         </div>
-      
-       
     }
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Create">
+            <form asp-controller="Employees" asp-action="CreateVacationRequest">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>

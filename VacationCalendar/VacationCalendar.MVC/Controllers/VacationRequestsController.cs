@@ -15,24 +15,12 @@ namespace VacationCalendar.MVC.Controllers
         {
             _vacationService = vacationService;
         }
-        // GET: VacationRequestsController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: VacationRequestsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: VacationRequestsController/Create
 
         [Authorize(Roles = "employee,manager")]
         public async Task <IActionResult> Create()
         {
-        
             return View();
         }
 

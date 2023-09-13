@@ -18,56 +18,46 @@ namespace VacationCalendar.MVC.Controllers
             _countVacationDaysLogic = countVacationDaysLogic;
         }
 
-        // GET: EmployeesController
-        public ActionResult GetEmployees()
+        [Authorize(Roles = "employee,manager")]
+        public async Task<IActionResult> CreateVacationRequest()
         {
-            var employees = _employeeService.GetAll();
-            return View(employees);
-        }
-        public ActionResult Index()
-        {
-            return View();
+            return View(nameof(CreateVacationRequest));
         }
 
-
-        // GET: EmployeesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: EmployeesController/Edit/5
+        // POST: VacationRequestsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+                string message = "";
 
-        // GET: EmployeesController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+                var days = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To, out message);
 
-        // POST: EmployeesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                if (days == 0)
+                {
+                    TempData["RequestMessage"] = $"{message}";
+                    TempData["message-type"] = "warning";
+                }
+                if (days > 0)
+                {
+                    TempData["RequestMessage"] = $"{message} {days}";
+                    TempData["message-type"] = "success";
+                }
+
+                await _employeeService.CreateVacationRequest(dto);
+
+                return RedirectToAction(nameof(CreateVacationRequest));
             }
-            catch
+            catch (Exception e)
             {
+                TempData["RequestMessage"] = $"{e.Message}";
+                TempData["message-type"] = "danger";
                 return View();
             }
         }
@@ -78,6 +68,8 @@ namespace VacationCalendar.MVC.Controllers
             return View(requests);
         }
 
+        [Authorize(Roles = "employee,manager")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteVacationRequest(int id)
         {
             await _employeeService.DeleteVacationRequest(id);
@@ -85,6 +77,7 @@ namespace VacationCalendar.MVC.Controllers
             return RedirectToAction("VacationRequests"); 
         }
         [HttpGet]
+        [Authorize(Roles = "employee,manager")]
         public async Task<IActionResult> EditVacationRequest(int id)
         {
             if (id == null)
@@ -109,6 +102,7 @@ namespace VacationCalendar.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "employee,manager")]
         public async Task<IActionResult> EditVacationRequest(EditVacationRequestDto dto)
         {
             var vacationRequest = await _employeeService.GetVacationRequest(dto.Id);

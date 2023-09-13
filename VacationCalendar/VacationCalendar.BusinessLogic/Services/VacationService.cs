@@ -23,7 +23,7 @@ namespace VacationCalendar.BusinessLogic.Services
         {
            
         }
-        [Authorize(Roles = "employee,manager")]
+
         public async Task CreateVacationRequest(CreateVacationRequestDto dto)
         {
             var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.Email == dto.Email);

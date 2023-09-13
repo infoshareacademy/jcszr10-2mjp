@@ -15,6 +15,31 @@ namespace VacationCalendar.BusinessLogic.Services
             _context = context;
             _countVacationDaysLogic = countVacationDaysLogic;
         }
+
+        public async Task CreateVacationRequest(CreateVacationRequestDto dto)
+        {
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == dto.Email);
+
+            if (employee == null)
+            {
+                throw new Exception("Nie znaleziono pracownika");
+            }
+
+            var newVacationRequest = new VacationRequest()
+            {
+                From = dto.From,
+                To = dto.To,
+                EmployeeId = employee.Id,
+                VacationDays = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To)
+            };
+
+            if (newVacationRequest.VacationDays > 0)
+            {
+                _context.Add(newVacationRequest);
+                //throw new Exception("Error: Testowy błąd przed zapisaniem wniosku");
+                await _context.SaveChangesAsync();
+            }
+        }
         public List<Employee> GetAll()
         {
             var employees =  _context.Employees.Include(e => e.Role).ToList();
