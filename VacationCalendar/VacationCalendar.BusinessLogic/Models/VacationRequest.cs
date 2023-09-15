@@ -17,7 +17,11 @@ namespace VacationCalendar.BusinessLogic.Models
         public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public int RequestStatusId { get; set; } = 1;
+
+        [DisplayName("Status wniosku")]
         public RequestStatus RequestStatus { get; set; }
+
+        [DisplayName("Ilośc dni urlopu na wniosku")]
         public int? VacationDays { get; set; }
     }
 }

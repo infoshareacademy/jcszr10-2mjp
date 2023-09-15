@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
@@ -8,76 +11,136 @@ namespace VacationCalendar.MVC.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeService _employeeService;
-        public EmployeesController(IEmployeeService employeeService)
+        private readonly ICountVacationDaysLogic _countVacationDaysLogic;
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysLogic countVacationDaysLogic)
         {
             _employeeService = employeeService;
+            _countVacationDaysLogic = countVacationDaysLogic;
         }
 
-        // GET: EmployeesController
-        public ActionResult GetEmployees()
+        [Authorize(Roles = "employee,manager")]
+        public async Task<IActionResult> CreateVacationRequest()
         {
-            var employees = _employeeService.GetAll();
-            return View(employees);
-        }
-        public ActionResult Index()
-        {
-            return View();
+            return View(nameof(CreateVacationRequest));
         }
 
-
-        // GET: EmployeesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: EmployeesController/Edit/5
+        // POST: VacationRequestsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+                string message = "";
+
+                var days = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To, out message);
+
+                if (days == 0)
+                {
+                    TempData["RequestMessage"] = $"{message}";
+                    TempData["message-type"] = "warning";
+                }
+                if (days > 0)
+                {
+                    TempData["RequestMessage"] = $"{message} {days}";
+                    TempData["message-type"] = "success";
+                }
+
+                await _employeeService.CreateVacationRequest(dto);
+
+                return RedirectToAction(nameof(CreateVacationRequest));
             }
-            catch
+            catch (Exception e)
             {
+                TempData["RequestMessage"] = $"{e.Message}";
+                TempData["message-type"] = "danger";
                 return View();
             }
         }
 
-        // GET: EmployeesController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: EmployeesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        public async Task<IActionResult> VacationRequests()
+        public async Task<IActionResult> GetVacationRequests()
         {
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             return View(requests);
         }
 
+        [Authorize(Roles = "employee,manager")]
         public async Task<IActionResult> DeleteVacationRequest(int id)
         {
             await _employeeService.DeleteVacationRequest(id);
             TempData["DeleteConfirmed"] = "Wniosek został usunięty";
-            return RedirectToAction("VacationRequests"); 
+            return RedirectToAction("GetVacationRequests"); 
+        }
+        [HttpGet]
+        [Authorize(Roles = "employee,manager")]
+        public async Task<IActionResult> EditVacationRequest(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vacationRequest = await _employeeService.GetVacationRequest(id);
+
+            if (vacationRequest == null)
+            {
+                return NotFound();
+            }
+
+            var dto = new EditVacationRequestDto()
+            {
+                From = vacationRequest.From,
+                To = vacationRequest.To    
+            };
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "employee,manager")]
+        public async Task<IActionResult> EditVacationRequest(EditVacationRequestDto dto)
+        {
+            var vacationRequest = await _employeeService.GetVacationRequest(dto.Id);
+            if (vacationRequest.RequestStatusId != 1)
+            {
+                TempData["EditRequestMessage"] = "Można edytować wniosek, który jeszcze nie został zatwirdzony lub odrzucony.";
+                TempData["message-type"] = "warning";
+                return RedirectToAction(nameof(GetVacationRequests));
+            }
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return RedirectToAction(nameof(GetVacationRequests));
+                }
+                string message = "";
+
+                var days = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To, out message);
+
+                if (days == 0)
+                {
+                    TempData["EditRequestMessage"] = $"{message}";
+                    TempData["message-type"] = "warning";
+                }
+                if (days > 0)
+                {
+                    TempData["EditRequestMessage"] = $"{message} {days}";
+                    TempData["message-type"] = "success";
+                }
+
+                await _employeeService.EditVacationRequest(dto);
+
+                return RedirectToAction(nameof(GetVacationRequests));
+            }
+            catch (Exception e)
+            {
+                TempData["EditRequestMessage"] = $"{e.Message}";
+                TempData["message-type"] = "danger";
+                return View();
+            }
         }
     }
 }

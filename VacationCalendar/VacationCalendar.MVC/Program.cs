@@ -17,6 +17,7 @@ namespace VacationCalendar.MVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews().AddFluentValidation();
+
             // rejestrowanie zale¿noœci z modu³u z logik¹ biznesow¹
             builder.Services.AddBusinessLogic(builder.Configuration);
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
@@ -24,6 +25,7 @@ namespace VacationCalendar.MVC
             builder.Services.AddScoped<IVacationService, VacationService>();
             builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
             builder.Services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
+            builder.Services.AddScoped<ICountVacationDaysLogic, CountVacationDaysLogic>();
 
             builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
             {

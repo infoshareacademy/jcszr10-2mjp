@@ -1,0 +1,132 @@
+﻿@using VacationCalendar.BusinessLogic.Models;
+@model IEnumerable<VacationRequest>;
+
+<div class="container">
+    @if (TempData["DeleteConfirmed"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["DeleteConfirmed"]
+        </div>
+    }
+    @if (TempData["EditRequestMessage"] != null)
+    {
+        <div class="alert alert-@TempData["message-type"]" role="alert" ]>
+            @TempData["EditRequestMessage"]
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="alert alert-primary" role="alert">
+            Brak wniosków urlopowych.
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.From)</th>
+                    <th>@Html.DisplayNameFor(model => model.To)</th>
+                    <th>@Html.DisplayNameFor(model => model.VacationDays)</th>
+                    <th>@Html.DisplayNameFor(model => model.RequestStatus)</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.From.ToShortDateString()</td>
+                        <td>@item.To.ToShortDateString()</td>
+                        <td>@item.VacationDays</td>
+                        <td>@item.RequestStatus.RequestStatusName</td>
+                        <td>
+                            @if (@item.RequestStatus.Id == 1)
+                            {
+                                <form method="post">
+                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
+                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
+                                        Edytuj
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>Akcje niedostępne.</p>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @foreach (var item in Model)
+        {
+            <div class="modal fade" id="myModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form asp-action="EditVacationRequest" asp-route-id="@item.Id">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edytuj wniosek</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="@item.From" class="control-label"></label>
+                                    <input asp-for="@item.From" class="form-control" name="From" />
+                                    <span asp-validation-for="@item.From" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@item.To" class="control-label"></label>
+                                    <input asp-for="@item.To" class="form-control" name="To" />
+                                    <span asp-validation-for="@item.To" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                <input type="submit" value="Zapisz" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!--Delete Modal -->
+
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Usuwanie wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy na pewno chcesz usunąć wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueDelete" class="btn btn-danger">Usuń</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        var pathToDelete;
+        $(".deleteItem").click(function (e) {
+            pathToDelete = $(this).data('path');
+        })
+        $("#btnContinueDelete").click(function () {
+            window.location = pathToDelete;
+        })
+    </script>
+}
+
