@@ -9,7 +9,6 @@ namespace VacationCalendar.BusinessLogic.Services
 {
     public interface IVacationService
     {
-         Task CreateVacationRequest(CreateVacationRequestDto dto);
-         int CountVacationDays(DateTime dateFrom, DateTime dateTo, out string message);
+        
     }
 }

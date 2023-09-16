@@ -11,11 +11,11 @@ namespace VacationCalendar.MVC.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeService _employeeService;
-        private readonly ICountVacationDaysLogic _countVacationDaysLogic;
-        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysLogic countVacationDaysLogic)
+        private readonly ICountVacationDaysService _countVacationDaysService;
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService)
         {
             _employeeService = employeeService;
-            _countVacationDaysLogic = countVacationDaysLogic;
+            _countVacationDaysService = countVacationDaysService;
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -36,7 +36,7 @@ namespace VacationCalendar.MVC.Controllers
                 }
                 string message = "";
 
-                var days = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To, out message);
+                var days = _countVacationDaysService.CountVacationDays(dto.From, dto.To, out message);
 
                 if (days == 0)
                 {
@@ -118,7 +118,7 @@ namespace VacationCalendar.MVC.Controllers
                 }
                 string message = "";
 
-                var days = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To, out message);
+                var days = _countVacationDaysService.CountVacationDays(dto.From, dto.To, out message);
 
                 if (days == 0)
                 {

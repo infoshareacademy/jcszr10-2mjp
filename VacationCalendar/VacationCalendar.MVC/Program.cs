@@ -25,7 +25,7 @@ namespace VacationCalendar.MVC
             builder.Services.AddScoped<IVacationService, VacationService>();
             builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
             builder.Services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
-            builder.Services.AddScoped<ICountVacationDaysLogic, CountVacationDaysLogic>();
+            builder.Services.AddScoped<ICountVacationDaysService, CountVacationDaysService>();
 
             builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
             {
