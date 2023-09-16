@@ -9,8 +9,8 @@ namespace VacationCalendar.BusinessLogic.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly VacationCalendarDbContext _context;
-        private readonly ICountVacationDaysLogic _countVacationDaysLogic;
-        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysLogic countVacationDaysLogic)
+        private readonly ICountVacationDaysService _countVacationDaysLogic;
+        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic)
         {
             _context = context;
             _countVacationDaysLogic = countVacationDaysLogic;
@@ -72,7 +72,7 @@ namespace VacationCalendar.BusinessLogic.Services
 
         public async Task<VacationRequest> GetVacationRequest(int id)
         {
-           return await _context.VacationRequests.FirstOrDefaultAsync(r => r.Id == id);         
+           return await _context.VacationRequests.FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task EditVacationRequest(EditVacationRequestDto dto)
@@ -81,7 +81,7 @@ namespace VacationCalendar.BusinessLogic.Services
             if(request == null)
             {
                 throw new Exception("Nie ma takiego wniosku!");
-            }      
+            }
             request.From = dto.From;
             request.To = dto.To;
             request.VacationDays = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To);
