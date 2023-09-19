@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Text;
 using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
@@ -31,6 +33,18 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
             var vacationRequests = await _employeeService.GetVacationRequests(dto.Email);
+
+            foreach (var previousRequest in vacationRequests)
+            {
+                if ((dto.From <= previousRequest.To && dto.To >= previousRequest.From)
+                    || (dto.From >= previousRequest.From && dto.To <= previousRequest.To))
+                {
+                    TempData["RequestMessage"] = "Twój nowy wniosek pokrywa się z poprzednimi.";
+                    TempData["message-type"] = "danger";
+                    return View();
+                }
+            }
+
             int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, dto.Email);
             try
             {
