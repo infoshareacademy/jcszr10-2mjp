@@ -14,6 +14,24 @@
             @TempData["EditRequestMessage"]
         </div>
     }
+    @if (ViewData["FreeDays"] != null)
+    {
+        if ((int)ViewData["FreeDays"] == 1)
+        {
+            <h3>Masz @ViewData["FreeDays"] dzień urlopu do wykorzystania.</h3>
+        }
+        else if ((int)ViewData["FreeDays"] == 0)
+        {
+            <div class="alert alert-warning" role="alert">
+                Nie masz już urlopu.
+            </div>
+        }
+        else
+        {
+            <h3>Masz @ViewData["FreeDays"] dni urlopu do wykorzystania.</h3>
+        }
+    }
+
     @if (!Model.Any())
     {
         <div class="alert alert-primary" role="alert">

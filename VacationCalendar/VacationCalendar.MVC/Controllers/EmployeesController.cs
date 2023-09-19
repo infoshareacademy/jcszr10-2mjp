@@ -12,10 +12,12 @@ namespace VacationCalendar.MVC.Controllers
     {
         private readonly IEmployeeService _employeeService;
         private readonly ICountVacationDaysLogic _countVacationDaysLogic;
-        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysLogic countVacationDaysLogic)
+        private readonly ICountEmployeeDaysService _countEmployeeDaysService;
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysLogic countVacationDaysLogic, ICountEmployeeDaysService countEmployeeDaysService)
         {
             _employeeService = employeeService;
             _countVacationDaysLogic = countVacationDaysLogic;
+            _countEmployeeDaysService = countEmployeeDaysService;
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -28,6 +30,8 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
+            var vacationRequests = await _employeeService.GetVacationRequests(dto.Email);
+            int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, dto.Email);
             try
             {
                 if (!ModelState.IsValid)
@@ -37,6 +41,15 @@ namespace VacationCalendar.MVC.Controllers
                 string message = "";
 
                 var days = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To, out message);
+
+                var daysAfterRequest = freeDays - days;
+
+                if (daysAfterRequest < 0)
+                {
+                    TempData["RequestMessage"] = "Twój wniosek przekracza ilość dni urlopu do wykorzystanaia.";
+                    TempData["message-type"] = "danger";
+                    return View();
+                }
 
                 if (days == 0)
                 {
@@ -64,6 +77,15 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> GetVacationRequests()
         {
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
+            int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
+            if (freeDays != null)
+            {
+                if (freeDays < 0)
+                {
+                    ViewData["FreeDays"] = 0;
+                }
+                ViewData["FreeDays"] = freeDays;
+            }
             return View(requests);
         }
 
