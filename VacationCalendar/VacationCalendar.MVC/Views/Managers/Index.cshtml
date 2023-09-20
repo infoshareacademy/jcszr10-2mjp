@@ -2,7 +2,12 @@
 @model IEnumerable<VacationRequest>;
 
 <div class="container">
-   
+    @if (TempData["DeleteConfirmed"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["DeleteConfirmed"]
+        </div>
+    }
 
     @if (!Model.Any())
     {
@@ -35,7 +40,14 @@
                         <td>@item.VacationDays</td>
                         <td>@item.RequestStatus.RequestStatusName</td>
                         <td>
-                            Tymczasowo niedostępne
+                            <form method="post">
+                                <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Delete", "Managers", new {item.Id})">Usuń</a>
+                                <a id="acceptItem" class="btn btn-sm btn-success acceptItem" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Accept", "Managers", new {item.Id})">Akceptuj</a>
+                                <a id="rejectItem" class="btn btn-sm btn-dark rejectItem" data-bs-target="#ConfirmRejectModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Reject", "Managers", new {item.Id})">Odrzuć</a>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -98,6 +110,46 @@
     </div>
 </div>
 
+<!--Accept Modal -->
+
+<div class="modal fade" id="ConfirmAcceptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Akcepracja wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy chcesz akceptować wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueAccept" class="btn btn-success">Akceptuj wniosek</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Reject Modal -->
+
+<div class="modal fade" id="ConfirmRejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Odrzucanie wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy chcesz odrzucić wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueReject" class="btn btn-dark">Odzuć wniosek</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
 
     <script>
@@ -107,6 +159,22 @@
         })
         $("#btnContinueDelete").click(function () {
             window.location = pathToDelete;
+        })
+
+        var pathToAccept;
+        $(".acceptItem").click(function (e) {
+            pathToAccept = $(this).data('path');
+        })
+        $("#btnContinueAccept").click(function () {
+            window.location = pathToAccept;
+        })
+
+        var pathToReject;
+        $(".rejectItem").click(function (e) {
+            pathToReject = $(this).data('path');
+        })
+        $("#btnContinueReject").click(function () {
+            window.location = pathToReject;
         })
     </script>
 }

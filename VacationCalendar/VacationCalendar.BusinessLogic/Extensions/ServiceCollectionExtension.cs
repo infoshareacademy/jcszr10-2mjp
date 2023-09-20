@@ -20,10 +20,8 @@ namespace VacationCalendar.BusinessLogic.Extensions
                 option.UseSqlServer(configuration.GetConnectionString("VacationCalendar")));
 
             services.AddScoped<DataSeeder>();
-     
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IVacationService, VacationService>();
             services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
             services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
             services.AddScoped<ICountVacationDaysLogic, CountVacationDaysLogic>();
