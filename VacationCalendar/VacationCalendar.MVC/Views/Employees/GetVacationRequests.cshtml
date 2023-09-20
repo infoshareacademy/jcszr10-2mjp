@@ -32,6 +32,12 @@
         }
     }
 
+    @if ((int)ViewData["FreeDays"] > 0)
+    {
+        <input type="button" class="btn btn-success" value="Utwórz nowy wniosek." onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
+    }
+
+
     @if (!Model.Any())
     {
         <div class="alert alert-primary" role="alert">

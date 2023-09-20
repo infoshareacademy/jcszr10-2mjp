@@ -29,6 +29,7 @@ namespace VacationCalendar.MVC.Controllers
         }
 
         // POST: VacationRequestsController/Create
+        [Authorize(Roles = "employee,manager")]
         [HttpPost]
         public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
@@ -88,6 +89,7 @@ namespace VacationCalendar.MVC.Controllers
             }
         }
 
+        [Authorize(Roles = "employee,manager")]
         public async Task<IActionResult> GetVacationRequests()
         {
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
