@@ -17,7 +17,7 @@ namespace VacationCalendar.MVC.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index()
         {
-            var requests = await _adminService.GetVacationRequestsAsync();   
+            var requests = await _adminService.GetVacationRequestsAsync();
             return View(requests);
         }
 

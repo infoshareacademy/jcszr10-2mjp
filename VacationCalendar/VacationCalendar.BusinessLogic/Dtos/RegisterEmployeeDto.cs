@@ -8,5 +8,6 @@
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public int RoleId { get; set; } = 3;
+        public int VacaationDays { get; set; }
     }
 }

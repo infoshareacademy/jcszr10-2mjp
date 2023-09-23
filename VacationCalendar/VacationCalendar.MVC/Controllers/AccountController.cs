@@ -18,7 +18,7 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IPasswordHasher<Employee> _passwordHasher;
         public AccountController(IAccountService accountService, IPasswordHasher<Employee> password)
         {
-            _accountService = accountService; 
+            _accountService = accountService;
             _passwordHasher = password;
         }
 
@@ -33,15 +33,16 @@ namespace VacationCalendar.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-               return View(dto);
+                ViewBag.RoleId = new SelectList(_accountService.GetDbContext().Roles, "Id", "Name");
+                return View(dto);
             }
-       
+
             _accountService.RegisterEmployee(dto);
            return RedirectToAction("GetEmployees", "Employees");
         }
         public ActionResult Login()
         {
-            return View(); 
+            return View();
         }
 
 
@@ -53,7 +54,7 @@ namespace VacationCalendar.MVC.Controllers
             {
                 return View();
             }
-              
+
             var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
 
             if (result == PasswordVerificationResult.Success)

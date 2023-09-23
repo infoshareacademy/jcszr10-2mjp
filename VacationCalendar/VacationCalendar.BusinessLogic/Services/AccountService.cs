@@ -27,6 +27,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 RoleId = dto.RoleId,
+                VacationDays = dto.VacaationDays
             };
             var hashedPassword = _passwordHasher.HashPassword(newEmployee, dto.Password);
             newEmployee.PasswordHash = hashedPassword;
