@@ -41,12 +41,12 @@
                         <td>@item.RequestStatus.RequestStatusName</td>
                         <td>
                             <form method="post">
-                                <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                   data-path="@Url.Action("Delete", "Managers", new {item.Id})">Usuń</a>
                                 <a id="acceptItem" class="btn btn-sm btn-success acceptItem" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
                                    data-path="@Url.Action("Accept", "Managers", new {item.Id})">Akceptuj</a>
-                                <a id="rejectItem" class="btn btn-sm btn-dark rejectItem" data-bs-target="#ConfirmRejectModal" data-bs-toggle="modal"
+                                <a id="rejectItem" class="btn btn-sm btn-warning rejectItem" data-bs-target="#ConfirmRejectModal" data-bs-toggle="modal"
                                    data-path="@Url.Action("Reject", "Managers", new {item.Id})">Odrzuć</a>
+                               @*  <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Delete", "Managers", new {item.Id})">Usuń</a> *@
                             </form>
                         </td>
                     </tr>
@@ -92,7 +92,7 @@
 
 <!--Delete Modal -->
 
-<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@* <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -108,7 +108,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@
 
 <!--Accept Modal -->
 
@@ -144,7 +144,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-                <button id="btnContinueReject" class="btn btn-dark">Odzuć wniosek</button>
+                <button id="btnContinueReject" class="btn btn-warning">Odzuć wniosek</button>
             </div>
         </div>
     </div>

@@ -27,7 +27,8 @@ namespace VacationCalendar.BusinessLogic.Services
 
             foreach (var request in vacationRequests)
             {  
-                daysCounter += request.VacationDays;
+                if(request.RequestStatus.Id != 3)
+                    daysCounter += request.VacationDays;
             }
             int? freeDays = employeeVacationDays - daysCounter;
     

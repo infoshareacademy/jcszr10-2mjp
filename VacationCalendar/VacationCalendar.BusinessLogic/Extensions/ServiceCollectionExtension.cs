@@ -27,6 +27,7 @@ namespace VacationCalendar.BusinessLogic.Extensions
             services.AddScoped<ICountVacationDaysLogic, CountVacationDaysLogic>();
             services.AddScoped<ICountEmployeeDaysService, CountEmployeeDaysService>();
             services.AddScoped<IManagerService, ManagerService>();
+            services.AddScoped<IAdminService, AdminService>();
         }
     }
 }

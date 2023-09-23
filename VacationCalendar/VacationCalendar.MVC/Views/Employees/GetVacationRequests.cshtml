@@ -67,11 +67,11 @@
                             @if (@item.RequestStatus.Id == 1)
                             {
                                 <form method="post">
-                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
                                         Edytuj
                                     </button>
+                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
                                 </form>
                             }
                             else

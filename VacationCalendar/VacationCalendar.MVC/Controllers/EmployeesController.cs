@@ -105,7 +105,7 @@ namespace VacationCalendar.MVC.Controllers
             return View(requests);
         }
 
-        [Authorize(Roles = "employee,manager")]
+        [Authorize(Roles = "employee")]
         public async Task<IActionResult> DeleteVacationRequest(int id)
         {
             await _employeeService.DeleteVacationRequest(id);
