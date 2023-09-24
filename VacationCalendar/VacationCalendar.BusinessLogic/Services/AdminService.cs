@@ -30,5 +30,12 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             return _dbContext.Employees.Include(e=>e.Role).ToList();
         }
+
+        public async Task DeleteEmployeeAsync(Guid id)
+        {
+            var employee = await _dbContext.Employees.FindAsync(id);
+            _dbContext.Employees.Remove(employee);
+            _dbContext.SaveChanges();
+        }
     }
 }

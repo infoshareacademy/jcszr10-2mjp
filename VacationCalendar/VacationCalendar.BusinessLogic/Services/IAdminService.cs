@@ -7,5 +7,6 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task <List<VacationRequest>> GetVacationRequestsAsync();
         public Task<List<Employee>> GetEmployeesAsync();
         public Task DeleteVacationRequestAsync(int id);
+        public Task DeleteEmployeeAsync(Guid id);
     }
 }

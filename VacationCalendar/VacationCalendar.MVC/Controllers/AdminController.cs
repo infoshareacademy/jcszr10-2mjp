@@ -38,13 +38,14 @@ namespace VacationCalendar.MVC.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteEmployee(int Id)
+        public async Task<IActionResult> DeleteEmployee(Guid id)
         {
-            throw new NotImplementedException();
+            await _adminService.DeleteEmployeeAsync(id);
+            TempData["DeleteConfirmed"] = "Pracownik został usunięty";
+            return RedirectToAction("GetEmployees");
         }
 
         [Authorize(Roles = "admin")]
-
         public async Task<IActionResult> EditEmployee(Employee employee)
         {
             throw new NotImplementedException();

@@ -3,6 +3,12 @@
 <div class="container">
     <h6>Menu administratora</h6>
     <hr />
+    @if (TempData["DeleteConfirmed"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["DeleteConfirmed"]
+        </div>
+    }
     <input type="button" class="btn btn-success" value="Dodaj pracownika" onclick="location.href='@Url.Action("Register", "Account")'" />
     <table class="table">
         <thead>
@@ -22,9 +28,12 @@
                     <td>@item.LastName</td>
                     <td>@item.Email</td>
                     <td>@item.Role.Name</td>
-                    <td>
-                        <a class="btn btn-sm btn-warning" href="@Url.Action("EditEmployee", new { id = item.Id })">Edit</a>
-                        <a class="btn btn-sm btn-danger" href="@Url.Action("DeleteEmployee", new { id = item.Id })">Delete</a>
+                    <td>              
+                        <form method="post">
+                            <a class="btn btn-sm btn-warning" href="@Url.Action("EditEmployee", new { id = item.Id })">Edit</a>
+                            <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                               data-path="@Url.Action("DeleteEmployee", "Admin", new {item.Id})">Usuń</a>
+                        </form>
                     </td>
                 </tr>
             }
@@ -32,3 +41,35 @@
     </table>
 
 </div>
+
+<!--Delete Modal -->
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Usuwanie pracownika.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy na pewno chcesz usunąć pracownika?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueDelete" class="btn btn-danger">Usuń</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        var pathToDelete;
+        $(".deleteItem").click(function (e) {
+            pathToDelete = $(this).data('path');
+        })
+        $("#btnContinueDelete").click(function () {
+            window.location = pathToDelete;
+        })
+    </script>
+}
