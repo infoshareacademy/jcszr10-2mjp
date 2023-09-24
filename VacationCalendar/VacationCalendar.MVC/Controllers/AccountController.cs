@@ -38,7 +38,7 @@ namespace VacationCalendar.MVC.Controllers
             }
 
             _accountService.RegisterEmployee(dto);
-           return RedirectToAction("GetEmployees", "Employees");
+           return RedirectToAction("GetEmployees", "Admin");
         }
         public ActionResult Login()
         {

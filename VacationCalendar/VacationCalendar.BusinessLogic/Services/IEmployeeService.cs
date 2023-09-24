@@ -14,6 +14,5 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task<VacationRequest> GetVacationRequest(int id);
         public Task EditVacationRequest(EditVacationRequestDto dto);
         Task CreateVacationRequest(CreateVacationRequestDto dto);
-
     }
 }

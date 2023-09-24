@@ -179,6 +179,6 @@ namespace VacationCalendar.MVC.Controllers
                 TempData["message-type"] = "danger";
                 return View();
             }
-        }
+        }  
     }
 }

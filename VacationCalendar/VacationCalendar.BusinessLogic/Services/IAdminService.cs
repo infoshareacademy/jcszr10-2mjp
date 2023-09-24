@@ -4,7 +4,8 @@ namespace VacationCalendar.BusinessLogic.Services
 {
     public interface IAdminService
     {
-        public Task <List<VacationRequest>> GetVacationRequestsAsync ();
-        public Task Delete(int id);
+        public Task <List<VacationRequest>> GetVacationRequestsAsync();
+        public Task<List<Employee>> GetEmployeesAsync();
+        public Task DeleteVacationRequestAsync(int id);
     }
 }

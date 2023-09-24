@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
@@ -15,18 +16,39 @@ namespace VacationCalendar.MVC.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> GetVacationRequests()
         {
             var requests = await _adminService.GetVacationRequestsAsync();
-            return View(requests);
+            return View("GetVacationRequests", requests);
         }
 
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteVacationRequest(int id)
         {
-            await _adminService.Delete(id);
+            await _adminService.DeleteVacationRequestAsync(id);
             TempData["DeleteConfirmed"] = "Wniosek został usunięty";
-            return RedirectToAction("Index");
+            return RedirectToAction("GetVacationRequests");
         }
+
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetEmployees()
+        {
+            var employees = await _adminService.GetEmployeesAsync();
+            return View(employees);
+        }
+
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteEmployee(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Authorize(Roles = "admin")]
+
+        public async Task<IActionResult> EditEmployee(Employee employee)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

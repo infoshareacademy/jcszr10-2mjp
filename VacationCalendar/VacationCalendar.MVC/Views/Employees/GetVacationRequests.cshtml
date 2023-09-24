@@ -34,7 +34,7 @@
 
     @if ((int)ViewData["FreeDays"] > 0)
     {
-        <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek." onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
+        <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
     }
 
     @if (!Model.Any())

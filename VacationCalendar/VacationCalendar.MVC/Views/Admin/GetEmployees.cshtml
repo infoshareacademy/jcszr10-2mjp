@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<VacationCalendar.BusinessLogic.Models.Employee>;
 
-
 <div class="container">
     <h6>Menu administratora</h6>
     <hr />
@@ -24,8 +23,8 @@
                     <td>@item.Email</td>
                     <td>@item.Role.Name</td>
                     <td>
-                        <a href="@Url.Action("Edit", new { id = item.Id })">Edit</a> |
-                        <a href="@Url.Action("Delete", new { id = item.Id })">Delete</a>
+                        <a class="btn btn-sm btn-warning" href="@Url.Action("EditEmployee", new { id = item.Id })">Edit</a>
+                        <a class="btn btn-sm btn-danger" href="@Url.Action("DeleteEmployee", new { id = item.Id })">Delete</a>
                     </td>
                 </tr>
             }
