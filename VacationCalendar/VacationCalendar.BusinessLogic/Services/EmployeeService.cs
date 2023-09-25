@@ -9,8 +9,8 @@ namespace VacationCalendar.BusinessLogic.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly VacationCalendarDbContext _context;
-        private readonly ICountVacationDaysLogic _countVacationDaysLogic;
-        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysLogic countVacationDaysLogic)
+        private readonly ICountVacationDaysService _countVacationDaysLogic;
+        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic)
         {
             _context = context;
             _countVacationDaysLogic = countVacationDaysLogic;

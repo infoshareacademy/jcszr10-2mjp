@@ -25,7 +25,7 @@ namespace VacationCalendar.BusinessLogic.Extensions
             services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
             services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
             services.AddScoped<IValidator<EditEmployeeDto>, EditEmployeeDtoValidator>();
-            services.AddScoped<ICountVacationDaysLogic, CountVacationDaysLogic>();
+            services.AddScoped<ICountVacationDaysService, CountVacationDaysService>();
             services.AddScoped<ICountEmployeeDaysService, CountEmployeeDaysService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IAdminService, AdminService>();

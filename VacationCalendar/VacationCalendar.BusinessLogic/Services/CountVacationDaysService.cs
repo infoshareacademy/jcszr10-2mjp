@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
-    public class CountVacationDaysLogic : ICountVacationDaysLogic
+    public class CountVacationDaysService : ICountVacationDaysService
     {
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele

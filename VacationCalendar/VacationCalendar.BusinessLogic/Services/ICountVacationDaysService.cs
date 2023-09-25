@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
-    public interface ICountVacationDaysLogic
+    public interface ICountVacationDaysService
     {
         public int CountVacationDays(DateTime dateFrom, DateTime dateTo, out string message);
         public int CountVacationDays(DateTime dateFrom, DateTime dateTo);
