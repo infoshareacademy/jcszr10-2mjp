@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
@@ -46,9 +48,20 @@ namespace VacationCalendar.MVC.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> EditEmployee(Employee employee)
+        [HttpGet]
+        public async Task<IActionResult> EditEmployee(Guid id) 
         {
-            throw new NotImplementedException();
+            var emplooyee = await _adminService.GetEmployeeDtoAsync(id);
+            ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+            return View(emplooyee);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
+        {
+            await _adminService.EditEmployeeAsync(dto);
+            return RedirectToAction("GetEmployees");
         }
 
     }
