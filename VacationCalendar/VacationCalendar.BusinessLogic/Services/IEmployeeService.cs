@@ -5,8 +5,6 @@ namespace VacationCalendar.BusinessLogic.Services
 {
     public interface IEmployeeService
     {
-        public List<Employee> GetAll();
-
         // Returns List of VacationRequests
         public Task<List<VacationRequest>> GetVacationRequests();
         // Returns List of VacationRequests belonging to Employee specified in parameter
@@ -16,6 +14,5 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task<VacationRequest> GetVacationRequest(int id);
         public Task EditVacationRequest(EditVacationRequestDto dto);
         Task CreateVacationRequest(CreateVacationRequestDto dto);
-
     }
 }

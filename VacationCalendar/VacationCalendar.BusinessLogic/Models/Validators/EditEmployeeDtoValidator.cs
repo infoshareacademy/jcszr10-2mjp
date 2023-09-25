@@ -1,0 +1,14 @@
+﻿using FluentValidation;
+using VacationCalendar.BusinessLogic.Data;
+using VacationCalendar.BusinessLogic.Dtos;
+
+namespace VacationCalendar.BusinessLogic.Models.Validators
+{
+    public class EditEmployeeDtoValidator : AbstractValidator<EditEmployeeDto>
+    {
+        public EditEmployeeDtoValidator(VacationCalendarDbContext dbContext)
+        {
+            RuleFor(x => x.VacaationDays).NotEmpty().GreaterThanOrEqualTo(0).LessThan(41);
+        }
+    }
+}

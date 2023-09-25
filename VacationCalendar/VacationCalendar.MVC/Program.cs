@@ -1,12 +1,6 @@
-using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Identity;
-using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Extensions;
-using VacationCalendar.BusinessLogic.Models;
-using VacationCalendar.BusinessLogic.Models.Validators;
 using VacationCalendar.BusinessLogic.Seeders;
-using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC
 {
@@ -20,12 +14,6 @@ namespace VacationCalendar.MVC
 
             // rejestrowanie zale¿noœci z modu³u z logik¹ biznesow¹
             builder.Services.AddBusinessLogic(builder.Configuration);
-            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IVacationService, VacationService>();
-            builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
-            builder.Services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
-            builder.Services.AddScoped<ICountVacationDaysService, CountVacationDaysService>();
 
             builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
             {

@@ -1,0 +1,9 @@
+﻿@if (User.IsInRole("manager"))
+{
+    <li>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="GetVacationRequests">Twoje wnioski urlopowe</a>
+    </li>
+    <li>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Managers" asp-action="Index">Zatwierdzanie wniosków</a>
+    </li>
+}

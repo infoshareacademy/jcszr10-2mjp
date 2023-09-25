@@ -40,11 +40,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 await _context.SaveChangesAsync();
             }
         }
-        public List<Employee> GetAll()
-        {
-            var employees =  _context.Employees.Include(e => e.Role).ToList();
-            return employees;
-        }
+ 
         public async Task<List<VacationRequest>> GetVacationRequests()
         {
             var requests = await _context.VacationRequests.Include(req => req.Employee).Include(req => req.RequestStatus).ToListAsync();

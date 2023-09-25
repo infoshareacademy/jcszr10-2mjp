@@ -14,6 +14,29 @@
             @TempData["EditRequestMessage"]
         </div>
     }
+    @if (ViewData["FreeDays"] != null)
+    {
+        if ((int)ViewData["FreeDays"] == 1)
+        {
+            <h3>Masz @ViewData["FreeDays"] dzień urlopu do wykorzystania.</h3>
+        }
+        else if ((int)ViewData["FreeDays"] == 0)
+        {
+            <div class="alert alert-warning" role="alert">
+                Nie masz już urlopu.
+            </div>
+        }
+        else
+        {
+            <h3>Masz @ViewData["FreeDays"] dni urlopu do wykorzystania.</h3>
+        }
+    }
+
+    @if ((int)ViewData["FreeDays"] > 0)
+    {
+        <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
+    }
+
     @if (!Model.Any())
     {
         <div class="alert alert-primary" role="alert">
@@ -44,11 +67,11 @@
                             @if (@item.RequestStatus.Id == 1)
                             {
                                 <form method="post">
-                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
                                         Edytuj
                                     </button>
+                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
                                 </form>
                             }
                             else

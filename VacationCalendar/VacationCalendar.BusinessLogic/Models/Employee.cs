@@ -11,13 +11,13 @@ namespace VacationCalendar.BusinessLogic.Models
 
         [Column(TypeName = "NVARCHAR")]
         [StringLength(100)]
-        [Display(Name = "First Name")]
+        [Display(Name = "Imię")]
         [Required(ErrorMessage = "Pole FirstName jest wymagane")]
         public string? FirstName { get; set; }
 
         [Column(TypeName = "NVARCHAR")]
         [StringLength(100)]
-        [Display(Name = "Last Name")]
+        [Display(Name = "Nazwisko")]
         [Required(ErrorMessage = "Pole LastName jest wymagane")]
         public string? LastName { get; set; }
 
@@ -25,8 +25,12 @@ namespace VacationCalendar.BusinessLogic.Models
         [Required(ErrorMessage = "Pole Email jest wymagane")]
         public string Email { get; set; }
         public string? PasswordHash { get; set; }
+
         public int? RoleId { get; set; }
+
         public virtual Role Role { get; set; }
+
+        [Display(Name = "Przyznane dni urlopu")]
         public int? VacationDays { get; set; }
     }
 }
