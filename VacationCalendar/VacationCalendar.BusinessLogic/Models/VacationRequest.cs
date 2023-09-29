@@ -21,7 +21,7 @@ namespace VacationCalendar.BusinessLogic.Models
         [DisplayName("Status wniosku")]
         public RequestStatus RequestStatus { get; set; }
 
-        [DisplayName("Ilośc dni urlopu na wniosku")]
+        [DisplayName("Dni urlopu")]
         public int? VacationDays { get; set; }
     }
 }

@@ -18,42 +18,44 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IPasswordHasher<Employee> _passwordHasher;
         public AccountController(IAccountService accountService, IPasswordHasher<Employee> password)
         {
-            _accountService = accountService; 
+            _accountService = accountService;
             _passwordHasher = password;
         }
 
         [Authorize(Roles = "admin")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
-            ViewBag.RoleId = new SelectList(_accountService.GetDbContext().Roles, "Id", "Name");
+            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
             return View("Register");
         }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterEmployeeDto dto)
         {
             if (!ModelState.IsValid)
             {
-               return View(dto);
+                ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+                return View(dto);
             }
-       
-            _accountService.RegisterEmployee(dto);
-           return RedirectToAction("GetEmployees", "Employees");
+
+            await _accountService.RegisterEmployee(dto);
+           return RedirectToAction("GetEmployees", "Admin");
         }
         public ActionResult Login()
         {
-            return View(); 
+            return View();
         }
-
 
         [HttpPost]
         public async Task<ActionResult> LoginAsync(LoginDto dto)
         {
-            var employee = _accountService.GetDbContext().Employees.Include(e => e.Role).FirstOrDefault(e => e.Email == dto.Email);
+            var employee = await _accountService.GetEmployeeByEmail(dto.Email);
             if (employee == null)
             {
                 return View();
             }
-              
+
             var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
 
             if (result == PasswordVerificationResult.Success)
@@ -80,7 +82,6 @@ namespace VacationCalendar.MVC.Controllers
 
             return View();
         }
-
         public ActionResult AccessDenied()
         {
             return View();

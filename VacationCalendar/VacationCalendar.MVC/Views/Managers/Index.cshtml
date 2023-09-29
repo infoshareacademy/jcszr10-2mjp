@@ -1,10 +1,182 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using VacationCalendar.BusinessLogic.Models;
+@model IEnumerable<VacationRequest>;
+
 <div class="container">
-    <h6>Menu managera</h6>
-    <hr />
-    <a asp-controller="#" asp-action="#" class="btn btn-success">Lista wniosków</a>
+    @if (TempData["DeleteConfirmed"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["DeleteConfirmed"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-primary" role="alert">
+            Brak wniosków urlopowych.
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Employee.FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Employee.LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.From)</th>
+                    <th>@Html.DisplayNameFor(model => model.To)</th>
+                    <th>@Html.DisplayNameFor(model => model.VacationDays)</th>
+                    <th>@Html.DisplayNameFor(model => model.RequestStatus)</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Employee.FirstName</td>
+                        <td>@item.Employee.LastName</td>
+                        <td>@item.From.ToShortDateString()</td>
+                        <td>@item.To.ToShortDateString()</td>
+                        <td>@item.VacationDays</td>
+                        <td>@item.RequestStatus.RequestStatusName</td>
+                        <td>
+                            <form method="post">
+                                <a id="acceptItem" class="btn btn-sm btn-success acceptItem" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Accept", "Managers", new {item.Id})">Akceptuj</a>
+                                <a id="rejectItem" class="btn btn-sm btn-warning rejectItem" data-bs-target="#ConfirmRejectModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Reject", "Managers", new {item.Id})">Odrzuć</a>
+                               @*  <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                   data-path="@Url.Action("Delete", "Managers", new {item.Id})">Usuń</a> *@
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @foreach (var item in Model)
+        {
+            <div class="modal fade" id="myModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form asp-action="EditVacationRequest" asp-route-id="@item.Id">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edytuj wniosek</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="@item.From" class="control-label"></label>
+                                    <input asp-for="@item.From" class="form-control" name="From" />
+                                    <span asp-validation-for="@item.From" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@item.To" class="control-label"></label>
+                                    <input asp-for="@item.To" class="form-control" name="To" />
+                                    <span asp-validation-for="@item.To" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                <input type="submit" value="Zapisz" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
 </div>
+
+<!--Delete Modal -->
+
+@* <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Usuwanie wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy na pewno chcesz usunąć wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueDelete" class="btn btn-danger">Usuń</button>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+<!--Accept Modal -->
+
+<div class="modal fade" id="ConfirmAcceptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Akcepracja wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy chcesz akceptować wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueAccept" class="btn btn-success">Akceptuj wniosek</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Reject Modal -->
+
+<div class="modal fade" id="ConfirmRejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Odrzucanie wniosku.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Czy chcesz odrzucić wniosek?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueReject" class="btn btn-warning">Odzuć wniosek</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        var pathToDelete;
+        $(".deleteItem").click(function (e) {
+            pathToDelete = $(this).data('path');
+        })
+        $("#btnContinueDelete").click(function () {
+            window.location = pathToDelete;
+        })
+
+        var pathToAccept;
+        $(".acceptItem").click(function (e) {
+            pathToAccept = $(this).data('path');
+        })
+        $("#btnContinueAccept").click(function () {
+            window.location = pathToAccept;
+        })
+
+        var pathToReject;
+        $(".rejectItem").click(function (e) {
+            pathToReject = $(this).data('path');
+        })
+        $("#btnContinueReject").click(function () {
+            window.location = pathToReject;
+        })
+    </script>
+}
+
+
