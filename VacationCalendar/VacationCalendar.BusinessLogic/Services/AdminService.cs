@@ -14,6 +14,17 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext = dbContext;
         }
 
+        public async Task EditSettings(int vacationDays, int roleId)
+        {
+            var settings = await _dbContext.AdminSettings.FirstAsync();
+            if (settings == null)
+            {
+                throw new InvalidOperationException();
+            }
+            settings.DefaultVacationDays = vacationDays;
+            settings.RoleId = roleId;
+            await _dbContext.SaveChangesAsync();
+        }
         public async Task<AdminSettings>GetAdminSettings()
         {
             return await _dbContext.AdminSettings.FirstAsync();
