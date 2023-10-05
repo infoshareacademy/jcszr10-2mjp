@@ -14,6 +14,11 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext = dbContext;
         }
 
+        public async Task<AdminSettings>GetAdminSettings()
+        {
+            return await _dbContext.AdminSettings.FirstAsync();
+        }
+
         public async Task<List<Role>> GetRolesAsync()
         {
             return await _dbContext.Roles.ToListAsync();

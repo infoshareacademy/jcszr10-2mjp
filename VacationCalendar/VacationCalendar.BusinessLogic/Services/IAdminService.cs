@@ -13,5 +13,6 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task DeleteEmployeeAsync(Guid id);
         public Task<EditEmployeeDto> GetEmployeeDtoAsync(Guid id);
         public Task EditEmployeeAsync(EditEmployeeDto dto);
+        public Task<AdminSettings> GetAdminSettings();
     }
 }
