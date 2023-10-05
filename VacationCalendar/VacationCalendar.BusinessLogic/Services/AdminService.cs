@@ -86,6 +86,15 @@ namespace VacationCalendar.BusinessLogic.Services
             {
                 throw new Exception("Nie ma takiego pracownika!");
             }
+
+            if( employee.Email != dto.Email)
+            {
+                if (_dbContext.Employees.Any(e => e.Email == dto.Email))
+                {
+                    throw new Exception("Ten Email już istnieje w bazie");
+                }
+            }
+
             try
             {
                 employee.Id = dto.Id;

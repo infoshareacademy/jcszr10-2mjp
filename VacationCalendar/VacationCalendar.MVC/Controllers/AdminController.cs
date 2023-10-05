@@ -71,6 +71,5 @@ namespace VacationCalendar.MVC.Controllers
             await _adminService.EditEmployeeAsync(dto);
             return RedirectToAction("GetEmployees");
         }
-
     }
 }
