@@ -18,6 +18,7 @@ namespace VacationCalendar.BusinessLogic.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RequestStatus> RequestStatuses { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<AdminSettings> AdminSettings { get; set; }
 
     }
 }

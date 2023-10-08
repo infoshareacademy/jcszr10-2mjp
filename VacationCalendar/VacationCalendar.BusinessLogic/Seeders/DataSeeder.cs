@@ -50,6 +50,12 @@ namespace VacationCalendar.BusinessLogic.Seeders
                     _dbContext.RequestStatuses.AddRange(status1, status2, status3);
                     _dbContext.SaveChanges();
                 }
+
+                if(!_dbContext.AdminSettings.Any())
+                {
+                   _dbContext.AdminSettings.Add(new AdminSettings() { RoleId = 3, DefaultVacationDays = 26 });
+                   _dbContext.SaveChanges();
+                }
             }
         }
     }

@@ -16,6 +16,14 @@ namespace VacationCalendar.MVC.Controllers
         {
             _adminService = adminService;
         }
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> EditSettings(int vacationDays, int roleId)
+        {
+            await _adminService.EditSettings(vacationDays, roleId);
+            return RedirectToAction("Register", "Account");
+
+        }
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetVacationRequests()
@@ -63,6 +71,5 @@ namespace VacationCalendar.MVC.Controllers
             await _adminService.EditEmployeeAsync(dto);
             return RedirectToAction("GetEmployees");
         }
-
     }
 }
