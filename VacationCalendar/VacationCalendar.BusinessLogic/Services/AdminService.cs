@@ -79,19 +79,19 @@ namespace VacationCalendar.BusinessLogic.Services
             };
             return dto;
         }
-        public async Task EditEmployeeAsync(EditEmployeeDto dto)
+        public async Task<string> EditEmployeeAsync(EditEmployeeDto dto)
         {
             var employee = await GetEmployeeByIdAsync(dto.Id);
             if (employee == null)
             {
-                throw new Exception("Nie ma takiego pracownika!");
+                return "Nie ma takiego pracownika!";
             }
 
-            if( employee.Email != dto.Email)
+            if (employee.Email != dto.Email)
             {
                 if (_dbContext.Employees.Any(e => e.Email == dto.Email))
                 {
-                    throw new Exception("Ten Email już istnieje w bazie");
+                    return "Ten Email jest już zarezerwowany!";
                 }
             }
 
@@ -107,8 +107,9 @@ namespace VacationCalendar.BusinessLogic.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return ex.Message;
             }
+            return "Poprawnie edytowano pracownika.";
         }
     }
 }
