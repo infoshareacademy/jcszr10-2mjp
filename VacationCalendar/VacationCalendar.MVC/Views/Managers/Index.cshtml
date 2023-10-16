@@ -4,7 +4,6 @@
     <h4>Zatwierdzanie wniosków</h4>
 
     <hr />
-<div class="container">
     @if (TempData["DeleteConfirmed"] != null)
     {
         <div class="alert alert-success" role="alert">
@@ -92,7 +91,6 @@
         }
     }
 </div>
-
 <!--Delete Modal -->
 
 @* <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -119,7 +117,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Akcepracja wniosku.</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Akceptacja wniosku.</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -156,14 +154,6 @@
 @section scripts{
 
     <script>
-        var pathToDelete;
-        $(".deleteItem").click(function (e) {
-            pathToDelete = $(this).data('path');
-        })
-        $("#btnContinueDelete").click(function () {
-            window.location = pathToDelete;
-        })
-
         var pathToAccept;
         $(".acceptItem").click(function (e) {
             pathToAccept = $(this).data('path');
