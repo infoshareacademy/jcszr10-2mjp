@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using NToastNotify;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,16 +20,21 @@ namespace VacationCalendar.BusinessLogic.Extensions
             services.AddDbContext<VacationCalendarDbContext>(option =>
                 option.UseSqlServer(configuration.GetConnectionString("VacationCalendar")));
 
+
             services.AddScoped<DataSeeder>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
+
             services.AddScoped<IValidator<RegisterEmployeeDto>, RegisterEmployeeDtoValidator>();
             services.AddScoped<IValidator<EditEmployeeDto>, EditEmployeeDtoValidator>();
+            services.AddScoped<IValidator<ChangePasswordDto>, ChangePasswordDtoValidator>();
+
             services.AddScoped<ICountVacationDaysService, CountVacationDaysService>();
             services.AddScoped<ICountEmployeeDaysService, CountEmployeeDaysService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IAdminService, AdminService>();
         }
+
     }
 }
