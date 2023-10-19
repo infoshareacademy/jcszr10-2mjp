@@ -1,6 +1,7 @@
 using FluentValidation.AspNetCore;
 using VacationCalendar.BusinessLogic.Extensions;
 using VacationCalendar.BusinessLogic.Seeders;
+using NToastNotify;
 
 namespace VacationCalendar.MVC
 {
@@ -11,6 +12,13 @@ namespace VacationCalendar.MVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews().AddFluentValidation();
+            builder.Services.AddMvc().AddNToastNotifyNoty(new NotyOptions
+            {
+                ProgressBar = true,
+                Timeout = 2000,
+                Layout = "topRight",
+                Theme = "metroui"
+            });
 
             // rejestrowanie zale¿noœci z modu³u z logik¹ biznesow¹
             builder.Services.AddBusinessLogic(builder.Configuration);
@@ -22,6 +30,8 @@ namespace VacationCalendar.MVC
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
+
+            
 
             var app = builder.Build();
 
@@ -36,6 +46,8 @@ namespace VacationCalendar.MVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseNToastNotify();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

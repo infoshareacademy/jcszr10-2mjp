@@ -11,7 +11,14 @@ namespace VacationCalendar.BusinessLogic.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasOne(e => e.Role).WithMany(r=>r.Employees).HasForeignKey(e=>e.RoleId);
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Role)
+                .WithMany(r=>r.Employees)
+                .HasForeignKey(e=>e.RoleId);
+
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.FirstPasswordChange)
+                .HasDefaultValue(false);
         }
 
         public DbSet<VacationRequest> VacationRequests { get; set; }

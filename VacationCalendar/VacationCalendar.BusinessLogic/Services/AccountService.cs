@@ -3,6 +3,7 @@ using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -10,11 +11,13 @@ namespace VacationCalendar.BusinessLogic.Services
     {
         private readonly VacationCalendarDbContext _dbContext;
         private readonly IPasswordHasher<Employee> _passwordHasher;
+        private readonly IToastNotification _toastNotification;
 
-        public AccountService(VacationCalendarDbContext dbContext, IPasswordHasher<Employee> passwordHasher)
+        public AccountService(VacationCalendarDbContext dbContext, IPasswordHasher<Employee> passwordHasher, IToastNotification toastNotification)
         {
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
+            _toastNotification = toastNotification;
         }
         public async Task<List<Role>> GetRolesAsync()
         {
@@ -40,5 +43,19 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext.Employees.Add(newEmployee);
             _dbContext.SaveChanges();
         }
+
+        public async Task ChangePassword(ChangePasswordDto dto, Employee emp) 
+        {
+            if (!emp.FirstPasswordChange)
+            {
+                emp.FirstPasswordChange = true;
+            }
+
+            var hashedNewPassword = _passwordHasher.HashPassword(emp, dto.NewPassword);
+            emp.PasswordHash = hashedNewPassword;
+            await _dbContext.SaveChangesAsync();
+            _toastNotification.AddSuccessToastMessage("Udana zmiana hasła");
+        }
+
     }
 }
