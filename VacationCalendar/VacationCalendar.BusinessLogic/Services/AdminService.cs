@@ -14,6 +14,22 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext = dbContext;
         }
 
+        public async Task EditSettings(int vacationDays, int roleId)
+        {
+            var settings = await _dbContext.AdminSettings.FirstAsync();
+            if (settings == null)
+            {
+                throw new InvalidOperationException();
+            }
+            settings.DefaultVacationDays = vacationDays;
+            settings.RoleId = roleId;
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task<AdminSettings>GetAdminSettings()
+        {
+            return await _dbContext.AdminSettings.FirstAsync();
+        }
+
         public async Task<List<Role>> GetRolesAsync()
         {
             return await _dbContext.Roles.ToListAsync();
@@ -63,13 +79,22 @@ namespace VacationCalendar.BusinessLogic.Services
             };
             return dto;
         }
-        public async Task EditEmployeeAsync(EditEmployeeDto dto)
+        public async Task<string> EditEmployeeAsync(EditEmployeeDto dto)
         {
             var employee = await GetEmployeeByIdAsync(dto.Id);
             if (employee == null)
             {
-                throw new Exception("Nie ma takiego pracownika!");
+                return "Nie ma takiego pracownika!";
             }
+
+            if (employee.Email != dto.Email)
+            {
+                if (_dbContext.Employees.Any(e => e.Email == dto.Email))
+                {
+                    return "Ten Email jest już zarezerwowany!";
+                }
+            }
+
             try
             {
                 employee.Id = dto.Id;
@@ -82,8 +107,9 @@ namespace VacationCalendar.BusinessLogic.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return ex.Message;
             }
+            return "Poprawnie edytowano pracownika.";
         }
     }
 }

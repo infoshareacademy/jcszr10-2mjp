@@ -38,14 +38,5 @@ namespace VacationCalendar.MVC.Controllers
             _managerService.Reject(vacationRequest);
             return RedirectToAction("Index");
         }
-
-
-        //[Authorize(Roles = "manager")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    await _managerService.Delete(id);
-        //    TempData["DeleteConfirmed"] = "Wniosek został usunięty";
-        //    return RedirectToAction("Index");
-        //}
     }
 }

@@ -14,19 +14,23 @@ namespace VacationCalendar.MVC.Controllers
 {
     public class AccountController : Controller
     {
-        public readonly IAccountService _accountService;
-
+        private readonly IAccountService _accountService;
+        private readonly IAdminService _adminService;
         private readonly IPasswordHasher<Employee> _passwordHasher;
-        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password)
+        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password, IAdminService adminService)
         {
             _accountService = accountService;
             _passwordHasher = password;
+            _adminService = adminService;
         }
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Register()
         {
-            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+            var settings = await _adminService.GetAdminSettings();
+            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name", settings.RoleId.ToString());
+            ViewData["VacationDays"] = settings.DefaultVacationDays;
+
             return View("Register");
         }
 
