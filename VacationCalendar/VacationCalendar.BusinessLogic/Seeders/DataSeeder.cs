@@ -35,6 +35,7 @@ namespace VacationCalendar.BusinessLogic.Seeders
                 {
                     var admin = new Employee() { FirstName = "admin", LastName = "admin", Email = "admin@company.com", RoleId = 1, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
                     var manager1 = new Employee() { FirstName = "Anna", LastName = "Kowalska", Email = "anna.kowalska@company.com", RoleId = 2, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var manager2 = new Employee() { FirstName = "Test", LastName = "Manager", Email = "testowy@manager.com", RoleId = 2, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
                     var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", Email = "magdalena.staniszewska@company.com", RoleId = 3 , VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
                     var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", Email = "piotr.tryfon@company.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
                     var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", Email = "jakub.szot@company.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
@@ -44,9 +45,9 @@ namespace VacationCalendar.BusinessLogic.Seeders
 
                 if (!_dbContext.RequestStatuses.Any())
                 {
-                    var status1 = new RequestStatus() { RequestStatusName = "InProgress" };
-                    var status2 = new RequestStatus() { RequestStatusName = "Confirmed" };
-                    var status3 = new RequestStatus() { RequestStatusName = "Rejected" };
+                    var status1 = new RequestStatus() { RequestStatusName = "Oczekuje" };
+                    var status2 = new RequestStatus() { RequestStatusName = "Potwierdzony" };
+                    var status3 = new RequestStatus() { RequestStatusName = "Odrzucony" };
                     _dbContext.RequestStatuses.AddRange(status1, status2, status3);
                     _dbContext.SaveChanges();
                 }

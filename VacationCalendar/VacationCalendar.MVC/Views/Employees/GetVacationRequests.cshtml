@@ -65,7 +65,11 @@
                         <td>@item.From.ToShortDateString()</td>
                         <td>@item.To.ToShortDateString()</td>
                         <td>@item.VacationDays</td>
-                        <td>@item.RequestStatus.RequestStatusName</td>
+                        <td>
+                            @item.RequestStatus.RequestStatusName
+                            <br/>
+                            @item.Message
+                        </td>
                         <td>
                             @if (@item.RequestStatus.Id == 1)
                             {
