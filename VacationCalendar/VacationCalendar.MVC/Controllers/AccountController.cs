@@ -57,20 +57,20 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<ActionResult> LoginAsync(LoginDto dto)
         {
             var employee = await _accountService.GetEmployeeByEmail(dto.Email);
-            if (employee == null)
+            if (employee != null)
             {
-                return View();
-                
+                await _accountService.LoginAsync(dto, employee);
+                if (!employee.FirstPasswordChange)
+                {
+                    return RedirectToAction("ChangePassword");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            await _accountService.LoginAsync(dto, employee);
-            if (!employee.FirstPasswordChange)
-            {
-                return RedirectToAction("ChangePassword");
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
+            return View();
         }
         public ActionResult AccessDenied()
         {
