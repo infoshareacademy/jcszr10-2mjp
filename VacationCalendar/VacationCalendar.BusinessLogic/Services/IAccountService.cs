@@ -9,5 +9,6 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task<Employee> GetEmployeeByEmail(string email);
         public Task<List<Role>> GetRolesAsync();
         public Task ChangePassword(ChangePasswordDto dto, Employee emp);
+        public Task LoginAsync(LoginDto dto, Employee employee);
     }
 }

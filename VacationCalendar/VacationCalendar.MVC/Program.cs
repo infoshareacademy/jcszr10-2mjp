@@ -11,6 +11,7 @@ namespace VacationCalendar.MVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllersWithViews().AddFluentValidation();
             builder.Services.AddMvc().AddNToastNotifyNoty(new NotyOptions
             {

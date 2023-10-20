@@ -47,9 +47,10 @@ namespace VacationCalendar.MVC.Controllers
             await _accountService.RegisterEmployee(dto);
            return RedirectToAction("GetEmployees", "Admin");
         }
-        public ActionResult Login()
+        [HttpGet]
+        public IActionResult Login()
         {
-            return View();
+            return View("Login");
         }
 
         [HttpPost]
@@ -59,38 +60,17 @@ namespace VacationCalendar.MVC.Controllers
             if (employee == null)
             {
                 return View();
+                
             }
-
-            var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
-
-            if (result == PasswordVerificationResult.Success)
+            await _accountService.LoginAsync(dto, employee);
+            if (!employee.FirstPasswordChange)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, employee.Email),
-                    new Claim(ClaimTypes.Role, $"{employee.Role.Name}"),
-                };
-                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-                ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
-
-                var authProperties = new AuthenticationProperties()
-                {
-                    IsPersistent = dto.RememberMe
-                };
-
-                await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal, authProperties);
-
-                if (!employee.FirstPasswordChange)
-                {          
-                    return RedirectToAction("ChangePassword"); 
-                }
-
+                return RedirectToAction("ChangePassword");
+            }
+            else
+            {
                 return RedirectToAction("Index", "Home");
             }
-
-            TempData["Message"] = $"Login failed";
-
-            return View();
         }
         public ActionResult AccessDenied()
         {
