@@ -27,7 +27,7 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> Accept(int id)
         {
             var vacationRequest = await _managerService.GetVacationRequestById(id);
-            _managerService.Accept(vacationRequest);
+            await _managerService.Accept(vacationRequest);
             return RedirectToAction("Index");
         }
 
@@ -35,7 +35,7 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> Reject(int id)
         {
             var vacationRequest = await _managerService.GetVacationRequestById(id);
-            _managerService.Reject(vacationRequest);
+            await _managerService.Reject(vacationRequest);
             return RedirectToAction("Index");
         }
     }

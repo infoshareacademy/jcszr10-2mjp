@@ -1,46 +1,95 @@
-﻿
-@model VacationCalendar.BusinessLogic.Dtos.LoginDto
+﻿@model VacationCalendar.BusinessLogic.Dtos.LoginDto
 @{
 }
 @{
     if (TempData["Message"] != null)
     {
         <h5 class="text-center" style="color: red">@TempData["Message"]</h5>
-
     }
 }
-<div class="container border col-6" style="padding:20px">
-    <form asp-action="Login">
-        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-        <div class="form-group row">
-            <div class="col-2">
-                <label asp-for="@Model.Email"></label>
-            </div>
-            <div class="col-10">
-                <input type="email" asp-for="@Model.Email" class="form-control" />
-            </div>
-            <span class="text-danger" asp-validation-for="@Model.Email"></span>
-        </div><br/>
-        <div class="form-group row">
-            <div class="col-2">
-                <label asp-for="@Model.Password"></label>
-            </div>
-            <div class="col-10">
-                <input type="password" asp-for="@Model.Password" class="form-control" />
-            </div>
-            <span class="text-danger" asp-validation-for="@Model.Password"></span>
-        </div><br/>
-        <div class="row form-check mb-2">
-            <div class="col-2">
-                <input type="checkbox"  asp-for="@Model.RememberMe" class="form-check-input"/>
-                <label class="form-check-label" asp-for="@Model.RememberMe"></label>
-            </div>
-        </div>
-        <div class="form-group row">
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" /></svg>
 
-            <div class="col-2">
-                <input type="submit" class="btn btn-primary" value="Login" />
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h1>Kalendarz urlopowy Twojej firmy!</h1>
+                    <p>Pracowniku! Zaloguj się i wypełnij wniosek o urlop!</p>
+                </div>
             </div>
         </div>
-    </form>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" /></svg>
+
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Jesteś managerem firmy?</h1>
+                    <p> Zaloguj się i zarządzaj urlopami pracowników Twojej firmy. </p>
+
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" /></svg>
+
+            <div class="container">
+                <div class="carousel-caption text-end">
+                    <h1>Jesteś administratorem? </h1>
+                    <p>Zaloguj się i wprowadź dane pracowników!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container border" style="padding:50px; ">
+    <div class="d-flex justify-content-center align-items-center">
+        <form asp-action="Login" class="mx-auto">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="@Model.Email"></label>
+                </div>
+                <div class="col-9">
+                    <input type="email" asp-for="@Model.Email" class="form-control" />
+                </div>
+                <span class="text-danger" asp-validation-for="@Model.Email"></span>
+            </div><br/>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="@Model.Password"></label>
+                </div>
+                <div class="col-9">
+                    <input type="password" asp-for="@Model.Password" class="form-control" />
+                </div>
+                <span class="text-danger" asp-validation-for="@Model.Password"></span>
+            </div><br/>
+            <div class="row form-check mb-2 d-flex justify-content-center align-items-center">
+                <div class="col-3">
+                    <input type="checkbox" asp-for="@Model.RememberMe" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.RememberMe"></label>
+                </div>
+            </div>
+            <div class="form-group row d-flex justify-content-center align-items-center">
+                <div class="col-3">
+                    <input type="submit" class="btn btn-primary" value="Login" />
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
