@@ -1,7 +1,10 @@
-﻿
-@if (User.IsInRole("employee"))
+﻿@if (User.IsInRole("employee"))
 {
     <li>
         <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="GetVacationRequests">Twoje wnioski urlopowe</a>
-    </li>    
+    </li>
+    <li>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangePassword">Zmień hasło</a>
+    </li>
 }
+

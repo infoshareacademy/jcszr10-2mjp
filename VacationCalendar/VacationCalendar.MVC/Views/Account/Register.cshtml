@@ -4,7 +4,12 @@
 }
 
 <div class="container">
-    <h4>Rejestracja pracownika</h4>
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Rejestracja pracownika</h4>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#settingsModal">
+            Ustawienia
+        </button>
+    </div>
     <hr />
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-4">
@@ -38,19 +43,49 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="VacationDays" class="control-label"></label>
-                    <input asp-for="VacationDays" class="form-control" />
+                    <input asp-for="VacationDays" class="form-control" value="@ViewData["VacationDays"]"/>
                     <span asp-validation-for="VacationDays" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="RoleId" class="control-label"></label>
                     <select asp-for="RoleId" class="form-control" asp-items=ViewBag.RoleId>
-                        <option>--wybierz--</option>
                     </select>
                     <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
                 <br />
                 <div class="form-group">
                     <input type="submit" id="btnSubmit" value="Dodaj" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Zmiana domyślnych ustawień</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="EditSettings" asp-controller="Admin">
+                <div class="modal-body">           
+                    <div class="form-group">
+                        <label asp-for="VacationDays" class="control-label"></label>
+                        <input asp-for="VacationDays" class="form-control" name="vacationDays" value="@ViewData["VacationDays"]" />
+                        <span asp-validation-for="VacationDays" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RoleId" class="control-label"></label>
+                        <select asp-for="RoleId" class="form-control" name="roleId" asp-items=ViewBag.RoleId>
+                        </select>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
+                    </div>            
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
                 </div>
             </form>
         </div>

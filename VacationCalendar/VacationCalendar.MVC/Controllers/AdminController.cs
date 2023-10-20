@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
@@ -15,6 +16,14 @@ namespace VacationCalendar.MVC.Controllers
         public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
+        }
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> EditSettings(int vacationDays, int roleId)
+        {
+            await _adminService.EditSettings(vacationDays, roleId);
+            return RedirectToAction("Register", "Account");
+
         }
 
         [Authorize(Roles = "admin")]
@@ -60,9 +69,19 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
         {
-            await _adminService.EditEmployeeAsync(dto);
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+            var message = await _adminService.EditEmployeeAsync(dto);
+            if (message.Contains('!'))
+            {
+                ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+                TempData["Message"] = message;
+                return View(dto);
+            }
+            TempData["Message"] = message;
             return RedirectToAction("GetEmployees");
         }
-
     }
 }

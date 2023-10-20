@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VacationCalendar.BusinessLogic.Data;
 
@@ -11,9 +12,11 @@ using VacationCalendar.BusinessLogic.Data;
 namespace VacationCalendar.BusinessLogic.Migrations
 {
     [DbContext(typeof(VacationCalendarDbContext))]
-    partial class VacationCalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231007204159_PasswordReset")]
+    partial class PasswordReset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,27 +24,6 @@ namespace VacationCalendar.BusinessLogic.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.AdminSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DefaultVacationDays")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AdminSettings");
-                });
 
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Employee", b =>
                 {
@@ -150,17 +132,6 @@ namespace VacationCalendar.BusinessLogic.Migrations
                     b.HasIndex("RequestStatusId");
 
                     b.ToTable("VacationRequests");
-                });
-
-            modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.AdminSettings", b =>
-                {
-                    b.HasOne("VacationCalendar.BusinessLogic.Models.Role", "DefaultEmployeeRole")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DefaultEmployeeRole");
                 });
 
             modelBuilder.Entity("VacationCalendar.BusinessLogic.Models.Employee", b =>
