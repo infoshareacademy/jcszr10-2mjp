@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System.Security.Claims;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
@@ -17,11 +18,13 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IAccountService _accountService;
         private readonly IAdminService _adminService;
         private readonly IPasswordHasher<Employee> _passwordHasher;
-        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password, IAdminService adminService)
+        private readonly IToastNotification _toastNotification;
+        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password, IAdminService adminService, IToastNotification toastNotification)
         {
             _accountService = accountService;
             _passwordHasher = password;
             _adminService = adminService;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(Roles = "admin")]
@@ -50,6 +53,7 @@ namespace VacationCalendar.MVC.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewData["email"] = "";
             return View("Login");
         }
 
@@ -69,7 +73,7 @@ namespace VacationCalendar.MVC.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-
+            _toastNotification.AddErrorToastMessage("Nie udało się zalogować");
             return View();
         }
         public ActionResult AccessDenied()
