@@ -23,5 +23,9 @@ namespace VacationCalendar.BusinessLogic.Models
 
         [DisplayName("Dni urlopu")]
         public int? VacationDays { get; set; }
+
+        [DisplayName("Uzasadnienie")]
+        [StringLength(250, ErrorMessage = "Uzasadnienie może zawierać maksymalnie {1} znaków.")]
+        public string? Message { get; set; }
     }
 }

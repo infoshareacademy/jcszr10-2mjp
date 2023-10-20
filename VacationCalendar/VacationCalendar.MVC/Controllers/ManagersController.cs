@@ -32,10 +32,10 @@ namespace VacationCalendar.MVC.Controllers
         }
 
         [Authorize(Roles = "manager")]
-        public async Task<IActionResult> Reject(int id)
+        public async Task<IActionResult> Reject(int id, string message)
         {
             var vacationRequest = await _managerService.GetVacationRequestById(id);
-            await _managerService.Reject(vacationRequest);
+            await _managerService.Reject(vacationRequest, message);
             return RedirectToAction("Index");
         }
     }

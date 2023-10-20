@@ -44,9 +44,9 @@ namespace VacationCalendar.BusinessLogic.Seeders
 
                 if (!_dbContext.RequestStatuses.Any())
                 {
-                    var status1 = new RequestStatus() { RequestStatusName = "InProgress" };
-                    var status2 = new RequestStatus() { RequestStatusName = "Confirmed" };
-                    var status3 = new RequestStatus() { RequestStatusName = "Rejected" };
+                    var status1 = new RequestStatus() { RequestStatusName = "Oczekuje" };
+                    var status2 = new RequestStatus() { RequestStatusName = "Potwierdzony" };
+                    var status3 = new RequestStatus() { RequestStatusName = "Odrzucony" };
                     _dbContext.RequestStatuses.AddRange(status1, status2, status3);
                     _dbContext.SaveChanges();
                 }
