@@ -26,7 +26,8 @@ namespace VacationCalendar.BusinessLogic.Services
         }
 
         public async Task LoginAsync(LoginDto dto, Employee employee)
-        {
+        {   
+            
             var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
 
             if (result == PasswordVerificationResult.Success)
