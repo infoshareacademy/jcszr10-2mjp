@@ -43,9 +43,9 @@
                         <td>@item.RequestStatus.RequestStatusName</td>
                         <td>
                             <form method="post">
-                                <a id="acceptItem" class="btn btn-sm btn-success acceptItem" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
+                                <a id="acceptItem" class="btn btn-sm btn-success acceptItem m-1" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
                                    data-path="@Url.Action("Accept", "Managers", new {item.Id})">Akceptuj</a>
-                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
+                                <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
                                     Odrzuć
                                 </button>
                             </form>
