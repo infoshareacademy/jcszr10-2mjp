@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using System.Data;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
@@ -62,6 +63,7 @@ namespace VacationCalendar.MVC.Controllers
         {
             var emplooyee = await _adminService.GetEmployeeDtoAsync(id);
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+            ViewData["employeeEmail"] = emplooyee.Email;
             return View(emplooyee);
         }
 
@@ -69,19 +71,15 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
         {
+            var emplooyee = await _adminService.GetEmployeeDtoAsync(dto.Id);
             if (!ModelState.IsValid)
             {
                 return View(dto);
             }
-            var message = await _adminService.EditEmployeeAsync(dto);
-            if (message.Contains('!'))
-            {
-                ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-                TempData["Message"] = message;
-                return View(dto);
-            }
-            TempData["Message"] = message;
-            return RedirectToAction("GetEmployees");
+            await _adminService.EditEmployeeAsync(dto);    
+            ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+            ViewData["employeeEmail"] = emplooyee.Email;
+            return View(dto);
         }
     }
 }

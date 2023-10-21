@@ -38,8 +38,8 @@
                     <td>@item.Role.Name</td>
                     <td>              
                         <form method="post">
-                            <a class="btn btn-sm btn-warning" href="@Url.Action("EditEmployee", new { id = item.Id })">Edit</a>
-                            <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                            <a class="btn btn-sm btn-warning m-1" href="@Url.Action("EditEmployee", new { id = item.Id })">Edit</a>
+                            <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
                                data-path="@Url.Action("DeleteEmployee", "Admin", new {item.Id})">Usuń</a>
                         </form>
                     </td>
