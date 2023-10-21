@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
@@ -9,9 +10,11 @@ namespace VacationCalendar.BusinessLogic.Services
     public class AdminService : IAdminService
     {
         private readonly VacationCalendarDbContext _dbContext;
-        public AdminService(VacationCalendarDbContext dbContext)
+        private readonly IToastNotification _toastNotification;
+        public AdminService(VacationCalendarDbContext dbContext, IToastNotification toastNotification)
         {
             _dbContext = dbContext;
+            _toastNotification = toastNotification;
         }
 
         public async Task EditSettings(int vacationDays, int roleId)
@@ -79,19 +82,21 @@ namespace VacationCalendar.BusinessLogic.Services
             };
             return dto;
         }
-        public async Task<string> EditEmployeeAsync(EditEmployeeDto dto)
+        public async Task EditEmployeeAsync(EditEmployeeDto dto)
         {
             var employee = await GetEmployeeByIdAsync(dto.Id);
             if (employee == null)
             {
-                return "Nie ma takiego pracownika!";
+                _toastNotification.AddWarningToastMessage("Nie ma takiego pracownika!");
+                return;
             }
 
             if (employee.Email != dto.Email)
             {
                 if (_dbContext.Employees.Any(e => e.Email == dto.Email))
                 {
-                    return "Ten Email jest już zarezerwowany!";
+                    _toastNotification.AddWarningToastMessage("Ten Email jest już zarezerwowany!");
+                    return;
                 }
             }
 
@@ -107,9 +112,9 @@ namespace VacationCalendar.BusinessLogic.Services
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                _toastNotification.AddErrorToastMessage(ex.Message);
             }
-            return "Poprawnie edytowano pracownika.";
+            _toastNotification.AddSuccessToastMessage("Poprawnie edytowano pracownika");
         }
     }
 }
