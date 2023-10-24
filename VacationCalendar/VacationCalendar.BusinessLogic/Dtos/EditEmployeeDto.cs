@@ -24,5 +24,8 @@ namespace VacationCalendar.BusinessLogic.Dtos
 
         [Display(Name = "Rola pracownika")]
         public int RoleId { get; set; } = 3;
+
+        [Display(Name = "Manager")]
+        public Guid ManagerId { get; set; }
     }
 }

@@ -33,6 +33,7 @@ namespace VacationCalendar.BusinessLogic.Models
         [Display(Name = "Przyznane dni urlopu")]
         public int? VacationDays { get; set; }
 
+        [Display(Name = "Manager")]
         public Guid? ManagerId { get; set; }
     }
 }

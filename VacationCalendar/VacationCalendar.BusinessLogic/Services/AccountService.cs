@@ -7,6 +7,7 @@ using NToastNotify;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -16,18 +17,20 @@ namespace VacationCalendar.BusinessLogic.Services
         private readonly IPasswordHasher<Employee> _passwordHasher;
         private readonly IToastNotification _toastNotification;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public AccountService(VacationCalendarDbContext dbContext, IPasswordHasher<Employee> passwordHasher, IToastNotification toastNotification, IHttpContextAccessor httpContextAccessor)
+        public AccountService(VacationCalendarDbContext dbContext, IPasswordHasher<Employee> passwordHasher, IToastNotification toastNotification, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
             _toastNotification = toastNotification;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
         public async Task LoginAsync(LoginDto dto, Employee employee)
-        {   
-            
+        {
+
             var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
 
             if (result == PasswordVerificationResult.Success)
@@ -59,20 +62,21 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             return await _dbContext.Roles.ToListAsync();
         }
-      
+
         public async Task<Employee> GetEmployeeByEmail(string email)
         {
             return await _dbContext.Employees.Include(e => e.Role).FirstOrDefaultAsync(e => e.Email == email);
-        } 
-        public async Task RegisterEmployee(RegisterEmployeeDto dto) 
+        }
+        public async Task RegisterEmployee(RegisterEmployeeDto dto)
         {
-            var newEmployee= new Models.Employee()
+            var newEmployee = new Models.Employee()
             {
                 Email = dto.Email,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 RoleId = dto.RoleId,
-                VacationDays = dto.VacationDays
+                VacationDays = dto.VacationDays,
+                ManagerId = dto.ManagerId              
             };
             var hashedPassword = _passwordHasher.HashPassword(newEmployee, dto.Password);
             newEmployee.PasswordHash = hashedPassword;
@@ -80,7 +84,7 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext.SaveChanges();
         }
 
-        public async Task ChangePassword(ChangePasswordDto dto, Employee emp) 
+        public async Task ChangePassword(ChangePasswordDto dto, Employee emp)
         {
             if (!emp.FirstPasswordChange)
             {
