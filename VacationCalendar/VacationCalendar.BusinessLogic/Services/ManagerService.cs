@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,22 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             _context = context;
         }
+
+        public async Task<Employee> GetEmployeeByEmail(string email)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(e => email.Equals(e.Email));
+        }
         public async Task<List<VacationRequest>> GetVacationRequests()
         {
             var requests = await _context.VacationRequests.Include(req => req.Employee).Include(req => req.RequestStatus).ToListAsync();
             return requests;
+        }
+
+        public async Task<List<VacationRequest>> GetVacationRequestsByManager(Guid managerId)
+        {
+            var allRequests = _context.VacationRequests.Include(req => req.Employee).Include(req => req.RequestStatus);
+            var requestsByManager =  await allRequests.Where(req => req.Employee.ManagerId == managerId).ToListAsync();
+            return requestsByManager;
         }
         public async Task<VacationRequest> GetVacationRequestById(int id)
         {
