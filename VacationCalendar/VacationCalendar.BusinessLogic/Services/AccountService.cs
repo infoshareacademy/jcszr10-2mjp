@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -86,6 +87,12 @@ namespace VacationCalendar.BusinessLogic.Services
 
         public async Task ChangePassword(ChangePasswordDto dto, Employee emp)
         {
+            if (dto.NewPassword.IsNullOrEmpty() || dto.OldPassword.IsNullOrEmpty() || dto.ConfirmPassword.IsNullOrEmpty())
+            {
+                _toastNotification.AddErrorToastMessage("Nie udana zmiana hasła");
+                return;
+            }
+
             if (!emp.FirstPasswordChange)
             {
                 emp.FirstPasswordChange = true;
@@ -96,6 +103,5 @@ namespace VacationCalendar.BusinessLogic.Services
             await _dbContext.SaveChangesAsync();
             _toastNotification.AddSuccessToastMessage("Udana zmiana hasła");
         }
-
     }
 }
