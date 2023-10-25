@@ -12,7 +12,7 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task<List<VacationRequest>> GetVacationRequests();
         public Task<VacationRequest> GetVacationRequestById(int id);
         public Task Accept(VacationRequest vacationRequest);
-        public Task Reject(VacationRequest vacationRequest);
+        public Task Reject(VacationRequest vacationRequest, string message);
         public Task Delete(int id);
     }
 }

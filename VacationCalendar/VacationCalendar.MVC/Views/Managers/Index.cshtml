@@ -43,12 +43,11 @@
                         <td>@item.RequestStatus.RequestStatusName</td>
                         <td>
                             <form method="post">
-                                <a id="acceptItem" class="btn btn-sm btn-success acceptItem" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
+                                <a id="acceptItem" class="btn btn-sm btn-success acceptItem m-1" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
                                    data-path="@Url.Action("Accept", "Managers", new {item.Id})">Akceptuj</a>
-                                <a id="rejectItem" class="btn btn-sm btn-warning rejectItem" data-bs-target="#ConfirmRejectModal" data-bs-toggle="modal"
-                                   data-path="@Url.Action("Reject", "Managers", new {item.Id})">Odrzuć</a>
-                               @*  <a id="deleteItem" class="btn btn-sm btn-danger deleteItem" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                   data-path="@Url.Action("Delete", "Managers", new {item.Id})">Usuń</a> *@
+                                <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
+                                    Odrzuć
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -62,21 +61,16 @@
 
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <form asp-action="EditVacationRequest" asp-route-id="@item.Id">
+                        <form asp-controller="Managers" asp-action="Reject" asp-route-id="@item.Id">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Edytuj wniosek</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Uzasadnij odrzucenie wniosku</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                              
                                 <div class="form-group">
-                                    <label asp-for="@item.From" class="control-label"></label>
-                                    <input asp-for="@item.From" class="form-control" name="From" />
-                                    <span asp-validation-for="@item.From" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="@item.To" class="control-label"></label>
-                                    <input asp-for="@item.To" class="form-control" name="To" />
+                                    <label asp-for="@item.Message" class="control-label"></label>
+                                    <textarea asp-for="@item.Message" class="form-control" name="message"></textarea>
                                     <span asp-validation-for="@item.To" class="text-danger"></span>
                                 </div>
                             </div>
@@ -91,6 +85,8 @@
         }
     }
 </div>
+
+<!--Accept Modal -->
 
 <div class="modal fade" id="ConfirmAcceptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -110,26 +106,6 @@
     </div>
 </div>
 
-<!--Reject Modal -->
-<div class="modal fade" id="ConfirmRejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Odrzucanie wniosku.</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Czy chcesz odrzucić wniosek?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-                <button id="btnContinueReject" class="btn btn-warning">Odzuć wniosek</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 
 @section scripts{
 
@@ -142,13 +118,6 @@
             window.location = pathToAccept;
         })
 
-        var pathToReject;
-        $(".rejectItem").click(function (e) {
-            pathToReject = $(this).data('path');
-        })
-        $("#btnContinueReject").click(function () {
-            window.location = pathToReject;
-        })
     </script>
 }
 

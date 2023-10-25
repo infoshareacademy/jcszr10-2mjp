@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VacationCalendar.BusinessLogic.Data;
 
@@ -11,9 +12,11 @@ using VacationCalendar.BusinessLogic.Data;
 namespace VacationCalendar.BusinessLogic.Migrations
 {
     [DbContext(typeof(VacationCalendarDbContext))]
-    partial class VacationCalendarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231005060239_adminSettings")]
+    partial class adminSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,11 +61,6 @@ namespace VacationCalendar.BusinessLogic.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("NVARCHAR");
-
-                    b.Property<bool>("FirstPasswordChange")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -133,10 +131,6 @@ namespace VacationCalendar.BusinessLogic.Migrations
 
                     b.Property<DateTime>("From")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int>("RequestStatusId")
                         .HasColumnType("int");

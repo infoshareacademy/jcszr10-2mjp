@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System.Security.Claims;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
@@ -13,19 +15,25 @@ namespace VacationCalendar.MVC.Controllers
 {
     public class AccountController : Controller
     {
-        public readonly IAccountService _accountService;
-
+        private readonly IAccountService _accountService;
+        private readonly IAdminService _adminService;
         private readonly IPasswordHasher<Employee> _passwordHasher;
-        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password)
+        private readonly IToastNotification _toastNotification;
+        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password, IAdminService adminService, IToastNotification toastNotification)
         {
             _accountService = accountService;
             _passwordHasher = password;
+            _adminService = adminService;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Register()
         {
-            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+            var settings = await _adminService.GetAdminSettings();
+            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name", settings.RoleId.ToString());
+            ViewData["VacationDays"] = settings.DefaultVacationDays;
+
             return View("Register");
         }
 
@@ -42,44 +50,30 @@ namespace VacationCalendar.MVC.Controllers
             await _accountService.RegisterEmployee(dto);
            return RedirectToAction("GetEmployees", "Admin");
         }
-        public ActionResult Login()
+        [HttpGet]
+        public IActionResult Login()
         {
-            return View();
+            ViewData["email"] = "";
+            return View("Login");
         }
 
         [HttpPost]
         public async Task<ActionResult> LoginAsync(LoginDto dto)
         {
             var employee = await _accountService.GetEmployeeByEmail(dto.Email);
-            if (employee == null)
+            if (employee != null)
             {
-                return View();
-            }
-
-            var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
-
-            if (result == PasswordVerificationResult.Success)
-            {
-                var claims = new List<Claim>
+                await _accountService.LoginAsync(dto, employee);
+                if (!employee.FirstPasswordChange)
                 {
-                    new Claim(ClaimTypes.Name, employee.Email),
-                    new Claim(ClaimTypes.Role, $"{employee.Role.Name}"),
-                };
-                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
-                ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
-
-                var authProperties = new AuthenticationProperties()
+                    return RedirectToAction("ChangePassword");
+                }
+                else
                 {
-                    IsPersistent = dto.RememberMe
-                };
-
-                await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal, authProperties);
-
-                return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
+                }
             }
-
-            TempData["Message"] = $"Login failed";
-
+            _toastNotification.AddErrorToastMessage("Nie udało się zalogować");
             return View();
         }
         public ActionResult AccessDenied()
@@ -90,6 +84,29 @@ namespace VacationCalendar.MVC.Controllers
         {
             await HttpContext.SignOutAsync("MyCookieAuth");
             return RedirectToAction("Login", "Account");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "admin,manager,employee")]
+        public IActionResult ChangePassword()
+        {
+            return View("ChangePassword");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "admin,manager,employee")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto changedPassword)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("ChangePassword");
+            }
+            var email = User.Identity.Name;
+            var emp = await _accountService.GetEmployeeByEmail(email);
+            await _accountService.ChangePassword(changedPassword, emp);
+            return RedirectToAction("ChangePassword");
+
+            // TODO: Dodac instrukcje warunkową
         }
     }
 }

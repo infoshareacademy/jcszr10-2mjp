@@ -32,9 +32,10 @@ namespace VacationCalendar.BusinessLogic.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task Reject(VacationRequest vacationRequest)
+        public async Task Reject(VacationRequest vacationRequest, string message)
         {
             vacationRequest.RequestStatusId = 3;
+            vacationRequest.Message = message;
             await _context.SaveChangesAsync();
         }
 
