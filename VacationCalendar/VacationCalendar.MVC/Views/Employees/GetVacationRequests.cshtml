@@ -1,29 +1,22 @@
 ﻿@using VacationCalendar.BusinessLogic.Models;
 @model IEnumerable<VacationRequest>;
+
 <div class="container">
     <h4>Twoje wnioski urlopowe</h4>
-
     <hr />
-<div class="container">
-    @if (TempData["DeleteConfirmed"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            @TempData["DeleteConfirmed"]
-        </div>
-    }
     @if (TempData["EditRequestMessage"] != null)
     {
         <div class="alert alert-@TempData["message-type"]" role="alert" ]>
             @TempData["EditRequestMessage"]
         </div>
     }
-    @if (ViewData["FreeDays"] != null)
+        @if (TempData["FreeDays"] != null)
     {
-        if ((int)ViewData["FreeDays"] == 1)
+            if ((int)TempData["FreeDays"] == 1)
         {
-            <h3>Masz @ViewData["FreeDays"] dzień urlopu do wykorzystania.</h3>
+                <h6>Masz @TempData["FreeDays"] dzień urlopu do wykorzystania.</h6>
         }
-        else if ((int)ViewData["FreeDays"] == 0)
+            else if ((int)TempData["FreeDays"] == 0)
         {
             <div class="alert alert-warning" role="alert">
                 Nie masz już urlopu.
@@ -31,11 +24,11 @@
         }
         else
         {
-            <h3>Masz @ViewData["FreeDays"] dni urlopu do wykorzystania.</h3>
+            <h6>Masz @TempData["FreeDays"] dni urlopu do wykorzystania.</h6>
         }
     }
 
-    @if ((int)ViewData["FreeDays"] > 0)
+    @if ((int)TempData["FreeDays"] > 0)
     {
         <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
     }

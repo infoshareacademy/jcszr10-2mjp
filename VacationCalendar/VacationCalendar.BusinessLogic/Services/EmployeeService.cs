@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
@@ -10,10 +11,12 @@ namespace VacationCalendar.BusinessLogic.Services
     {
         private readonly VacationCalendarDbContext _context;
         private readonly ICountVacationDaysService _countVacationDaysLogic;
-        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic)
+        private readonly IToastNotification _toastNotification;
+        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic, IToastNotification toastNotification)
         {
             _context = context;
             _countVacationDaysLogic = countVacationDaysLogic;
+            _toastNotification = toastNotification;
         }
 
         public async Task CreateVacationRequest(CreateVacationRequestDto dto)
@@ -33,10 +36,15 @@ namespace VacationCalendar.BusinessLogic.Services
                 VacationDays = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To)
             };
 
+            if(newVacationRequest.VacationDays < 0)
+            {
+                _toastNotification.AddWarningToastMessage("Wniosek przekracza dni urlopu.");
+                return;
+            }
+
             if (newVacationRequest.VacationDays > 0)
             {
                 _context.Add(newVacationRequest);
-                //throw new Exception("Error: Testowy błąd przed zapisaniem wniosku");
                 await _context.SaveChangesAsync();
             }
         }
@@ -58,6 +66,7 @@ namespace VacationCalendar.BusinessLogic.Services
             var request = await _context.VacationRequests.FindAsync(id);
             _context.VacationRequests.Remove(request);
             _context.SaveChanges();
+            _toastNotification.AddSuccessToastMessage("Pomyślnie usunięto wniosek");
         }
 
         public void SetVacationDays(string email, int days)
@@ -84,7 +93,6 @@ namespace VacationCalendar.BusinessLogic.Services
 
             if (request.VacationDays > 0)
             {
-                //throw new Exception("Error: Testowy błąd przed zapisaniem wniosku");
                 await _context.SaveChangesAsync();
             }
         }

@@ -25,8 +25,20 @@ namespace VacationCalendar.BusinessLogic.Services
                     || (dto.From >= previousRequest.From && dto.To <= previousRequest.To))
                 {
                     _toastNotification.AddWarningToastMessage("Twój nowy wniosek pokrywa się z poprzednimi.");
-                    return false;
+                    return true;
                 }
+            }
+            return false;
+        }
+
+        public bool IsVacationDaysAfterRequest(int? vacationDays, int requestDays)
+        {
+            var daysAfterRequest = vacationDays - requestDays;
+
+            if (daysAfterRequest < 0)
+            {
+                _toastNotification.AddWarningToastMessage("Twój wniosek przekracza ilość dni urlopu do wykorzystanaia.");
+                return false;
             }
             return true;
         }
