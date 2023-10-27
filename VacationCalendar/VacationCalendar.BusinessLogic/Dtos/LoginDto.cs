@@ -15,8 +15,10 @@ namespace VacationCalendar.BusinessLogic.Dtos
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Pole hasło nie może być puste")]
+        [Display(Name = "Hasło")]
         public string Password { get; set; }
 
+        [Display(Name = "Zapamiętaj")]
         public bool RememberMe { get; set; }
     }
 }
