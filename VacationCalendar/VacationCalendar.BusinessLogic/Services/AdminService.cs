@@ -17,6 +17,11 @@ namespace VacationCalendar.BusinessLogic.Services
             _toastNotification = toastNotification;
         }
 
+        public async Task<List<Employee>> GetManagersAsync()
+        {
+            return await _dbContext.Employees.Where(e => e.RoleId == 2).ToListAsync();
+        }
+
         public async Task EditSettings(int vacationDays, int roleId)
         {
             var settings = await _dbContext.AdminSettings.FirstAsync();
@@ -37,7 +42,7 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             return await _dbContext.Roles.ToListAsync();
         }
-   
+
         public async Task DeleteVacationRequestAsync(int id)
         {
             var request = await _dbContext.VacationRequests.FindAsync(id);
@@ -63,7 +68,7 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext.SaveChanges();
         }
 
-        private async Task<Employee> GetEmployeeByIdAsync(Guid id)
+        public async Task<Employee> GetEmployeeByIdAsync(Guid id)
         {
             var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.Id == id);
             return employee;
@@ -78,7 +83,8 @@ namespace VacationCalendar.BusinessLogic.Services
                 LastName = employee.LastName,
                 Email = employee.Email,
                 VacaationDays = (int)employee.VacationDays,
-                RoleId = (int)employee.RoleId             
+                RoleId = (int)employee.RoleId,
+                ManagerId = employee.ManagerId.HasValue ? (Guid)employee.ManagerId : Guid.Empty
             };
             return dto;
         }
@@ -108,6 +114,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 employee.Email = dto.Email;
                 employee.VacationDays = dto.VacaationDays;
                 employee.RoleId = dto.RoleId;
+                employee.ManagerId = dto.ManagerId;
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)

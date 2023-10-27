@@ -59,12 +59,24 @@ namespace VacationCalendar.MVC.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public async Task<IActionResult> EditEmployee(Guid id) 
+        public async Task<IActionResult> EditEmployee(Guid id)
         {
-            var emplooyee = await _adminService.GetEmployeeDtoAsync(id);
+            var employee = await _adminService.GetEmployeeDtoAsync(id);
+            var currentManager = await _adminService.GetEmployeeByIdAsync(employee.ManagerId);
+
+            if (currentManager != null)
+            {
+                ViewBag.CurrentManager = currentManager.LastName;
+            }
+            else
+            {
+                ViewBag.CurrentManager = null;
+            }
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-            ViewData["employeeEmail"] = emplooyee.Email;
-            return View(emplooyee);
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+           
+            ViewData["employeeEmail"] = employee.Email;
+            return View(employee);
         }
 
         [Authorize(Roles = "admin")]
@@ -74,10 +86,14 @@ namespace VacationCalendar.MVC.Controllers
             var emplooyee = await _adminService.GetEmployeeDtoAsync(dto.Id);
             if (!ModelState.IsValid)
             {
+                ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+                ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
                 return View(dto);
             }
-            await _adminService.EditEmployeeAsync(dto);    
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+            await _adminService.EditEmployeeAsync(dto);
+
             ViewData["employeeEmail"] = emplooyee.Email;
             return View(dto);
         }

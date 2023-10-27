@@ -32,7 +32,8 @@ namespace VacationCalendar.MVC
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
 
-            
+            var profileAssembly = typeof(Program).Assembly;
+            builder.Services.AddAutoMapper(profileAssembly);
 
             var app = builder.Build();
 

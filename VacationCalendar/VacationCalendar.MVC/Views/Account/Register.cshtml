@@ -52,6 +52,13 @@
                     </select>
                     <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
+                <div class="form-group">
+                    <label asp-for="ManagerId" class="control-label"></label>
+                    <select asp-for="ManagerId" class="form-control" asp-items=ViewBag.ManagerId>
+                        <option>---wybierz---</option>
+                    </select>
+                    <span asp-validation-for="ManagerId" class="text-danger"></span>
+                </div>
                 <br />
                 <div class="form-group">
                     <input type="submit" id="btnSubmit" value="Dodaj" class="btn btn-primary" />
@@ -70,7 +77,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-action="EditSettings" asp-controller="Admin">
-                <div class="modal-body">           
+                <div class="modal-body">
                     <div class="form-group">
                         <label asp-for="VacationDays" class="control-label"></label>
                         <input asp-for="VacationDays" class="form-control" name="vacationDays" value="@ViewData["VacationDays"]" />
@@ -81,7 +88,7 @@
                         <select asp-for="RoleId" class="form-control" name="roleId" asp-items=ViewBag.RoleId>
                         </select>
                         <span asp-validation-for="RoleId" class="text-danger"></span>
-                    </div>            
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>

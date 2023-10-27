@@ -31,6 +31,7 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> Register()
         {
             var settings = await _adminService.GetAdminSettings();
+            ViewBag.ManagerId = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
             ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name", settings.RoleId.ToString());
             ViewData["VacationDays"] = settings.DefaultVacationDays;
 
@@ -41,14 +42,20 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterEmployeeDto dto)
         {
+            var settings = await _adminService.GetAdminSettings();
             if (!ModelState.IsValid)
             {
                 ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+                ViewBag.ManagerId = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+                ViewData["VacationDays"] = settings.DefaultVacationDays;
                 return View(dto);
             }
+            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+            ViewBag.ManagerId = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+            ViewData["VacationDays"] = settings.DefaultVacationDays;
 
             await _accountService.RegisterEmployee(dto);
-           return RedirectToAction("GetEmployees", "Admin");
+            return RedirectToAction("GetEmployees", "Admin");
         }
         [HttpGet]
         public IActionResult Login()
