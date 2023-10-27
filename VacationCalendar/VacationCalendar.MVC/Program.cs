@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using VacationCalendar.BusinessLogic.Extensions;
 using VacationCalendar.BusinessLogic.Seeders;
 using NToastNotify;
+using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC
 {
