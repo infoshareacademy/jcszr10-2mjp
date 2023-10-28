@@ -18,6 +18,7 @@ namespace VacationCalendar.MVC.Controllers
         {
             _adminService = adminService;
         }
+
         [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> EditSettings(int vacationDays, int roleId)

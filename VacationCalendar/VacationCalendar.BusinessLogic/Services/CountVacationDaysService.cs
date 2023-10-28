@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DateTimeExtensions;
+using DateTimeExtensions.WorkingDays;
+using System.Text.RegularExpressions;
+using VacationCalendar.BusinessLogic.Migrations;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -16,6 +15,7 @@ namespace VacationCalendar.BusinessLogic.Services
         /// <returns></returns>
         public int CountVacationDays(DateTime dateFrom, DateTime dateTo, out string message)
         {
+            var culture = new WorkingDayCultureInfo("pl-PL");
 
             if (dateFrom > dateTo)
             {
@@ -27,6 +27,12 @@ namespace VacationCalendar.BusinessLogic.Services
                 || dateTo.DayOfWeek == DayOfWeek.Saturday || dateTo.DayOfWeek == DayOfWeek.Sunday)
             {
                 message = $"Wniosek nie może zaczynać i kończyć się na sobocie lub niedzieli.";
+                return 0;
+            }
+
+            if (!dateFrom.IsWorkingDay(culture) || !dateTo.IsWorkingDay(culture))
+            {
+                message = $"Nie możesz wziąć urlopu w swięta.";
                 return 0;
             }
 
@@ -51,26 +57,34 @@ namespace VacationCalendar.BusinessLogic.Services
             TimeSpan dateInterval = dateTo - dateFrom;
             int numberOfDays = dateInterval.Days;
             DateTime currentDay;
-            int daysWithoutWeekend = 0;
+            int freeDays = 0;
             for (int i = 0; i <= numberOfDays; i++)
             {
                 currentDay = (dateFrom.AddDays(i));
-                if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
+                if (!currentDay.IsWorkingDay(culture))
                     continue;
 
-                daysWithoutWeekend++;
+                freeDays++;
             }
+
             message = $"Wystawiono wniosek. Ilość dni urlopu:";
-            return daysWithoutWeekend;
+            return freeDays;
         }
 
         public int CountVacationDays(DateTime dateFrom, DateTime dateTo)
         {
+            var culture = new WorkingDayCultureInfo("pl-PL");
+
             if (dateFrom > dateTo)
                 return 0;
 
             if (dateFrom.DayOfWeek == DayOfWeek.Saturday || dateFrom.DayOfWeek == DayOfWeek.Sunday
                 || dateTo.DayOfWeek == DayOfWeek.Saturday || dateTo.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return 0;
+            }
+
+            if (!dateFrom.IsWorkingDay(culture) || !dateTo.IsWorkingDay(culture))
             {
                 return 0;
             }
@@ -86,21 +100,20 @@ namespace VacationCalendar.BusinessLogic.Services
             if (dateFrom == dateTo)
                 return 1;
 
-
             TimeSpan dateInterval = dateTo - dateFrom;
             int numberOfDays = dateInterval.Days;
             DateTime currentDay;
-            int daysWithoutWeekend = 0;
+            int freeDays = 0;
             for (int i = 0; i <= numberOfDays; i++)
             {
                 currentDay = (dateFrom.AddDays(i));
-                if (currentDay.DayOfWeek == DayOfWeek.Sunday || currentDay.DayOfWeek == DayOfWeek.Saturday)
+                if (!currentDay.IsWorkingDay(culture))
                     continue;
 
-                daysWithoutWeekend++;
+                freeDays++;
             }
 
-            return daysWithoutWeekend;
+            return freeDays;
         }
     }
 }
