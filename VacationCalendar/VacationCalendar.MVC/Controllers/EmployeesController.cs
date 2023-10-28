@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,16 @@ namespace VacationCalendar.MVC.Controllers
         [Authorize(Roles = "employee,manager")]
         public async Task<IActionResult> CreateVacationRequest()
         {
+            var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
+            int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
+            if (freeDays != null)
+            {
+                if (freeDays < 0)
+                {
+                    TempData["VacationDays"] = 0;
+                }
+                TempData["VacationDays"] = freeDays;
+            }
             return View(nameof(CreateVacationRequest));
         }
 
@@ -33,60 +44,36 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVacationRequest(CreateVacationRequestDto dto)
         {
+            var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
+            int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
+            if (freeDays != null)
+            {
+                if (freeDays < 0)
+                {
+                    TempData["VacationDays"] = 0;
+                }
+                TempData["VacationDays"] = freeDays;
+            }
             var vacationRequests = await _employeeService.GetVacationRequests(dto.Email);
 
-            foreach (var previousRequest in vacationRequests)
+            int? vacationDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, dto.Email);
+
+            if (!ModelState.IsValid)
             {
-                if ((dto.From <= previousRequest.To && dto.To >= previousRequest.From)
-                    || (dto.From >= previousRequest.From && dto.To <= previousRequest.To))
-                {
-                    TempData["RequestMessage"] = "Twój nowy wniosek pokrywa się z poprzednimi.";
-                    TempData["message-type"] = "danger";
-                    return View();
-                }
-            }
-
-            int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, dto.Email);
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View();
-                }
-                string message = "";
-
-                var days = _countVacationDaysService.CountVacationDays(dto.From, dto.To, out message);
-
-                var daysAfterRequest = freeDays - days;
-
-                if (daysAfterRequest < 0)
-                {
-                    TempData["RequestMessage"] = "Twój wniosek przekracza ilość dni urlopu do wykorzystanaia.";
-                    TempData["message-type"] = "danger";
-                    return View();
-                }
-
-                if (days == 0)
-                {
-                    TempData["RequestMessage"] = $"{message}";
-                    TempData["message-type"] = "warning";
-                }
-                if (days > 0)
-                {
-                    TempData["RequestMessage"] = $"{message} {days}";
-                    TempData["message-type"] = "success";
-                }
-
-                await _employeeService.CreateVacationRequest(dto);
-
-                return RedirectToAction(nameof(CreateVacationRequest));
-            }
-            catch (Exception e)
-            {
-                TempData["RequestMessage"] = $"{e.Message}";
-                TempData["message-type"] = "danger";
                 return View();
             }
+            var requestDays = _countVacationDaysService.CountVacationDays(dto.From, dto.To);
+
+            bool isPreviusRequestContainsCurrentRequest = _countVacationDaysService.IsPreviusRequestContainsCurrentRequest(dto, vacationRequests);
+            if (isPreviusRequestContainsCurrentRequest) return View();
+
+            bool hasVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(vacationDays, requestDays);
+            if (!hasVacationDaysAfterRequest) return View();
+
+            _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
+            await _employeeService.CreateVacationRequest(dto);
+
+            return RedirectToAction(nameof(CreateVacationRequest));
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -98,9 +85,9 @@ namespace VacationCalendar.MVC.Controllers
             {
                 if (freeDays < 0)
                 {
-                    ViewData["FreeDays"] = 0;
+                    TempData["FreeDays"] = 0;
                 }
-                ViewData["FreeDays"] = freeDays;
+                TempData["FreeDays"] = freeDays;
             }
             return View(requests);
         }
@@ -109,8 +96,7 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> DeleteVacationRequest(int id)
         {
             await _employeeService.DeleteVacationRequest(id);
-            TempData["DeleteConfirmed"] = "Wniosek został usunięty";
-            return RedirectToAction("GetVacationRequests"); 
+            return RedirectToAction("GetVacationRequests");
         }
         [HttpGet]
         [Authorize(Roles = "employee,manager")]
@@ -131,7 +117,7 @@ namespace VacationCalendar.MVC.Controllers
             var dto = new EditVacationRequestDto()
             {
                 From = vacationRequest.From,
-                To = vacationRequest.To    
+                To = vacationRequest.To
             };
 
             return View(dto);
@@ -148,37 +134,16 @@ namespace VacationCalendar.MVC.Controllers
                 TempData["message-type"] = "warning";
                 return RedirectToAction(nameof(GetVacationRequests));
             }
-            try
+          
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return RedirectToAction(nameof(GetVacationRequests));
-                }
-                string message = "";
-
-                var days = _countVacationDaysService.CountVacationDays(dto.From, dto.To, out message);
-
-                if (days == 0)
-                {
-                    TempData["EditRequestMessage"] = $"{message}";
-                    TempData["message-type"] = "warning";
-                }
-                if (days > 0)
-                {
-                    TempData["EditRequestMessage"] = $"{message} {days}";
-                    TempData["message-type"] = "success";
-                }
-
-                await _employeeService.EditVacationRequest(dto);
-
                 return RedirectToAction(nameof(GetVacationRequests));
             }
-            catch (Exception e)
-            {
-                TempData["EditRequestMessage"] = $"{e.Message}";
-                TempData["message-type"] = "danger";
-                return View();
-            }
-        }  
+            var days = _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
+
+            await _employeeService.EditVacationRequest(dto);
+
+            return RedirectToAction(nameof(GetVacationRequests));         
+        }
     }
 }
