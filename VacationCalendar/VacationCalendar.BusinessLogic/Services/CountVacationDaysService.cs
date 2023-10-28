@@ -1,9 +1,6 @@
-﻿using NToastNotify;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DateTimeExtensions;
+using DateTimeExtensions.WorkingDays;
+using NToastNotify;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 
@@ -43,6 +40,11 @@ namespace VacationCalendar.BusinessLogic.Services
             return true;
         }
 
+        public int CountVacationDaysAfterRequest(int? vacationDays, int requestDays)
+        {
+            var daysAfterRequest = vacationDays - requestDays;
+            return (int)daysAfterRequest; 
+        }
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele
         /// </summary>
@@ -68,7 +70,7 @@ namespace VacationCalendar.BusinessLogic.Services
 
             if (!dateFrom.IsWorkingDay(culture) || !dateTo.IsWorkingDay(culture))
             {
-                message = $"Nie możesz wziąć urlopu w swięta.";
+                _toastNotification.AddWarningToastMessage("Nie możesz wziąć urlopu w swięta.");
                 return 0;
             }
 
@@ -93,14 +95,14 @@ namespace VacationCalendar.BusinessLogic.Services
             TimeSpan dateInterval = dateTo - dateFrom;
             int numberOfDays = dateInterval.Days;
             DateTime currentDay;
-            int freeDays = 0;
+            int daysWithoutWeekend = 0;
             for (int i = 0; i <= numberOfDays; i++)
             {
                 currentDay = (dateFrom.AddDays(i));
                 if (!currentDay.IsWorkingDay(culture))
                     continue;
 
-                freeDays++;
+                daysWithoutWeekend++;
             }
             _toastNotification.AddSuccessToastMessage($"Wystawiono wniosek. Ilość dni urlopu: {daysWithoutWeekend}");
             return daysWithoutWeekend;
@@ -138,17 +140,17 @@ namespace VacationCalendar.BusinessLogic.Services
             TimeSpan dateInterval = dateTo - dateFrom;
             int numberOfDays = dateInterval.Days;
             DateTime currentDay;
-            int freeDays = 0;
+            int daysWithoutWeekend = 0;
             for (int i = 0; i <= numberOfDays; i++)
             {
                 currentDay = (dateFrom.AddDays(i));
                 if (!currentDay.IsWorkingDay(culture))
                     continue;
 
-                freeDays++;
+                daysWithoutWeekend++;
             }
 
-            return freeDays;
+            return daysWithoutWeekend;
         }
     }
 }

@@ -107,6 +107,9 @@
                                     <input asp-for="@item.To" class="form-control" name="To" />
                                     <span asp-validation-for="@item.To" class="text-danger"></span>
                                 </div>
+                                <div class="form-group">
+                                    <input class="form-control" value="@User.Identity.Name" name="email" readonly hidden/>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>

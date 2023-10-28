@@ -67,8 +67,8 @@ namespace VacationCalendar.MVC.Controllers
             bool isPreviusRequestContainsCurrentRequest = _countVacationDaysService.IsPreviusRequestContainsCurrentRequest(dto, vacationRequests);
             if (isPreviusRequestContainsCurrentRequest) return View();
 
-            bool hasVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(vacationDays, requestDays);
-            if (!hasVacationDaysAfterRequest) return View();
+            bool isVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(vacationDays, requestDays);
+            if (!isVacationDaysAfterRequest) return View();
 
             _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
             await _employeeService.CreateVacationRequest(dto);
@@ -100,7 +100,7 @@ namespace VacationCalendar.MVC.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "employee,manager")]
-        public async Task<IActionResult> EditVacationRequest(int id)
+        public async Task<IActionResult> EditVacationRequest(int id, string email)
         {
             if (id == null)
             {
@@ -125,20 +125,27 @@ namespace VacationCalendar.MVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "employee,manager")]
-        public async Task<IActionResult> EditVacationRequest(EditVacationRequestDto dto)
+        public async Task<IActionResult> EditVacationRequest(EditVacationRequestDto dto, string email)
         {
             var vacationRequest = await _employeeService.GetVacationRequest(dto.Id);
+            var vacationRequests= await _employeeService.GetVacationRequests(email);
             if (vacationRequest.RequestStatusId != 1)
             {
                 TempData["EditRequestMessage"] = "Można edytować wniosek, który jeszcze nie został zatwirdzony lub odrzucony.";
                 TempData["message-type"] = "warning";
                 return RedirectToAction(nameof(GetVacationRequests));
             }
-          
+            int? vacationDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, email);
+            var requestDays = _countVacationDaysService.CountVacationDays(dto.From, dto.To);
+
+            bool isVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(vacationDays, requestDays);
+            if (!isVacationDaysAfterRequest) return RedirectToAction(nameof(GetVacationRequests));
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction(nameof(GetVacationRequests));
             }
+
             var days = _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
 
             await _employeeService.EditVacationRequest(dto);
