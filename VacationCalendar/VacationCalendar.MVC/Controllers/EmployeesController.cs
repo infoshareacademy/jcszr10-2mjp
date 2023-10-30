@@ -138,7 +138,9 @@ namespace VacationCalendar.MVC.Controllers
             int? vacationDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, email);
             var requestDays = _countVacationDaysService.CountVacationDays(dto.From, dto.To);
 
-            bool isVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(vacationDays, requestDays);
+            int holidayDaysRefunded = (int)vacationDays + (int)vacationRequest.VacationDays;           
+
+            bool isVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(holidayDaysRefunded, requestDays);
             if (!isVacationDaysAfterRequest) return RedirectToAction(nameof(GetVacationRequests));
 
             if (!ModelState.IsValid)

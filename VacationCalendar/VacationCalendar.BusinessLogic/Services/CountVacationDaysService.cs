@@ -40,11 +40,6 @@ namespace VacationCalendar.BusinessLogic.Services
             return true;
         }
 
-        public int CountVacationDaysAfterRequest(int? vacationDays, int requestDays)
-        {
-            var daysAfterRequest = vacationDays - requestDays;
-            return (int)daysAfterRequest; 
-        }
         /// <summary>
         /// Metoda oblicza dni wakacji, pomija soboty i niedziele
         /// </summary>

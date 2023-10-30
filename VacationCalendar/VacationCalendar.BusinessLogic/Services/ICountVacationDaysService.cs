@@ -14,6 +14,5 @@ namespace VacationCalendar.BusinessLogic.Services
         public int CountVacationDays(DateTime dateFrom, DateTime dateTo);
         public bool IsPreviusRequestContainsCurrentRequest(CreateVacationRequestDto dto, List<VacationRequest> requests);
         public bool IsVacationDaysAfterRequest(int? vacationDays, int requestDays);
-        public int CountVacationDaysAfterRequest(int? vacationDays, int requestDays);
     }
 }
