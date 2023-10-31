@@ -1,5 +1,4 @@
-﻿using VacationCalendar.BusinessLogic.Data;
-using VacationCalendar.BusinessLogic.Dtos;
+﻿using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services

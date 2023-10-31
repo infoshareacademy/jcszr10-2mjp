@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VacationCalendar.BusinessLogic.Data;
-using VacationCalendar.BusinessLogic.Dtos;
-using VacationCalendar.BusinessLogic.Models;
+﻿using VacationCalendar.BusinessLogic.Data;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -15,6 +10,5 @@ namespace VacationCalendar.BusinessLogic.Services
         {
             _dbContext = dbContext;
         }
-
     }
 }
