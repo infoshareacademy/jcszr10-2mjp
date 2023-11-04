@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
-using NToastNotify;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
-using VacationCalendar.BusinessLogic.Models.Validators;
 using VacationCalendar.BusinessLogic.Models;
+using VacationCalendar.BusinessLogic.Models.Validators;
 using VacationCalendar.BusinessLogic.Seeders;
 using VacationCalendar.BusinessLogic.Services;
 

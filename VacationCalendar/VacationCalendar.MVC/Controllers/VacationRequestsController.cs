@@ -1,9 +1,4 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using VacationCalendar.BusinessLogic.Dtos;
-using VacationCalendar.BusinessLogic.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace VacationCalendar.MVC.Controllers
 {

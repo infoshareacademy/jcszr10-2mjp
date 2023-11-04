@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
 
