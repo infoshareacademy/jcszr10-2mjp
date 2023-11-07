@@ -12,13 +12,15 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly ICountVacationDaysService _countVacationDaysService;
         private readonly ICountEmployeeDaysService _countEmployeeDaysService;
-        private readonly IEmailSender _emailSender;
-        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, ICountEmployeeDaysService countEmployeeDaysService, IEmailSender emailSender)
+        private readonly IEmailSenderService _emailSender;
+        private readonly ILogger<EmployeesController> _logger;
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, ICountEmployeeDaysService countEmployeeDaysService, IEmailSenderService emailSender, ILogger<EmployeesController> logger)
         {
             _employeeService = employeeService;
             _countVacationDaysService = countVacationDaysService;
             _countEmployeeDaysService = countEmployeeDaysService;
             _emailSender = emailSender;
+            _logger = logger;
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -72,11 +74,16 @@ namespace VacationCalendar.MVC.Controllers
             await _employeeService.CreateVacationRequest(dto);
 
             var reciver = "pit.pit@wp.pl";
-            var subject = "Nowy wniosek";
-            var message = $"Pracownik {User.Identity.Name} wygenerował nowy wniosek urlopowy.";
-    
-            _emailSender.SendEmailAsync(reciver, subject, message);
 
+            try
+            {
+                _emailSender.SendEmailAsync(reciver, User.Identity.Name);
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Nie wysłano emaila.");
+            }
+        
             return RedirectToAction(nameof(CreateVacationRequest));
         }
 

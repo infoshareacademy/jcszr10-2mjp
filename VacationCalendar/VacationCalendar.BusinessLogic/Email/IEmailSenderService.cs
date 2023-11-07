@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace VacationCalendar.BusinessLogic.Email
 {
-    public interface IEmailSender
+    public interface IEmailSenderService
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        Task SendEmailAsync(string reciver, string employeeEmail);
     }
 }

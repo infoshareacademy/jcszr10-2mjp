@@ -1,20 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 
 namespace VacationCalendar.BusinessLogic.Email
 {
-    public class EmailSender : IEmailSender
+    public class EmailSenderService : IEmailSenderService
     {
-        private readonly IConfiguration _configuration;
-
-        public EmailSender(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(string reciver, string employeeEmail)
         {
             string mail = File.ReadAllText("C:\\VacationCalendarEmail\\email.txt");
             string pwd = File.ReadAllText("C:\\VacationCalendarEmail\\pwd.txt");        
@@ -24,10 +15,10 @@ namespace VacationCalendar.BusinessLogic.Email
                 EnableSsl = true,
                 Credentials = new NetworkCredential(mail, pwd)
             };
-
+            var subject = "Nowy wniosek urlopowy";
+            var message = $"Pracownik {employeeEmail} wygenerował nowy wniosek urlopowy.";
             return client.SendMailAsync(
-                new MailMessage(from: mail, to: email, subject, message));
-
+                new MailMessage(from: mail, to: reciver, subject, message));
         }
     }
 }
