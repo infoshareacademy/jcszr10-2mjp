@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Email;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
@@ -11,11 +12,13 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly ICountVacationDaysService _countVacationDaysService;
         private readonly ICountEmployeeDaysService _countEmployeeDaysService;
-        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, ICountEmployeeDaysService countEmployeeDaysService)
+        private readonly IEmailSender _emailSender;
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, ICountEmployeeDaysService countEmployeeDaysService, IEmailSender emailSender)
         {
             _employeeService = employeeService;
             _countVacationDaysService = countVacationDaysService;
             _countEmployeeDaysService = countEmployeeDaysService;
+            _emailSender = emailSender;
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -67,6 +70,12 @@ namespace VacationCalendar.MVC.Controllers
 
             _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
             await _employeeService.CreateVacationRequest(dto);
+
+            var reciver = "pit.pit@wp.pl";
+            var subject = "Nowy wniosek";
+            var message = $"Pracownik {User.Identity.Name} wygenerował nowy wniosek urlopowy.";
+    
+            _emailSender.SendEmailAsync(reciver, subject, message);
 
             return RedirectToAction(nameof(CreateVacationRequest));
         }
@@ -133,7 +142,7 @@ namespace VacationCalendar.MVC.Controllers
             int? vacationDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, email);
             var requestDays = _countVacationDaysService.CountVacationDays(dto.From, dto.To);
 
-            int holidayDaysRefunded = (int)vacationDays + (int)vacationRequest.VacationDays;           
+            int holidayDaysRefunded = (int)vacationDays + (int)vacationRequest.VacationDays;
 
             bool isVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(holidayDaysRefunded, requestDays);
             if (!isVacationDaysAfterRequest) return RedirectToAction(nameof(GetVacationRequests));
@@ -147,7 +156,7 @@ namespace VacationCalendar.MVC.Controllers
 
             await _employeeService.EditVacationRequest(dto);
 
-            return RedirectToAction(nameof(GetVacationRequests));         
+            return RedirectToAction(nameof(GetVacationRequests));
         }
     }
 }

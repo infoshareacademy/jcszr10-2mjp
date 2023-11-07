@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Email;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Models.Validators;
 using VacationCalendar.BusinessLogic.Seeders;
@@ -33,6 +34,7 @@ namespace VacationCalendar.BusinessLogic.Extensions
             services.AddScoped<ICountEmployeeDaysService, CountEmployeeDaysService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddTransient<IEmailSender, EmailSender>();
         }
 
     }
