@@ -79,9 +79,9 @@ namespace VacationCalendar.MVC.Controllers
             {
                 _emailSender.SendEmailAsync(reciver, User.Identity.Name);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                _logger.LogError("Nie wysłano emaila.");
+                _logger.LogError($"Błąd wysyłania maila: {e.Message}");
             }
         
             return RedirectToAction(nameof(CreateVacationRequest));
