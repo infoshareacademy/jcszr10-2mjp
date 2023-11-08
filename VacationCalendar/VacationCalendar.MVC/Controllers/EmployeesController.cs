@@ -12,15 +12,21 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly ICountVacationDaysService _countVacationDaysService;
         private readonly ICountEmployeeDaysService _countEmployeeDaysService;
-        private readonly IEmailSenderService _emailSender;
+        private readonly IEmailSenderService _emailSenderService;
+        private readonly IManagerService _managerService;
+        private readonly IAdminService _adminService;
         private readonly ILogger<EmployeesController> _logger;
-        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, ICountEmployeeDaysService countEmployeeDaysService, IEmailSenderService emailSender, ILogger<EmployeesController> logger)
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, 
+            ICountEmployeeDaysService countEmployeeDaysService, IEmailSenderService emailSender, 
+            ILogger<EmployeesController> logger, IManagerService managerService, IAdminService adminService)
         {
             _employeeService = employeeService;
             _countVacationDaysService = countVacationDaysService;
             _countEmployeeDaysService = countEmployeeDaysService;
-            _emailSender = emailSender;
+            _emailSenderService = emailSender;
             _logger = logger;
+            _managerService = managerService;
+            _adminService = adminService;
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -73,11 +79,25 @@ namespace VacationCalendar.MVC.Controllers
             _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
             await _employeeService.CreateVacationRequest(dto);
 
-            var reciver = "pit.pit@wp.pl";
+            string reciver = string.Empty;
+            try
+            {
+                var employee = await _managerService.GetEmployeeByEmail(User.Identity.Name);
+                var managerId = employee.ManagerId;
+                var manager = await _adminService.GetEmployeeByIdAsync((Guid)managerId);
+                reciver = manager.Email;
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError($"Nie można wyszukać odbiorcy maila: {e.Message}");
+            }
+       
+            //reciver = "pit.pit@wp.pl";
 
             try
             {
-                _emailSender.SendEmailAsync(reciver, User.Identity.Name);
+                _emailSenderService.SendEmailAsync(reciver, User.Identity.Name);
             }
             catch (Exception e)
             {
