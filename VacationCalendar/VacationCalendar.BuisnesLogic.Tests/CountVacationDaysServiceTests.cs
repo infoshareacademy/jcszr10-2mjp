@@ -15,8 +15,8 @@ namespace VacationCalendar.BuisnesLogic.Tests
         public void IsVacationDaysAfterRequest_WhenRequestDaysAreGreatherThenVacationDays_ReturnFalse(int vacationDays, int requestDays)
         {
             // Arrange
-            var toastNotification = new Mock<IToastNotification>();
-            _sut = new CountVacationDaysService(toastNotification.Object);
+            var toastNotificationMock = new Mock<IToastNotification>();
+            _sut = new CountVacationDaysService(toastNotificationMock.Object);
 
             // Act
             var result = _sut.IsVacationDaysAfterRequest(vacationDays, requestDays);
@@ -32,14 +32,33 @@ namespace VacationCalendar.BuisnesLogic.Tests
         public void IsVacationDaysAfterRequest_WhenVacationDaysAreGreatherThenRequestDays_ReturnTrue(int vacationDays, int requestDays)
         {
             // Arrange
-            var toastNotification = new Mock<IToastNotification>();
-            _sut = new CountVacationDaysService(toastNotification.Object);
+            var toastNotificationMock = new Mock<IToastNotification>();
+            _sut = new CountVacationDaysService(toastNotificationMock.Object);
 
             // Act
             var result = _sut.IsVacationDaysAfterRequest(vacationDays, requestDays);
 
             // Assert
             Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData("2023-12-23", "2023-12-25")]
+        [InlineData("2023-11-11", "2023-11-13")]
+        [InlineData("2023-11-18", "2023-11-20")]
+        [InlineData("2023-11-26", "2023-11-27")]
+        [InlineData("2023-05-01", "2023-05-01")]
+        public void VacationDaysValidation_WhenAtLeastOneDateIsHoliday_ReturnZero(DateTime from, DateTime to)
+        {
+            // Arrange
+            var toastNotificationMock = new Mock<IToastNotification>();
+            _sut = new CountVacationDaysService(toastNotificationMock.Object);
+
+            // Act
+            var result = _sut.VacationDaysValidation(from, to);
+
+            // Assert
+            Assert.Equal(0, result);
         }
     }
 }
