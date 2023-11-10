@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using NToastNotify;
 using VacationCalendar.BusinessLogic.Extensions;
 using VacationCalendar.BusinessLogic.Seeders;
+using Serilog;
 
 namespace VacationCalendar.MVC
 {
@@ -19,6 +20,13 @@ namespace VacationCalendar.MVC
                 Timeout = 2000,
                 Layout = "topRight",
                 Theme = "metroui"
+            });
+
+             builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
+            {
+                loggerConfiguration.WriteTo.Console();
+                loggerConfiguration.WriteTo.File("./logs/vcLogs.txt").MinimumLevel.Error();
+                loggerConfiguration.WriteTo.File(@"C:\VacationCalendar\logs.txt").MinimumLevel.Error();
             });
 
             // rejestrowanie zale¿noœci z modu³u z logik¹ biznesow¹

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Email;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
@@ -11,11 +12,21 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly ICountVacationDaysService _countVacationDaysService;
         private readonly ICountEmployeeDaysService _countEmployeeDaysService;
-        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, ICountEmployeeDaysService countEmployeeDaysService)
+        private readonly IEmailSenderService _emailSenderService;
+        private readonly IManagerService _managerService;
+        private readonly IAdminService _adminService;
+        private readonly ILogger<EmployeesController> _logger;
+        public EmployeesController(IEmployeeService employeeService, ICountVacationDaysService countVacationDaysService, 
+            ICountEmployeeDaysService countEmployeeDaysService, IEmailSenderService emailSender, 
+            ILogger<EmployeesController> logger, IManagerService managerService, IAdminService adminService)
         {
             _employeeService = employeeService;
             _countVacationDaysService = countVacationDaysService;
             _countEmployeeDaysService = countEmployeeDaysService;
+            _emailSenderService = emailSender;
+            _logger = logger;
+            _managerService = managerService;
+            _adminService = adminService;
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -68,6 +79,31 @@ namespace VacationCalendar.MVC.Controllers
             _countVacationDaysService.VacationDaysValidation(dto.From, dto.To);
             await _employeeService.CreateVacationRequest(dto);
 
+            string reciver = string.Empty;
+            try
+            {
+                var employee = await _managerService.GetEmployeeByEmail(User.Identity.Name);
+                var managerId = employee.ManagerId;
+                var manager = await _adminService.GetEmployeeByIdAsync((Guid)managerId);
+                reciver = manager.Email;
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError($"Nie można wyszukać odbiorcy maila: {e.Message}");
+            }
+       
+            //reciver = "pit.pit@wp.pl";
+
+            try
+            {
+                _emailSenderService.SendEmailAsync(reciver, User.Identity.Name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Błąd wysyłania maila: {e.Message}");
+            }
+        
             return RedirectToAction(nameof(CreateVacationRequest));
         }
 
@@ -133,7 +169,7 @@ namespace VacationCalendar.MVC.Controllers
             int? vacationDays = await _countEmployeeDaysService.CountEmployeeDays(vacationRequests, email);
             var requestDays = _countVacationDaysService.CountVacationDays(dto.From, dto.To);
 
-            int holidayDaysRefunded = (int)vacationDays + (int)vacationRequest.VacationDays;           
+            int holidayDaysRefunded = (int)vacationDays + (int)vacationRequest.VacationDays;
 
             bool isVacationDaysAfterRequest = _countVacationDaysService.IsVacationDaysAfterRequest(holidayDaysRefunded, requestDays);
             if (!isVacationDaysAfterRequest) return RedirectToAction(nameof(GetVacationRequests));
@@ -147,7 +183,7 @@ namespace VacationCalendar.MVC.Controllers
 
             await _employeeService.EditVacationRequest(dto);
 
-            return RedirectToAction(nameof(GetVacationRequests));         
+            return RedirectToAction(nameof(GetVacationRequests));
         }
     }
 }

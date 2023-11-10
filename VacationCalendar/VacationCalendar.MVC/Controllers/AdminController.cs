@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.MVC.Controllers
@@ -72,8 +73,8 @@ namespace VacationCalendar.MVC.Controllers
             }
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
             ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
-           
             ViewData["employeeEmail"] = employee.Email;
+
             return View(employee);
         }
 
@@ -81,18 +82,22 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
         {
-            var emplooyee = await _adminService.GetEmployeeDtoAsync(dto.Id);
+            var employee = await _adminService.GetEmployeeDtoAsync(dto.Id);
             if (!ModelState.IsValid)
             {
                 ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
                 ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+                ViewData["employeeEmail"] = employee.Email;
                 return View(dto);
             }
-            ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
             await _adminService.EditEmployeeAsync(dto);
 
-            ViewData["employeeEmail"] = emplooyee.Email;
+            employee = await _adminService.GetEmployeeDtoAsync(dto.Id);
+
+            ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+            ViewData["employeeEmail"] = employee.Email;
+
             return View(dto);
         }
     }
