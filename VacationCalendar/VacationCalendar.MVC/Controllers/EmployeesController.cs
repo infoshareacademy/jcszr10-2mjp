@@ -118,12 +118,6 @@ namespace VacationCalendar.MVC.Controllers
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
 
-            DateTime currentDate = DateTime.Now;
-            DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
-            int daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
-            for(int day = 1; day <= daysInMonth; day++)
-           
-
             if (freeDays != null)
             {
                 if (freeDays < 0)
