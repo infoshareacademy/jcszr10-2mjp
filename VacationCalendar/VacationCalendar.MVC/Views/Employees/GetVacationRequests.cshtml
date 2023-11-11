@@ -1,4 +1,7 @@
-﻿@using VacationCalendar.BusinessLogic.Models;
+﻿@using DateTimeExtensions;
+@using System.Globalization;
+@using VacationCalendar.BusinessLogic.Models;
+@using DateTimeExtensions.WorkingDays;
 @model IEnumerable<VacationRequest>;
 
 <div class="container">
@@ -32,6 +35,9 @@
     {
         <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
     }
+
+    <input type="button" class="btn btn-secondary mb-2" id="loadPartialButton" value="Pokarz kalendarz" />
+    <div id="partialViewContainer"></div>
 
     @if (!Model.Any())
     {
@@ -144,7 +150,6 @@
 </div>
 
 @section scripts{
-
     <script>
         var pathToDelete;
         $(".deleteItem").click(function (e) {
@@ -153,6 +158,26 @@
         $("#btnContinueDelete").click(function () {
             window.location = pathToDelete;
         })
+
+        $("#loadPartialButton").click(function () {
+            var partialViewContainer = $("#partialViewContainer");
+            var isPartialViewVisible = partialViewContainer.children().length > 0;
+
+            if (isPartialViewVisible) {
+                partialViewContainer.empty();
+            } else {
+                $.ajax({
+                    url: "/Employees/CalendarPartial",
+                    type: "GET",
+                    success: function (data) {
+                        partialViewContainer.html(data);
+                    },
+                    error: function () {
+                        alert("Error while loading Partial View.");
+                    }
+                });
+            }
+        });
     </script>
 }
 

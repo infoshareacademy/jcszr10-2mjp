@@ -1,0 +1,67 @@
+﻿@using DateTimeExtensions;
+@using System.Globalization;
+@using VacationCalendar.BusinessLogic.Models;
+@using DateTimeExtensions.WorkingDays;
+@{
+    DateTime currentDate = DateTime.Now;
+    string currentMonthAndYear = currentDate.ToString("MMMM yyyy");
+    string secoundMonthAndYear = currentDate.AddMonths(1).ToString("MMMM yyyy");
+    string thirdMonthAndYear = currentDate.AddMonths(2).ToString("MMMM yyyy");
+    DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+    int daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+    int daysInNextMonth = DateTime.DaysInMonth(currentDate.AddMonths(1).Year, currentDate.AddMonths(1).Month);
+}
+
+<hr />
+<span>@currentMonthAndYear</span>
+<br />
+<div class="monthContainer">
+    @for (int day = 1; day <= daysInMonth; day++)
+    {
+        DateTime currentDay = firstDayOfMonth.AddDays(day - 1);
+        bool isWorkingDay = currentDay.IsWorkingDay();
+
+        <div class="daySquare @(currentDay.Date == currentDate.Date ? "today" : "")  @(isWorkingDay ? "" : "holiday")">
+            <div>@currentDay.ToString("ddd")</div>
+            <div>@day</div>
+        </div>
+    }
+</div>
+<hr />
+<span>@secoundMonthAndYear</span>
+<br />
+<div class="monthContainer">
+    @for (int day = 1; day <= daysInNextMonth; day++)
+    {
+        DateTime nextMonthFirstDay = new DateTime(currentDate.AddMonths(1).Year, currentDate.AddMonths(1).Month, 1);
+        DateTime currentDay = nextMonthFirstDay.AddDays(day - 1);
+        bool isWorkingDay = currentDay.IsWorkingDay();
+
+        <div class="daySquare @(isWorkingDay ? "" : "holiday")">
+            <div>@currentDay.ToString("ddd")</div>
+            <div>@day</div>
+        </div>
+    }
+</div>
+<hr />
+<span>@thirdMonthAndYear</span>
+<br />
+<div class="monthContainer">
+    @for (int day = 1; day <= daysInNextMonth; day++)
+    {
+        DateTime nextMonthFirstDay = new DateTime(currentDate.AddMonths(2).Year, currentDate.AddMonths(2).Month, 1);
+        DateTime currentDay = nextMonthFirstDay.AddDays(day - 1);
+        bool isWorkingDay = currentDay.IsWorkingDay();
+
+        <div class="daySquare @(isWorkingDay ? "" : "holiday")">
+            <div>@currentDay.ToString("ddd")</div>
+            <div>@day</div>
+        </div>
+    }
+</div>
+<hr /> 
+
+
+
+
+

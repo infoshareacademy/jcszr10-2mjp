@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Email;
 using VacationCalendar.BusinessLogic.Services;
+using DateTimeExtensions.WorkingDays;
 
 namespace VacationCalendar.MVC.Controllers
 {
@@ -27,6 +28,10 @@ namespace VacationCalendar.MVC.Controllers
             _logger = logger;
             _managerService = managerService;
             _adminService = adminService;
+        }
+        public IActionResult CalendarPartial()
+        {
+            return PartialView("_CalendarPartial");
         }
 
         [Authorize(Roles = "employee,manager")]
@@ -112,6 +117,13 @@ namespace VacationCalendar.MVC.Controllers
         {
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
+
+            DateTime currentDate = DateTime.Now;
+            DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+            int daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+            for(int day = 1; day <= daysInMonth; day++)
+           
+
             if (freeDays != null)
             {
                 if (freeDays < 0)
