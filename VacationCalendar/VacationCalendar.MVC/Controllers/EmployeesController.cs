@@ -118,8 +118,10 @@ namespace VacationCalendar.MVC.Controllers
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
 
+            var plannedAndConfirmedVacationRequests = requests.Where(r=>r.RequestStatusId != 3).ToList();
+
             List<DateTime>vacationDates = new List<DateTime>();
-            foreach (var item in requests)
+            foreach (var item in plannedAndConfirmedVacationRequests)
             {
                 for (DateTime date = item.From; date <= item.To; date = date.AddDays(1))
                 {
