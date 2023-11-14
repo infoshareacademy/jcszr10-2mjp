@@ -60,10 +60,9 @@
                     bool isWorkingDay = currentDay.IsWorkingDay();
 
                     <div class="daySquare
-                    @((i==0) ? (currentDay.Date == currentDate.Date ? "today" : "") : "")
-                    @(vacationDates.Contains(currentDay.Date) ? (isWorkingDay ? "plannedVacation" : "holiday") : "")
-                    @(isWorkingDay ? "" : "holiday")
-                ">
+                        @((i==0) ? (currentDay.Date == currentDate.Date ? "today" : "") : "")
+                        @(vacationDates.Contains(currentDay.Date) ? (isWorkingDay ? "plannedVacation" : "holiday") : "")
+                        @(isWorkingDay ? "" : "holiday")">
                         <div>@currentDay.ToString("ddd")</div>
                         <div>@day</div>
                     </div>
@@ -71,7 +70,6 @@
             </div>
             <hr />
         }
-
     </div>
 
     @if (!Model.Any())
