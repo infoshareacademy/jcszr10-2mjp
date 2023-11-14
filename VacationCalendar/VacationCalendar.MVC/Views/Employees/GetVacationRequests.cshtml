@@ -44,6 +44,10 @@
     <input type="button" class="btn btn-secondary mb-2" id="showCalendarBtn" value="Pokaż kalendarz" />
   
     <div id="calendar" class="hidden">
+        <br />
+        <span class="comment-vacation">urlop</span>
+        <span class="comment-holliday">świeta</span>
+        <br /><br />
         @for (int i = 0; i < 4; i++)
         {
             <span>@currentDate.AddMonths(i).ToString("MMMM yyyy");</span>
