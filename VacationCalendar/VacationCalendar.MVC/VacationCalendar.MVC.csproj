@@ -35,8 +35,4 @@
     <ProjectReference Include="..\VacationCalendar.BusinessLogic\VacationCalendar.BusinessLogic.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Views\Employees\_CalendarPartial.cshtml" />
-  </ItemGroup>
-
 </Project>

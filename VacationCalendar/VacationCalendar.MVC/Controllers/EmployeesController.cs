@@ -118,6 +118,15 @@ namespace VacationCalendar.MVC.Controllers
             var requests = await _employeeService.GetVacationRequests(User.Identity.Name);
             int? freeDays = await _countEmployeeDaysService.CountEmployeeDays(requests, User.Identity.Name);
 
+            List<DateTime>vacationDates = new List<DateTime>();
+            foreach (var item in requests)
+            {
+                for (DateTime date = item.From; date <= item.To; date = date.AddDays(1))
+                {
+                    vacationDates.Add(date);
+                }
+;           }
+
             if (freeDays != null)
             {
                 if (freeDays < 0)
@@ -126,6 +135,7 @@ namespace VacationCalendar.MVC.Controllers
                 }
                 TempData["FreeDays"] = freeDays;
             }
+            ViewBag.VacationDates = vacationDates;
             return View(requests);
         }
 

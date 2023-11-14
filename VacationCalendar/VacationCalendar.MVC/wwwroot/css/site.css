@@ -41,3 +41,9 @@ body {
     background-color: cornflowerblue;
     color: white;
 }
+.plannedVacation {
+    background-color: greenyellow;
+}
+.hidden {
+    display: none;
+}

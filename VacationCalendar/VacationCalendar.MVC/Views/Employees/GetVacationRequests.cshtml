@@ -3,6 +3,11 @@
 @using VacationCalendar.BusinessLogic.Models;
 @using DateTimeExtensions.WorkingDays;
 @model IEnumerable<VacationRequest>;
+@{
+    DateTime currentDate = DateTime.Now;
+    string currentMonthAndYear = currentDate.ToString("MMMM yyyy");
+    List<DateTime> vacationDates = ViewBag.VacationDates;
+}
 
 <div class="container">
     <h4>Twoje wnioski urlopowe</h4>
@@ -36,8 +41,34 @@
         <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
     }
 
-    <input type="button" class="btn btn-secondary mb-2" id="loadPartialButton" value="Pokarz kalendarz" />
-    <div id="partialViewContainer"></div>
+    <input type="button" class="btn btn-secondary mb-2" id="showCalendarBtn" value="Pokaż kalendarz" />
+  
+    <div id="calendar" class="hidden">
+        @for (int i = 0; i < 4; i++)
+        {
+            <span>@currentDate.AddMonths(i).ToString("MMMM yyyy");</span>
+            <br />
+            <div class="monthContainer">
+                @for (int day = 1; day <= DateTime.DaysInMonth(currentDate.AddMonths(i).Year, currentDate.AddMonths(i).Month); day++)
+                {
+                    DateTime nextMonthFirstDay = new DateTime(currentDate.AddMonths(i).Year, currentDate.AddMonths(i).Month, 1);
+                    DateTime currentDay = nextMonthFirstDay.AddDays(day - 1);
+                    bool isWorkingDay = currentDay.IsWorkingDay();
+
+                    <div class="daySquare
+                    @((i==0) ? (currentDay.Date == currentDate.Date ? "today" : "") : "")
+                    @(vacationDates.Contains(currentDay.Date) ? (isWorkingDay ? "plannedVacation" : "holiday") : "")
+                    @(isWorkingDay ? "" : "holiday")
+                ">
+                        <div>@currentDay.ToString("ddd")</div>
+                        <div>@day</div>
+                    </div>
+                }
+            </div>
+            <hr />
+        }
+
+    </div>
 
     @if (!Model.Any())
     {
@@ -159,25 +190,12 @@
             window.location = pathToDelete;
         })
 
-        $("#loadPartialButton").click(function () {
-            var partialViewContainer = $("#partialViewContainer");
-            var isPartialViewVisible = partialViewContainer.children().length > 0;
-
-            if (isPartialViewVisible) {
-                partialViewContainer.empty();
-            } else {
-                $.ajax({
-                    url: "/Employees/CalendarPartial",
-                    type: "GET",
-                    success: function (data) {
-                        partialViewContainer.html(data);
-                    },
-                    error: function () {
-                        alert("Error while loading Partial View.");
-                    }
-                });
-            }
+        $('#showCalendarBtn').click(function () {
+            $('#calendar').toggle();
+            var newValue = $('#calendar').is(':visible') ? 'Ukryj kalendarz' : 'Pokaż kalendarz';
+            $('#showCalendarBtn').val(newValue);
         });
+    
     </script>
 }
 
