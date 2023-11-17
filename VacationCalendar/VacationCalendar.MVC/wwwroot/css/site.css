@@ -20,3 +20,44 @@ html {
 body {
   margin-bottom: 60px;
 }
+.monthContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+.daySquare {
+    font-size: 11px;
+    width: 55px;
+    height: 45px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 3px;
+    text-align: center;
+    line-height: 20px;
+}
+.today {
+    border: 4px solid red;
+}
+.holiday {
+    background-color: cornflowerblue;
+    color: white;
+}
+.plannedVacation {
+    background-color: greenyellow;
+}
+.hidden {
+    display: none;
+}
+.comment-vacation {
+    background-color: greenyellow;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 5px;
+}
+.comment-holliday {
+    background-color: cornflowerblue;
+    padding: 5px;
+    margin: 3px;
+    color: white;
+    border: solid 1px;
+    border-radius: 5px;
+}
