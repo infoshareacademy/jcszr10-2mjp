@@ -11,6 +11,7 @@ namespace VacationCalendar.MVC.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
+        private readonly ILogger<HomeController> _logger;
 
         public AdminController(IAdminService adminService)
         {
@@ -21,9 +22,15 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> EditSettings(int vacationDays, int roleId)
         {
-            await _adminService.EditSettings(vacationDays, roleId);
+            try
+            {
+                await _adminService.EditSettings(vacationDays, roleId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
             return RedirectToAction("Register", "Account");
-
         }
 
         [Authorize(Roles = "admin")]
@@ -61,18 +68,9 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> EditEmployee(Guid id)
         {
             var employee = await _adminService.GetEmployeeDtoAsync(id);
-            var currentManager = await _adminService.GetEmployeeByIdAsync(employee.ManagerId);
-
-            if (currentManager != null)
-            {
-                ViewBag.CurrentManager = currentManager.LastName;
-            }
-            else
-            {
-                ViewBag.CurrentManager = null;
-            }
+       
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(id), "Id", "LastName");
             ViewData["employeeEmail"] = employee.Email;
 
             return View(employee);
@@ -83,19 +81,18 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
         {
             var employee = await _adminService.GetEmployeeDtoAsync(dto.Id);
+            var currentManager = await _adminService.GetEmployeeByIdAsync(employee.ManagerId);
             if (!ModelState.IsValid)
-            {
+            {         
                 ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-                ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+                ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(dto.Id), "Id", "LastName");
                 ViewData["employeeEmail"] = employee.Email;
                 return View(dto);
             }
             await _adminService.EditEmployeeAsync(dto);
 
-            employee = await _adminService.GetEmployeeDtoAsync(dto.Id);
-
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(dto.Id), "Id", "LastName");
             ViewData["employeeEmail"] = employee.Email;
 
             return View(dto);
