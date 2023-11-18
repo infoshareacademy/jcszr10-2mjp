@@ -68,7 +68,7 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> EditEmployee(Guid id)
         {
             var employee = await _adminService.GetEmployeeDtoAsync(id);
-       
+
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
             ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(id), "Id", "LastName");
             ViewData["employeeEmail"] = employee.Email;
@@ -81,19 +81,18 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
         {
             var employee = await _adminService.GetEmployeeDtoAsync(dto.Id);
-            var currentManager = await _adminService.GetEmployeeByIdAsync(employee.ManagerId);
+
             if (!ModelState.IsValid)
-            {         
+            {
                 ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
                 ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(dto.Id), "Id", "LastName");
-                ViewData["employeeEmail"] = employee.Email;
+
                 return View(dto);
             }
             await _adminService.EditEmployeeAsync(dto);
 
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
             ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(dto.Id), "Id", "LastName");
-            ViewData["employeeEmail"] = employee.Email;
 
             return View(dto);
         }
