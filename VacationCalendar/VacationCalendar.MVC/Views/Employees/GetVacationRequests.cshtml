@@ -18,13 +18,13 @@
             @TempData["EditRequestMessage"]
         </div>
     }
-        @if (TempData["FreeDays"] != null)
+    @if (TempData["FreeDays"] != null)
     {
-            if ((int)TempData["FreeDays"] == 1)
+        if ((int)TempData["FreeDays"] == 1)
         {
-                <h6>Masz @TempData["FreeDays"] dzień urlopu do wykorzystania.</h6>
+            <h6>Masz @TempData["FreeDays"] dzień urlopu do wykorzystania.</h6>
         }
-            else if ((int)TempData["FreeDays"] == 0)
+        else if ((int)TempData["FreeDays"] == 0)
         {
             <div class="alert alert-warning" role="alert">
                 Nie masz już urlopu.
@@ -42,7 +42,7 @@
     }
 
     <input type="button" class="btn btn-secondary mb-2" id="showCalendarBtn" value="Pokaż kalendarz" />
-  
+
     <div id="calendar" class="hidden">
         <br />
         <span class="comment-vacation">urlop</span>
@@ -99,17 +99,17 @@
                         <td>@item.VacationDays</td>
                         <td>
                             @item.RequestStatus.RequestStatusName
-                            <br/>
+                            <br />
                             @item.Message
                         </td>
                         <td>
                             @if (@item.RequestStatus.Id == 1)
                             {
                                 <form method="post">
-                                        <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
+                                    <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
                                         Edytuj
                                     </button>
-                                        <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
                                        data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Usuń</a>
                                 </form>
                             }
@@ -147,7 +147,7 @@
                                     <span asp-validation-for="@item.To" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" value="@User.Identity.Name" name="email" readonly hidden/>
+                                    <input class="form-control" value="@User.Identity.Name" name="email" readonly hidden />
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -197,7 +197,7 @@
             var newValue = $('#calendar').is(':visible') ? 'Ukryj kalendarz' : 'Pokaż kalendarz';
             $('#showCalendarBtn').val(newValue);
         });
-    
+
     </script>
 }
 
