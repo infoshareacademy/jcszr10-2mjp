@@ -1,12 +1,8 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using NToastNotify;
-using System.Security.Claims;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
@@ -18,19 +14,19 @@ namespace VacationCalendar.MVC.Controllers
         private readonly IAccountService _accountService;
         private readonly IAdminService _adminService;
         private readonly IPasswordHasher<Employee> _passwordHasher;
-        private readonly IToastNotification _toastNotification;
-        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password, IAdminService adminService, IToastNotification toastNotification)
+        //private readonly IToastNotification _toastNotification;
+        public AccountController(IAccountService accountService, IPasswordHasher<Employee> password, IAdminService adminService)
         {
             _accountService = accountService;
             _passwordHasher = password;
             _adminService = adminService;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Register()
         {
             var settings = await _adminService.GetAdminSettings();
+            ViewBag.ManagerId = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
             ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name", settings.RoleId.ToString());
             ViewData["VacationDays"] = settings.DefaultVacationDays;
 
@@ -41,14 +37,20 @@ namespace VacationCalendar.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterEmployeeDto dto)
         {
+            var settings = await _adminService.GetAdminSettings();
             if (!ModelState.IsValid)
             {
                 ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+                ViewBag.ManagerId = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+                ViewData["VacationDays"] = settings.DefaultVacationDays;
                 return View(dto);
             }
+            ViewBag.RoleId = new SelectList(await _accountService.GetRolesAsync(), "Id", "Name");
+            ViewBag.ManagerId = new SelectList(await _adminService.GetManagersAsync(), "Id", "LastName");
+            ViewData["VacationDays"] = settings.DefaultVacationDays;
 
             await _accountService.RegisterEmployee(dto);
-           return RedirectToAction("GetEmployees", "Admin");
+            return RedirectToAction("GetEmployees", "Admin");
         }
         [HttpGet]
         public IActionResult Login()
@@ -73,7 +75,6 @@ namespace VacationCalendar.MVC.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-            _toastNotification.AddErrorToastMessage("Nie udało się zalogować");
             return View();
         }
         public ActionResult AccessDenied()

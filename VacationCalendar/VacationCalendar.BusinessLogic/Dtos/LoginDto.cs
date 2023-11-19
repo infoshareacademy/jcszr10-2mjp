@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace VacationCalendar.BusinessLogic.Dtos
 {
@@ -15,8 +9,10 @@ namespace VacationCalendar.BusinessLogic.Dtos
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Pole hasło nie może być puste")]
+        [Display(Name = "Hasło")]
         public string Password { get; set; }
 
+        [Display(Name = "Zapamiętaj")]
         public bool RememberMe { get; set; }
     }
 }

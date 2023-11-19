@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
-using System.Data;
 using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 using VacationCalendar.BusinessLogic.Services;
@@ -13,18 +11,26 @@ namespace VacationCalendar.MVC.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
+        private readonly ILogger<HomeController> _logger;
 
         public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
         }
+
         [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> EditSettings(int vacationDays, int roleId)
         {
-            await _adminService.EditSettings(vacationDays, roleId);
+            try
+            {
+                await _adminService.EditSettings(vacationDays, roleId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
             return RedirectToAction("Register", "Account");
-
         }
 
         [Authorize(Roles = "admin")]
@@ -59,26 +65,35 @@ namespace VacationCalendar.MVC.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public async Task<IActionResult> EditEmployee(Guid id) 
+        public async Task<IActionResult> EditEmployee(Guid id)
         {
-            var emplooyee = await _adminService.GetEmployeeDtoAsync(id);
+            var employee = await _adminService.GetEmployeeDtoAsync(id);
+
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-            ViewData["employeeEmail"] = emplooyee.Email;
-            return View(emplooyee);
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(id), "Id", "LastName");
+            ViewData["employeeEmail"] = employee.Email;
+
+            return View(employee);
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> EditEmployee(EditEmployeeDto dto)
         {
-            var emplooyee = await _adminService.GetEmployeeDtoAsync(dto.Id);
+            var employee = await _adminService.GetEmployeeDtoAsync(dto.Id);
+
             if (!ModelState.IsValid)
             {
+                ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
+                ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(dto.Id), "Id", "LastName");
+
                 return View(dto);
             }
-            await _adminService.EditEmployeeAsync(dto);    
+            await _adminService.EditEmployeeAsync(dto);
+
             ViewBag.RoleId = new SelectList(await _adminService.GetRolesAsync(), "Id", "Name");
-            ViewData["employeeEmail"] = emplooyee.Email;
+            ViewBag.Managers = new SelectList(await _adminService.GetManagersAsync(dto.Id), "Id", "LastName");
+
             return View(dto);
         }
     }

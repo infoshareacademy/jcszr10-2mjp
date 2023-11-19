@@ -1,29 +1,30 @@
-﻿@using VacationCalendar.BusinessLogic.Models;
+﻿@using DateTimeExtensions;
+@using System.Globalization;
+@using VacationCalendar.BusinessLogic.Models;
+@using DateTimeExtensions.WorkingDays;
 @model IEnumerable<VacationRequest>;
+@{
+    DateTime currentDate = DateTime.Now;
+    string currentMonthAndYear = currentDate.ToString("MMMM yyyy");
+    List<DateTime> vacationDates = ViewBag.VacationDates;
+}
+
 <div class="container">
     <h4>Twoje wnioski urlopowe</h4>
-
     <hr />
-
-    @if (TempData["DeleteConfirmed"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            @TempData["DeleteConfirmed"]
-        </div>
-    }
     @if (TempData["EditRequestMessage"] != null)
     {
         <div class="alert alert-@TempData["message-type"]" role="alert" ]>
             @TempData["EditRequestMessage"]
         </div>
     }
-    @if (ViewData["FreeDays"] != null)
+    @if (TempData["FreeDays"] != null)
     {
-        if ((int)ViewData["FreeDays"] == 1)
+        if ((int)TempData["FreeDays"] == 1)
         {
-            <h3>Masz @ViewData["FreeDays"] dzień urlopu do wykorzystania.</h3>
+            <h6>Masz @TempData["FreeDays"] dzień urlopu do wykorzystania.</h6>
         }
-        else if ((int)ViewData["FreeDays"] == 0)
+        else if ((int)TempData["FreeDays"] == 0)
         {
             <div class="alert alert-warning" role="alert">
                 Nie masz już urlopu.
@@ -31,14 +32,45 @@
         }
         else
         {
-            <h3>Masz @ViewData["FreeDays"] dni urlopu do wykorzystania.</h3>
+            <h6>Masz @TempData["FreeDays"] dni urlopu do wykorzystania.</h6>
         }
     }
 
-    @if ((int)ViewData["FreeDays"] > 0)
+    @if ((int)TempData["FreeDays"] > 0)
     {
         <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
     }
+
+    <input type="button" class="btn btn-secondary mb-2" id="showCalendarBtn" value="Pokaż kalendarz" />
+
+    <div id="calendar" class="hidden">
+        <br />
+        <span class="comment-vacation">urlop</span>
+        <span class="comment-holliday">świeta</span>
+        <br /><br />
+        @for (int i = 0; i < 4; i++)
+        {
+            <span>@currentDate.AddMonths(i).ToString("MMMM yyyy");</span>
+            <br />
+            <div class="monthContainer">
+                @for (int day = 1; day <= DateTime.DaysInMonth(currentDate.AddMonths(i).Year, currentDate.AddMonths(i).Month); day++)
+                {
+                    DateTime nextMonthFirstDay = new DateTime(currentDate.AddMonths(i).Year, currentDate.AddMonths(i).Month, 1);
+                    DateTime currentDay = nextMonthFirstDay.AddDays(day - 1);
+                    bool isWorkingDay = currentDay.IsWorkingDay();
+
+                    <div class="daySquare
+                        @((i==0) ? (currentDay.Date == currentDate.Date ? "today" : "") : "")
+                        @(vacationDates.Contains(currentDay.Date) ? (isWorkingDay ? "plannedVacation" : "holiday") : "")
+                        @(isWorkingDay ? "" : "holiday")">
+                        <div>@currentDay.ToString("ddd")</div>
+                        <div>@day</div>
+                    </div>
+                }
+            </div>
+            <hr />
+        }
+    </div>
 
     @if (!Model.Any())
     {
@@ -67,18 +99,18 @@
                         <td>@item.VacationDays</td>
                         <td>
                             @item.RequestStatus.RequestStatusName
-                            <br/>
+                            <br />
                             @item.Message
                         </td>
                         <td>
                             @if (@item.RequestStatus.Id == 1)
                             {
                                 <form method="post">
-                                        <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
+                                    <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
                                         Edytuj
                                     </button>
-                                        <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Delete</a>
+                                    <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
+                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Usuń</a>
                                 </form>
                             }
                             else
@@ -114,10 +146,13 @@
                                     <input asp-for="@item.To" class="form-control" name="To" />
                                     <span asp-validation-for="@item.To" class="text-danger"></span>
                                 </div>
+                                <div class="form-group">
+                                    <input class="form-control" value="@User.Identity.Name" name="email" readonly hidden />
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-                                <input type="submit" value="Zapisz" class="btn btn-primary" />
+                                <input type="submit" value="Zapisz" class="btn btn-success" />
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
                             </div>
                         </form>
                     </div>
@@ -140,15 +175,14 @@
                 Czy na pewno chcesz usunąć wniosek?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
                 <button id="btnContinueDelete" class="btn btn-danger">Usuń</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
             </div>
         </div>
     </div>
 </div>
 
 @section scripts{
-
     <script>
         var pathToDelete;
         $(".deleteItem").click(function (e) {
@@ -157,6 +191,13 @@
         $("#btnContinueDelete").click(function () {
             window.location = pathToDelete;
         })
+
+        $('#showCalendarBtn').click(function () {
+            $('#calendar').toggle();
+            var newValue = $('#calendar').is(':visible') ? 'Ukryj kalendarz' : 'Pokaż kalendarz';
+            $('#showCalendarBtn').val(newValue);
+        });
+
     </script>
 }
 

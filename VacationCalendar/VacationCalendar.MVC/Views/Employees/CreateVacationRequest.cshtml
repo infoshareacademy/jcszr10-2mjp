@@ -6,11 +6,22 @@
 <div class="container">
     <h4>Dodaj nowy wniosek</h4>
     <hr />
-    @if(TempData["RequestMessage"] != null)
+    @if (TempData["VacationDays"] != null)
     {
-        <div class="alert alert-@TempData["message-type"]" role="alert">
-            @TempData["RequestMessage"]
-        </div>
+        if ((int)TempData["VacationDays"] == 1)
+        {
+            <h6>Masz @TempData["VacationDays"] dzień urlopu do wykorzystania.</h6>
+        }
+        else if ((int)TempData["VacationDays"] == 0)
+        {
+            <div class="alert alert-warning" role="alert">
+                Nie masz już urlopu.
+            </div>
+        }
+        else
+        {
+            <h6>Masz @TempData["VacationDays"] dni urlopu do wykorzystania.</h6>
+        }
     }
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-4 ">
@@ -32,7 +43,8 @@
                 </div>
                 <br />
                 <div class="form-group">
-                    <input type="submit" id="btnSubmit" value="Dodaj" class="btn btn-primary" />
+                    <input type="submit" id="btnSubmit" value="Dodaj" class="btn btn-success" />
+                    <a class="btn btn-light" asp-action="GetVacationRequests">Wróć do listy</a>
                 </div>
             </form>
         </div>

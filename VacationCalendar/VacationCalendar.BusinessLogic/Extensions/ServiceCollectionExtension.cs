@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
-using NToastNotify;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
-using VacationCalendar.BusinessLogic.Models.Validators;
+using VacationCalendar.BusinessLogic.Email;
 using VacationCalendar.BusinessLogic.Models;
+using VacationCalendar.BusinessLogic.Models.Validators;
 using VacationCalendar.BusinessLogic.Seeders;
 using VacationCalendar.BusinessLogic.Services;
 
@@ -34,6 +34,7 @@ namespace VacationCalendar.BusinessLogic.Extensions
             services.AddScoped<ICountEmployeeDaysService, CountEmployeeDaysService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddTransient<IEmailSenderService, EmailSenderService>();
         }
 
     }

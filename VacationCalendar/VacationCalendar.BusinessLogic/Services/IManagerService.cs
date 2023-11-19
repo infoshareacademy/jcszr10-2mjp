@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VacationCalendar.BusinessLogic.Models;
+﻿using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -14,5 +9,7 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task Accept(VacationRequest vacationRequest);
         public Task Reject(VacationRequest vacationRequest, string message);
         public Task Delete(int id);
+        public Task<List<VacationRequest>> GetVacationRequestsByManager(Guid managerId);
+        public Task<Employee> GetEmployeeByEmail(string email);
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VacationCalendar.BusinessLogic.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace VacationCalendar.BusinessLogic.Dtos
 {
@@ -24,5 +18,8 @@ namespace VacationCalendar.BusinessLogic.Dtos
 
         [Display(Name = "Rola pracownika")]
         public int RoleId { get; set; } = 3;
+
+        [Display(Name = "Manager")]
+        public Guid ManagerId { get; set; }
     }
 }

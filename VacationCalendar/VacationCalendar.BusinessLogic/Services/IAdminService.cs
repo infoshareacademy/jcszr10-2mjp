@@ -1,5 +1,4 @@
-﻿using VacationCalendar.BusinessLogic.Data;
-using VacationCalendar.BusinessLogic.Dtos;
+﻿using VacationCalendar.BusinessLogic.Dtos;
 using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
@@ -15,5 +14,8 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task EditEmployeeAsync(EditEmployeeDto dto);
         public Task<AdminSettings> GetAdminSettings();
         public Task EditSettings(int vacationDays, int roleId);
+        public Task<List<Employee>> GetManagersAsync(Guid id);
+        public Task<List<Employee>> GetManagersAsync();
+        public Task<Employee> GetEmployeeByIdAsync(Guid id);
     }
 }

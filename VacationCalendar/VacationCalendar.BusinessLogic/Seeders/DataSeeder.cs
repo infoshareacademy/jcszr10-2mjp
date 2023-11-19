@@ -33,13 +33,13 @@ namespace VacationCalendar.BusinessLogic.Seeders
                 }
                 if (!_dbContext.Employees.Any())
                 {
-                    var admin = new Employee() { FirstName = "admin", LastName = "admin", Email = "admin@company.com", RoleId = 1, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
-                    var manager1 = new Employee() { FirstName = "Anna", LastName = "Kowalska", Email = "anna.kowalska@company.com", RoleId = 2, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
-                    var manager2 = new Employee() { FirstName = "Test", LastName = "Manager", Email = "testowy@manager.com", RoleId = 2, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
-                    var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", Email = "magdalena.staniszewska@company.com", RoleId = 3 , VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
-                    var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", Email = "piotr.tryfon@company.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
-                    var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", Email = "jakub.szot@company.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
-                    _dbContext.Employees.AddRange(admin, manager1, employee1, employee2, employee3);
+                    var admin = new Employee() { FirstName = "admin", LastName = "admin", Email = "admin@example.com", RoleId = 1, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var manager1 = new Employee() { FirstName = "Anna", LastName = "Kowalska", Email = "anna.kowalska@example.com", RoleId = 2, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var manager2 = new Employee() { FirstName = "Test", LastName = "Manager", Email = "testowy@example.com", RoleId = 2, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var employee1 = new Employee() { FirstName = "Magdalena", LastName = "Staniszewska", Email = "magdalena.staniszewska@example.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var employee2 = new Employee() { FirstName = "Piotr", LastName = "Tryfon", Email = "piotr.tryfon@example.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    var employee3 = new Employee() { FirstName = "Jakub", LastName = "Szot", Email = "jakub.szot@example.com", RoleId = 3, VacationDays = 30, PasswordHash = "AQAAAAIAAYagAAAAEGSU9n8SoG2A5h6nJiAtKXqKR+tHRnKNN6q5oG/6qyF+9AzOHHPJARZ3mRPYsaB2hg==" };
+                    _dbContext.Employees.AddRange(admin, manager1, manager2, employee1, employee2, employee3);
                     await _dbContext.SaveChangesAsync();
                 }
 
