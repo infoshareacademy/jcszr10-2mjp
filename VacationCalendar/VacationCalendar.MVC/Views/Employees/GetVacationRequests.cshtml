@@ -107,10 +107,10 @@
                             {
                                 <form method="post">
                                     <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
-                                        Edytuj
+                                        <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
                                     </button>
                                     <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})">Usuń</a>
+                                       data-path="@Url.Action("DeleteVacationRequest", "Employees", new {item.Id})"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
                                 </form>
                             }
                             else
@@ -152,7 +152,7 @@
                             </div>
                             <div class="modal-footer">
                                 <input type="submit" value="Zapisz" class="btn btn-success" />
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
                             </div>
                         </form>
                     </div>
@@ -168,15 +168,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Usuwanie wniosku.</h5>
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Usuwanie wniosku.</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 Czy na pewno chcesz usunąć wniosek?
             </div>
             <div class="modal-footer">
-                <button id="btnContinueDelete" class="btn btn-danger">Usuń</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueDelete" class="btn btn-danger"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
