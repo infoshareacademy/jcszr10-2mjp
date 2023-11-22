@@ -63,9 +63,10 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<ActionResult> LoginAsync(LoginDto dto)
         {
             var employee = await _accountService.GetEmployeeByEmail(dto.Email);
-            if (employee != null)
+            var isLogged = await _accountService.LoginAsync(dto, employee);
+
+            if (isLogged)
             {
-                await _accountService.LoginAsync(dto, employee);
                 if (!employee.FirstPasswordChange)
                 {
                     return RedirectToAction("ChangePassword");

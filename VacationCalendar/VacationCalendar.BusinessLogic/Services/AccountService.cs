@@ -1,14 +1,14 @@
-﻿using VacationCalendar.BusinessLogic.Data;
-using VacationCalendar.BusinessLogic.Dtos;
-using VacationCalendar.BusinessLogic.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using NToastNotify;
-using System.Security.Claims;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NToastNotify;
+using System.Security.Claims;
+using VacationCalendar.BusinessLogic.Data;
+using VacationCalendar.BusinessLogic.Dtos;
+using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Services
 {
@@ -29,18 +29,31 @@ namespace VacationCalendar.BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task LoginAsync(LoginDto dto, Employee employee)
+        public async Task<bool> LoginAsync(LoginDto dto, Employee employee)
         {
+            PasswordVerificationResult result;
+            if (employee == null)
+            {
+                _toastNotification.AddErrorToastMessage("Nie udało się zalogować");
+                return false;
+            }
 
-            var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
+            try
+            {
+                result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, dto.Password);
+            }
+            catch (Exception)
+            {
+                result = PasswordVerificationResult.Failed;
+            }
 
             if (result == PasswordVerificationResult.Success)
             {
                 var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, employee.Email),
-                    new Claim(ClaimTypes.Role, $"{employee.Role.Name}"),
-                };
+                  {
+                      new Claim(ClaimTypes.Name, employee.Email),
+                      new Claim(ClaimTypes.Role, $"{employee.Role.Name}"),
+                  };
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
@@ -49,14 +62,15 @@ namespace VacationCalendar.BusinessLogic.Services
                     IsPersistent = dto.RememberMe
                 };
 
-                // albo stworzyc obiekt ktory bedzie miał Claimy i AuthenticationProperties i przekazac do kontrolera i wykonac reszte kodu tam
                 await _httpContextAccessor.HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal, authProperties);
                 _toastNotification.AddSuccessToastMessage("Zalogowano");
             }
             else
             {
                 _toastNotification.AddErrorToastMessage("Nie udało się zalogować");
+                return false;
             }
+            return true;
         }
 
         public async Task<List<Role>> GetRolesAsync()
@@ -77,7 +91,7 @@ namespace VacationCalendar.BusinessLogic.Services
                 LastName = dto.LastName,
                 RoleId = dto.RoleId,
                 VacationDays = dto.VacationDays,
-                ManagerId = dto.ManagerId              
+                ManagerId = dto.ManagerId
             };
             var hashedPassword = _passwordHasher.HashPassword(newEmployee, dto.Password);
             newEmployee.PasswordHash = hashedPassword;
