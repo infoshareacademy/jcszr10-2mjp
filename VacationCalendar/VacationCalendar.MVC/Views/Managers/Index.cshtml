@@ -44,9 +44,9 @@
                         <td>
                             <form method="post">
                                 <a id="acceptItem" class="btn btn-sm btn-success acceptItem m-1" data-bs-target="#ConfirmAcceptModal" data-bs-toggle="modal"
-                                   data-path="@Url.Action("Accept", "Managers", new {item.Id})">Akceptuj</a>
+                                   data-path="@Url.Action("Accept", "Managers", new {item.Id})"><i class="fa fa-check fa-lg" aria-hidden="true"></i></a>
                                 <button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#myModal-@item.Id">
-                                    Odrzuć
+                                    <i class="fa fa-ban fa-lg" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </td>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="modal-footer">
                                 <input type="submit" value="Zapisz" class="btn btn-success" />
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
                             </div>
                         </form>
                     </div>
@@ -99,8 +99,8 @@
                 Czy chcesz akceptować wniosek?
             </div>
             <div class="modal-footer">
-                <button id="btnContinueAccept" class="btn btn-success">Akceptuj wniosek</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueAccept" class="btn btn-success"><i class="fa fa-check fa-lg" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
