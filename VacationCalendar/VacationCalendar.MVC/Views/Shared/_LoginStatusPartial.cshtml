@@ -2,11 +2,11 @@
 {
     <form method="post" class="form-inline" asp-controller="Account" asp-action="LogOut">
         @User?.Identity?.Name
-        <button type="submit" class="btn btn-link ml-2">Logout</button>
+        <button type="submit" class="btn btn-link ml-2"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></button>
     </form>
 }
 else
 {
-    <a class="btn btn-link" asp-controller="Account" asp-action="Login">Login</a>
+    <a class="btn btn-link" asp-controller="Account" asp-action="Login"><i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></a>
 }
 

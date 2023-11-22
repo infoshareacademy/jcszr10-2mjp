@@ -38,9 +38,9 @@
                     <td>@item.Role.Name</td>
                     <td>              
                         <form method="post">
-                            <a class="btn btn-sm btn-warning m-1" href="@Url.Action("EditEmployee", new { id = item.Id })">Edit</a>
+                            <a class="btn btn-sm btn-warning m-1" href="@Url.Action("EditEmployee", new { id = item.Id })"><i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i></a>
                             <a id="deleteItem" class="btn btn-sm btn-danger deleteItem m-1" data-bs-target="#ConfirmDeleteModal" data-bs-toggle="modal"
-                               data-path="@Url.Action("DeleteEmployee", "Admin", new {item.Id})">Usuń</a>
+                               data-path="@Url.Action("DeleteEmployee", "Admin", new {item.Id})"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
                         </form>
                     </td>
                 </tr>
@@ -62,8 +62,8 @@
                 Czy na pewno chcesz usunąć pracownika?
             </div>
             <div class="modal-footer">
-                <button id="btnContinueDelete" class="btn btn-danger">Usuń</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+                <button id="btnContinueDelete" class="btn btn-danger"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
