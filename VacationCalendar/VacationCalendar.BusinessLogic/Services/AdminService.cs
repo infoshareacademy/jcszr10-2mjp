@@ -15,7 +15,10 @@ namespace VacationCalendar.BusinessLogic.Services
             _dbContext = dbContext;
             _toastNotification = toastNotification;
         }
-
+        public Task<List<string>> GetAdminsEmailsAsync()
+        {
+            return _dbContext.Employees.Where(e => e.RoleId == 1).Select(e => e.Email).ToListAsync();
+        }
         public async Task<List<Employee>> GetManagersAsync(Guid id)
         {
             return await _dbContext.Employees.Where(e => e.RoleId == 2 && e.Id != id).ToListAsync();
