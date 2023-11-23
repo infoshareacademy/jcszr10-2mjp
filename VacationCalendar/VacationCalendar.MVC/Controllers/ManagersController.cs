@@ -18,9 +18,8 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> Index()
         {
             var manager = await _managerService.GetEmployeeByEmail(User.Identity.Name);
-            Guid managerId = manager.Id; 
-            var vacatinRequests = await _managerService.GetVacationRequestsByManager(managerId);
-            return View(vacatinRequests);
+            var vacationRequests = await _managerService.GetVacationRequestsByManager(manager.Id);
+            return View(vacationRequests);
         }
 
         [Authorize(Roles = "manager")]
