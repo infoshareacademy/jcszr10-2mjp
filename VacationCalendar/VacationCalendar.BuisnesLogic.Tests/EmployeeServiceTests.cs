@@ -1,13 +1,9 @@
-﻿using VacationCalendar.BusinessLogic.Data;
-using VacationCalendar.BusinessLogic.Services;
-using Xunit;
-using Moq;
+﻿using Moq;
 using NToastNotify;
+using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
-using Microsoft.EntityFrameworkCore;
 using VacationCalendar.BusinessLogic.Models;
-using System.Linq.Expressions;
-using System.Transactions;
+using VacationCalendar.BusinessLogic.Services;
 
 namespace VacationCalendar.BuisnesLogic.Tests
 {
@@ -20,8 +16,10 @@ namespace VacationCalendar.BuisnesLogic.Tests
         public async Task CreateVacationRequest_NullEmployee_ThorwsException()
         {
             // Arrange
-            List<Employee> emps = new List<Employee>();
-            emps.Add(new Employee() { Email = "xxxx@xxxx.pl" });
+            List<Employee> emps = new List<Employee>
+            {
+                new Employee() { Email = "xxxx@xxxx.pl" }
+            };
             var mockDbSet = ServiceTestHelper.GetMockDbSet<Employee>(emps);
             var mockContext = new Mock<VacationCalendarDbContext>();
             var mockCount = new Mock<ICountVacationDaysService>();
@@ -34,13 +32,11 @@ namespace VacationCalendar.BuisnesLogic.Tests
             _sut = new EmployeeService(mockContext.Object, mockCount.Object, mockToast.Object);
 
             var dto = new CreateVacationRequestDto()
-            { 
+            {
                 Email = "niewiem@corobie.pl"
             };
-            
+
             // Act
-
-
             // Assert
             await Assert.ThrowsAsync<Exception>(() => _sut.CreateVacationRequest(dto));
         }
