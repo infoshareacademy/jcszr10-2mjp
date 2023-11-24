@@ -52,6 +52,8 @@ namespace VacationCalendar.MVC.Controllers
         public async Task<IActionResult> GetEmployees()
         {
             var employees = await _adminService.GetEmployeesAsync();
+            var admins = await _adminService.GetAdminsEmailsAsync();
+            ViewBag.Admins = admins;
             return View(employees);
         }
 

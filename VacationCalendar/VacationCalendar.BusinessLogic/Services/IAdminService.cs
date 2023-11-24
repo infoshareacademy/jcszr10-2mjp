@@ -17,5 +17,6 @@ namespace VacationCalendar.BusinessLogic.Services
         public Task<List<Employee>> GetManagersAsync(Guid id);
         public Task<List<Employee>> GetManagersAsync();
         public Task<Employee> GetEmployeeByIdAsync(Guid id);
+        Task<List<string>> GetAdminsEmailsAsync();
     }
 }
