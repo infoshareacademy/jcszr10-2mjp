@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<VacationCalendar.BusinessLogic.Models.Employee>;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 
 <div class="container">
-    <h4>Lista pracowników</h4>
+    <h4>@Localizer["Title"]</h4>
     <hr />
     @if (TempData["DeleteConfirmed"] != null)
     {
@@ -19,12 +21,12 @@
     <table class="table">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.FirstName)</th>
-                <th>@Html.DisplayNameFor(model => model.LastName)</th>
-                <th>@Html.DisplayNameFor(model => model.Email)</th>
-                <th>@Html.DisplayNameFor(model => model.VacationDays)</th>
-                <th>@Html.DisplayNameFor(model => model.Role.Name)</th>
-                <th>Akcje</th>
+                <th>@Localizer["FirstName"]</th>
+                <th>@Localizer["LastName"]</th>
+                <th>@Localizer["Email"]</th>
+                <th>@Localizer["VacationDaysGranted"]</th>
+                <th>@Localizer["EmployeeRole"]</th>
+                <th>@Localizer["Actions"]</th>
             </tr>
         </thead>
         <tbody>

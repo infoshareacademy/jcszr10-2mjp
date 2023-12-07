@@ -1,16 +1,21 @@
-﻿
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 @if (User.IsInRole("admin"))
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja pracownika</a>
+        <a class="nav-link text-dark" asp-area=""
+           asp-controller="Account" asp-action="Register">@Localizer["EmployeeRegistration"]</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="GetVacationRequests">Wnioski pracowników</a>
+        <a class="nav-link text-dark" asp-area=""
+           asp-controller="Admin" asp-action="GetVacationRequests">@Localizer["EmployeeRequests"]</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="GetEmployees">Lista pracowników</a>
+        <a class="nav-link text-dark" asp-area=""
+           asp-controller="Admin" asp-action="GetEmployees">@Localizer["EmployeeList"]</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangePassword">Zmień hasło</a>
+        <a class="nav-link text-dark" asp-area=""
+           asp-controller="Account" asp-action="ChangePassword">@Localizer["ChangePassword"]</a>
     </li>
 }

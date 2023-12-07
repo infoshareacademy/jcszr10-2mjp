@@ -1,7 +1,10 @@
 ﻿@using VacationCalendar.BusinessLogic.Models;
 @model IEnumerable<VacationRequest>;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+
 <div class="container">
-    <h4>Zatwierdzanie wniosków</h4>
+    <h4>@Localizer["Title"]</h4>
 
     <hr />
     @if (TempData["DeleteConfirmed"] != null)
