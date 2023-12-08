@@ -1,12 +1,14 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6 text-center">
-            <h2 class="display-4">Witaj w aplikacji Vacation Calendar <i class="bi bi-calendar"></i></h2>
-            <p class="lead">Śledź swoje urlopy i zarządzaj nimi w prosty sposób.</p>
+            <h2 class="display-4">@Localizer["Welcome"]</h2>
+            <p class="lead">@Localizer["Incentive"]</p>
         </div>
     </div>
 </div>
