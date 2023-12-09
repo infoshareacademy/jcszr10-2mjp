@@ -2,6 +2,9 @@
 @using System.Globalization;
 @using VacationCalendar.BusinessLogic.Models;
 @using DateTimeExtensions.WorkingDays;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
+
 @model IEnumerable<VacationRequest>;
 @{
     DateTime currentDate = DateTime.Now;
@@ -10,7 +13,7 @@
 }
 
 <div class="container">
-    <h4>Twoje wnioski urlopowe</h4>
+    <h4>@Localizer["Title"]</h4>
     <hr />
     @if (TempData["EditRequestMessage"] != null)
     {
@@ -38,7 +41,7 @@
 
     @if ((int)TempData["FreeDays"] > 0)
     {
-        <input type="button" class="btn btn-success mb-2" value="Utwórz nowy wniosek" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
+        <input type="button" class="btn btn-success mb-2" value="@Localizer["CreateRequest"]" onclick="location.href='@Url.Action("CreateVacationRequest", "Employees")'" />
     }
 
     <input type="button" class="btn btn-secondary mb-2" id="showCalendarBtn" value="Pokaż kalendarz" />
@@ -83,11 +86,11 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.From)</th>
-                    <th>@Html.DisplayNameFor(model => model.To)</th>
-                    <th>@Html.DisplayNameFor(model => model.VacationDays)</th>
-                    <th>@Html.DisplayNameFor(model => model.RequestStatus)</th>
-                    <th>Akcje</th>
+                    <th>@Localizer["DateFrom"]</th>
+                    <th>@Localizer["DateTo"]</th>
+                    <th>@Localizer["FreeDays"]</th>
+                    <th>@Localizer["Status"]</th>
+                    <th>@Localizer["Actions"]</th>
                 </tr>
             </thead>
             <tbody>
