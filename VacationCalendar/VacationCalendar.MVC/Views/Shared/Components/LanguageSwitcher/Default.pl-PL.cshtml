@@ -1,0 +1,14 @@
+﻿@model LanguageSwitcherViewModel
+
+<div class="language-switcher d-flex">
+    @foreach (var culture in Model.SupportedCultures)
+    {
+        <div class="flex-grow-1">
+            <form asp-controller="Culture" asp-action="SetCulture" method="post">
+                <input type="hidden" name="culture" value="@culture" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                <button type="submit" class="btn @(Model.CurrentCulture == culture ? "btn-primary" : "btn-secondary")">@culture</button>
+            </form>
+        </div>
+    }
+</div>

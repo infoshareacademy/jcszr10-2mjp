@@ -61,3 +61,7 @@ body {
     border: solid 1px;
     border-radius: 5px;
 }
+
+#language-switcher{
+    margin-right: 15px;
+}

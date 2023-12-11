@@ -34,7 +34,10 @@
                    
                     </ul>
                 </div>
-                <div class="mr-2">
+                <div class="d-flex align-items-center">
+                    <div id="language-switcher">
+                        @await Component.InvokeAsync("LanguageSwitcher")
+                    </div>
                     <partial name="_LoginStatusPartial" />
                 </div>
             </div>            
