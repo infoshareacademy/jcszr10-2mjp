@@ -16,7 +16,7 @@ namespace VacationCalendar.MVC.Views.Shared.Components.LanguageSwitcher
                 SupportedCultures = new[] { "en-US", "pl-PL" }
             };
 
-            return View("Default", model);
+            return View("Switcher", model);
         }
     }
 }
