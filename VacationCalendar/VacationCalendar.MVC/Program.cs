@@ -48,7 +48,7 @@ namespace VacationCalendar.MVC
             builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
             {
                 loggerConfiguration.WriteTo.Console();
-                loggerConfiguration.WriteTo.File("./logs/vcLogs.txt").MinimumLevel.Error();
+                loggerConfiguration.WriteTo.File(@".\logs\vcLogs.txt").MinimumLevel.Error();
                 loggerConfiguration.WriteTo.File(@"C:\VacationCalendar\logs.txt").MinimumLevel.Error();
             });
 
