@@ -1,4 +1,6 @@
 ﻿@model VacationCalendar.BusinessLogic.Dtos.EditEmployeeDto;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer;
 @{
     ViewData["Title"] = "Edit Employee";
 }
@@ -9,7 +11,7 @@
     </div>
 }
 <div class="container">
-    <h4>Edycja pracownika</h4>
+    <h4>@Localizer["Title"]</h4>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -22,35 +24,35 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="FirstName" class="control-label"></label>
+                    <label asp-for="FirstName" class="control-label">@Localizer["FirstName"]</label>
                     <input asp-for="FirstName" class="form-control" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LastName" class="control-label"></label>
+                    <label asp-for="LastName" class="control-label">@Localizer["LastName"]</label>
                     <input asp-for="LastName" class="form-control" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="VacaationDays" class="control-label"></label>
+                    <label asp-for="VacaationDays" class="control-label">@Localizer["VacationDaysGranted"]</label>
                     <input asp-for="VacaationDays" class="form-control" />
                     <span asp-validation-for="VacaationDays" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="RoleId" class="control-label"></label>
+                    <label asp-for="RoleId" class="control-label">@Localizer["EmployeeRole"]</label>
                     <select asp-for="RoleId" class="form-control" asp-items=ViewBag.RoleId></select>
                     <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ManagerId" class="control-label"></label>
+                    <label asp-for="ManagerId" class="control-label">@Localizer["Manager"]</label>
                     <select asp-for="ManagerId" class="form-control" asp-items=ViewBag.Managers>
                     </select>
                     <span asp-validation-for="ManagerId" class="text-danger"></span>
                 </div>
                 <br />
                 <div class="form-group">
-                    <input type="submit" id="btnSubmit" value="Edytuj" class="btn btn-success" />
-                    <a class="btn btn-light" asp-action="GetEmployees">Wróć do listy</a>
+                    <input type="submit" id="btnSubmit" value="@Localizer["Edit"]" class="btn btn-success" />
+                    <a class="btn btn-light" asp-action="GetEmployees">@Localizer["Return"]</a>
                 </div>
             </form>
         </div>

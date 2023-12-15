@@ -61,3 +61,18 @@ body {
     border: solid 1px;
     border-radius: 5px;
 }
+
+#language-switcher{
+    margin-right: 10px;
+}
+.culture-btn{
+    font-size: 10px;
+    margin-right: 3px;
+    color: white;
+    background-color: black;
+    border: hidden;
+    border-radius: 10px;
+}
+.current-culture{
+    border: 5px solid lime;
+}
