@@ -5,6 +5,10 @@ namespace VacationCalendar.BusinessLogic.Data
 {
     public class VacationCalendarDbContext : DbContext
     {
+        public VacationCalendarDbContext()
+        {
+
+        }
         public VacationCalendarDbContext(DbContextOptions<VacationCalendarDbContext> options) : base(options)
         {
 
