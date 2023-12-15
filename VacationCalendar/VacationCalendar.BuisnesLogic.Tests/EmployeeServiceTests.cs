@@ -11,7 +11,6 @@ namespace VacationCalendar.BuisnesLogic.Tests
     {
         private EmployeeService _sut;
 
-
         [Fact]
         public async Task CreateVacationRequest_NullEmployee_ThorwsException()
         {
@@ -25,18 +24,16 @@ namespace VacationCalendar.BuisnesLogic.Tests
             var mockCount = new Mock<ICountVacationDaysService>();
             var mockToast = new Mock<IToastNotification>();
 
-            //jakis setup cos ten teges?
-
             mockContext.Setup(c => c.Set<Employee>()).Returns(mockDbSet.Object);
 
             _sut = new EmployeeService(mockContext.Object, mockCount.Object, mockToast.Object);
 
+            // Act
             var dto = new CreateVacationRequestDto()
             {
                 Email = "niewiem@corobie.pl"
             };
 
-            // Act
             // Assert
             await Assert.ThrowsAsync<Exception>(() => _sut.CreateVacationRequest(dto));
         }
