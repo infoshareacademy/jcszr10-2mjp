@@ -25,13 +25,13 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.Employee.FirstName)</th>
-                    <th>@Html.DisplayNameFor(model => model.Employee.LastName)</th>
-                    <th>@Html.DisplayNameFor(model => model.From)</th>
-                    <th>@Html.DisplayNameFor(model => model.To)</th>
-                    <th>@Html.DisplayNameFor(model => model.VacationDays)</th>
-                    <th>@Html.DisplayNameFor(model => model.RequestStatus)</th>
-                    <th>Akcje</th>
+                    <th>@Localizer["FirstName"]</th>
+                    <th>@Localizer["LastName"]</th>
+                    <th>@Localizer["From"]</th>
+                    <th>@Localizer["To"]</th>
+                    <th>@Localizer["Days"]</th>
+                    <th>@Localizer["Status"]</th>
+                    <th>@Localizer["Actions"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,8 +69,7 @@
                                 <h5 class="modal-title" id="exampleModalLabel">Uzasadnij odrzucenie wniosku</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                              
+                            <div class="modal-body">                             
                                 <div class="form-group">
                                     <label asp-for="@item.Message" class="control-label"></label>
                                     <textarea asp-for="@item.Message" class="form-control" name="message"></textarea>
@@ -120,7 +119,6 @@
         $("#btnContinueAccept").click(function () {
             window.location = pathToAccept;
         })
-
     </script>
 }
 
