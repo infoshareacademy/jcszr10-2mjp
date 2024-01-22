@@ -13,24 +13,13 @@ namespace VacationCalendar.BusinessLogic.Services
         private readonly ICountVacationDaysService _countVacationDaysLogic;
         private readonly IToastNotification _toastNotification;
         private readonly IMapper _mapper;
-        private VacationCalendarDbContext object1;
-        private ICountVacationDaysService object2;
-        private IToastNotification object3;
 
         public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic, IToastNotification toastNotification, IMapper mapper)
         {
-
             _context = context;
             _countVacationDaysLogic = countVacationDaysLogic;
             _toastNotification = toastNotification;
             _mapper = mapper;
-        }
-
-        public EmployeeService(VacationCalendarDbContext object1, ICountVacationDaysService object2, IToastNotification object3)
-        {
-            this.object1 = object1;
-            this.object2 = object2;
-            this.object3 = object3;
         }
 
         public async Task CreateVacationRequest(CreateVacationRequestDto dto)
