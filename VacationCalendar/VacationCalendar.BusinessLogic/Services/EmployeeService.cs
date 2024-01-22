@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using VacationCalendar.BusinessLogic.Data;
 using VacationCalendar.BusinessLogic.Dtos;
@@ -11,11 +12,25 @@ namespace VacationCalendar.BusinessLogic.Services
         private readonly VacationCalendarDbContext _context;
         private readonly ICountVacationDaysService _countVacationDaysLogic;
         private readonly IToastNotification _toastNotification;
-        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic, IToastNotification toastNotification)
+        private readonly IMapper _mapper;
+        private VacationCalendarDbContext object1;
+        private ICountVacationDaysService object2;
+        private IToastNotification object3;
+
+        public EmployeeService(VacationCalendarDbContext context, ICountVacationDaysService countVacationDaysLogic, IToastNotification toastNotification, IMapper mapper)
         {
+
             _context = context;
             _countVacationDaysLogic = countVacationDaysLogic;
             _toastNotification = toastNotification;
+            _mapper = mapper;
+        }
+
+        public EmployeeService(VacationCalendarDbContext object1, ICountVacationDaysService object2, IToastNotification object3)
+        {
+            this.object1 = object1;
+            this.object2 = object2;
+            this.object3 = object3;
         }
 
         public async Task CreateVacationRequest(CreateVacationRequestDto dto)
@@ -86,8 +101,14 @@ namespace VacationCalendar.BusinessLogic.Services
             {
                 throw new Exception("Nie ma takiego wniosku!");
             }
-            request.From = dto.From;
-            request.To = dto.To;
+
+            _mapper.Map(dto, request); // update existing 'request' with values from 'dto'
+
+            //_mapper.Map<VacationRequest>(dto); // Create a new instance and map values
+
+            // Without mapper
+            //request.From = dto.From;
+            //request.To = dto.To;
             request.VacationDays = _countVacationDaysLogic.CountVacationDays(dto.From, dto.To);
 
             if (request.VacationDays > 0)

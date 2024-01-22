@@ -4,13 +4,12 @@ using VacationCalendar.BusinessLogic.Models;
 
 namespace VacationCalendar.BusinessLogic.Profiles
 {
-    public class EmployeeProfile : Profile
+    public class VacationRequestProfile : Profile
     {
-        public EmployeeProfile()
+        public VacationRequestProfile()
         {
             // <From,To>
-            CreateMap<RegisterEmployeeDto, Employee>();
-
+            CreateMap<EditVacationRequestDto, VacationRequest>(); 
         }
     }
 }

@@ -34,8 +34,7 @@ namespace VacationCalendar.BusinessLogic.Extensions
             services.AddScoped<ICountEmployeeDaysService, CountEmployeeDaysService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IAdminService, AdminService>();
-            services.AddTransient<IEmailSenderService, EmailSenderService>();
+            services.AddTransient<IEmailSenderService, EmailSenderService>();        
         }
-
     }
 }
