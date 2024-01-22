@@ -84,15 +84,16 @@ namespace VacationCalendar.BusinessLogic.Services
         }
         public async Task RegisterEmployee(RegisterEmployeeDto dto)
         {
-            var newEmployee = new Models.Employee()
-            {
-                Email = dto.Email,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                RoleId = dto.RoleId,
-                VacationDays = dto.VacationDays,
-                ManagerId = dto.ManagerId
-            };
+            var newEmployee = _mapper.Map<Employee>(dto);
+            //var newEmployee = new Models.Employee()
+            //{
+            //    Email = dto.Email,
+            //    FirstName = dto.FirstName,
+            //    LastName = dto.LastName,
+            //    RoleId = dto.RoleId,
+            //    VacationDays = dto.VacationDays,
+            //    ManagerId = dto.ManagerId
+            //};
             var hashedPassword = _passwordHasher.HashPassword(newEmployee, dto.Password);
             newEmployee.PasswordHash = hashedPassword;
             _dbContext.Employees.Add(newEmployee);
